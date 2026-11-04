@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcuserstate
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Secrets / local config
+*.xcconfig
+!*.example.xcconfig
+.env*
+
+
+# Shared, secret-free build settings
+!Configs/Project.xcconfig
+
+# Local build output
+build/
+
+# Apple keys (Sign in with Apple, push) never belong in the repo
+*.p8
