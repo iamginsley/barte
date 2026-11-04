@@ -6,6 +6,7 @@ struct GroupsView: View {
     @State private var path: [UUID] = []
     @State private var showsNewGroup = false
     @State private var showsAbout = false
+    @State private var showsJoin = false
     @State private var cardWidth: CGFloat = 360
     @State private var appliedLaunchFlags = false
     @Namespace private var zoom
@@ -15,8 +16,17 @@ struct GroupsView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
-                if model.groups.isEmpty {
-                    emptyState
+                if !model.hasLoaded {
+                    ProgressView()
+                        .controlSize(.large)
+                        .padding(.top, 120)
+                        .frame(maxWidth: .infinity)
+                } else if model.groups.isEmpty {
+                    if let error = model.loadError {
+                        loadErrorView(error)
+                    } else {
+                        emptyState
+                    }
                 } else {
                     VStack(alignment: .leading, spacing: 20) {
                         summary
@@ -26,6 +36,7 @@ struct GroupsView: View {
                     .padding(.bottom, 32)
                 }
             }
+            .refreshable { await model.reload() }
             .background(Color.surface.ignoresSafeArea())
             .navigationTitle("Barte")
             .toolbar {
@@ -33,7 +44,10 @@ struct GroupsView: View {
                     Button("Über Barte", systemImage: "info.circle") { showsAbout = true }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Neue Gruppe", systemImage: "plus") { showsNewGroup = true }
+                    Menu("Hinzufügen", systemImage: "plus") {
+                        Button("Neue Gruppe", systemImage: "rectangle.stack.badge.plus") { showsNewGroup = true }
+                        Button("Mit Code beitreten", systemImage: "person.crop.circle.badge.checkmark") { showsJoin = true }
+                    }
                 }
             }
             .navigationDestination(for: UUID.self) { id in
@@ -44,7 +58,14 @@ struct GroupsView: View {
                 GroupEditorSheet(group: nil) { id in path = [id] }
             }
             .sheet(isPresented: $showsAbout) { AboutView() }
+            .sheet(isPresented: $showsJoin) {
+                JoinSheet(code: nil) { id in path = [id] }
+            }
+            .sheet(item: inviteBinding) { invite in
+                JoinSheet(code: invite.code) { id in path = [id] }
+            }
             .onAppear(perform: applyLaunchFlags)
+            .onChange(of: model.hasLoaded) { applyLaunchFlags() }
         }
     }
 
@@ -107,21 +128,50 @@ struct GroupsView: View {
                     .foregroundStyle(Color.inkSecondary)
                     .multilineTextAlignment(.center)
             }
-            Button {
-                showsNewGroup = true
-            } label: {
-                Text("Gruppe erstellen")
-                    .frame(maxWidth: 280)
+            VStack(spacing: 12) {
+                Button {
+                    showsNewGroup = true
+                } label: {
+                    Text("Gruppe erstellen")
+                        .frame(maxWidth: 280)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                Button("Mit Code beitreten") { showsJoin = true }
+                    .controlSize(.large)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
         }
         .padding(.horizontal, 32)
         .frame(maxWidth: .infinity)
     }
 
+    private func loadErrorView(_ message: String) -> some View {
+        ContentUnavailableView {
+            Label("Keine Verbindung", systemImage: "wifi.exclamationmark")
+        } description: {
+            Text(message)
+        } actions: {
+            Button("Erneut versuchen") { Task { await model.reload() } }
+                .buttonStyle(.bordered)
+        }
+        .padding(.top, 60)
+    }
+
+    private struct PendingInvite: Identifiable {
+        let code: String
+        var id: String { code }
+    }
+
+    /// An invite link that opened the app shows the join sheet.
+    private var inviteBinding: Binding<PendingInvite?> {
+        Binding(
+            get: { model.pendingInviteCode.map(PendingInvite.init(code:)) },
+            set: { if $0 == nil { model.pendingInviteCode = nil } }
+        )
+    }
+
     private func applyLaunchFlags() {
-        guard model.isDemo, !appliedLaunchFlags else { return }
+        guard model.isDemo, model.hasLoaded, !appliedLaunchFlags else { return }
         appliedLaunchFlags = true
         if let index = DemoData.argument(after: "-BarteGroup").flatMap(Int.init), model.groups.indices.contains(index) {
             path = [model.groups[index].id]
@@ -129,6 +179,7 @@ struct GroupsView: View {
         switch DemoData.argument(after: "-BarteSheet") {
         case "group" where path.isEmpty: showsNewGroup = true
         case "about" where path.isEmpty: showsAbout = true
+        case "join" where path.isEmpty: model.pendingInviteCode = "KROATIEN"
         default: break
         }
     }

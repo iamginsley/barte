@@ -5,6 +5,8 @@ struct ExpenseEditorSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var model: ExpenseEditorModel
     @State private var confirmsDelete = false
+    @State private var isSaving = false
+    @State private var errorMessage: String?
     @FocusState private var focus: Field?
     @ScaledMetric(relativeTo: .largeTitle) private var amountSize: CGFloat = 56
 
@@ -97,21 +99,27 @@ struct ExpenseEditorSheet: View {
                     Button("Abbrechen", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Sichern", role: .confirm, action: save)
-                        .disabled(!model.canSave)
+                    if isSaving {
+                        ProgressView()
+                    } else {
+                        Button("Sichern", role: .confirm) { Task { await save() } }
+                            .disabled(!model.canSave)
+                    }
                 }
             }
             .confirmationDialog("Ausgabe löschen?", isPresented: $confirmsDelete, titleVisibility: .visible) {
-                Button("Löschen", role: .destructive) {
-                    if let id = model.existing?.id { app.repository.deleteExpense(id) }
-                    dismiss()
-                }
+                Button("Löschen", role: .destructive) { Task { await delete() } }
+            }
+            .alert("Das hat nicht geklappt", isPresented: .init(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
             }
             .onAppear {
                 if model.existing == nil { focus = .amount }
             }
         }
-        .interactiveDismissDisabled(model.existing == nil && !model.amountText.isEmpty)
+        .interactiveDismissDisabled(isSaving || (model.existing == nil && !model.amountText.isEmpty))
     }
 
     private func participantRow(_ member: Member) -> some View {
@@ -143,9 +151,25 @@ struct ExpenseEditorSheet: View {
         .sensoryFeedback(.selection, trigger: selected)
     }
 
-    private func save() {
+    private func save() async {
         guard let expense = model.makeExpense() else { return }
-        app.repository.save(expense, in: model.group.id)
-        dismiss()
+        focus = nil
+        isSaving = true
+        defer { isSaving = false }
+        let groupID = model.group.id
+        if let message = await app.run({ try await $0.save(expense, in: groupID) }) {
+            errorMessage = message
+        } else {
+            dismiss()
+        }
+    }
+
+    private func delete() async {
+        guard let id = model.existing?.id else { return }
+        if let message = await app.run({ try await $0.deleteExpense(id) }) {
+            errorMessage = message
+        } else {
+            dismiss()
+        }
     }
 }

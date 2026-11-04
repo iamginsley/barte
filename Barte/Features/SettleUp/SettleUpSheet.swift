@@ -9,6 +9,7 @@ struct SettleUpSheet: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var pending: Transfer?
     @State private var paidCount = 0
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -26,6 +27,11 @@ struct SettleUpSheet: View {
             }
         }
         .sensoryFeedback(.success, trigger: paidCount)
+        .alert("Nicht verbucht", isPresented: .init(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
     }
 
     private func content(_ group: SplitGroup) -> some View {
@@ -88,18 +94,23 @@ struct SettleUpSheet: View {
             titleVisibility: .visible,
             presenting: pending
         ) { transfer in
-            Button("Ja, ist bezahlt") { record(transfer, in: group) }
+            Button("Ja, ist bezahlt") { Task { await record(transfer, in: group) } }
         } message: { transfer in
             Text("\(group.name(of: transfer.from, me: me)) → \(group.name(of: transfer.to, me: me)): \(Money.format(transfer.amountCents, currency: group.currency))")
         }
     }
 
-    private func record(_ transfer: Transfer, in group: SplitGroup) {
-        model.repository.save(Expense(
+    private func record(_ transfer: Transfer, in group: SplitGroup) async {
+        let settlement = Expense(
             id: UUID(), title: "Ausgleich", amountCents: transfer.amountCents, date: .now,
             payerID: transfer.from, participantIDs: [transfer.to], isSettlement: true
-        ), in: group.id)
-        paidCount += 1
+        )
+        let groupID = group.id
+        if let message = await model.run({ try await $0.save(settlement, in: groupID) }) {
+            errorMessage = message
+        } else {
+            paidCount += 1
+        }
     }
 }
 

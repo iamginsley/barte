@@ -1,9 +1,9 @@
 import Foundation
 
-/// Which member "I" am in each group, and my name for new groups. Kept on this device only:
-/// members are plain names, so every friend picks themselves once per group.
+/// Small per-device settings. My name prefills new groups and joining; it never leaves the phone
+/// except as the member name I type into a group.
 @MainActor
-enum Identity {
+enum Preferences {
     private static var defaults: UserDefaults = .standard
 
     /// Demo mode uses its own, emptied defaults so screenshots never touch real data.
@@ -13,18 +13,8 @@ enum Identity {
         defaults = UserDefaults(suiteName: suite) ?? .standard
     }
 
-    static func me(in groupID: UUID) -> UUID? {
-        defaults.string(forKey: key(groupID)).flatMap(UUID.init(uuidString:))
-    }
-
-    static func setMe(_ memberID: UUID?, in groupID: UUID) {
-        defaults.set(memberID?.uuidString, forKey: key(groupID))
-    }
-
     static var myName: String {
         get { defaults.string(forKey: "myName") ?? "" }
         set { defaults.set(newValue.trimmingCharacters(in: .whitespaces), forKey: "myName") }
     }
-
-    private static func key(_ groupID: UUID) -> String { "me." + groupID.uuidString }
 }

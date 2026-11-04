@@ -6,6 +6,8 @@ struct GroupEditorSheet: View {
     @State private var model: GroupEditorModel?
     @FocusState private var focusedRow: UUID?
     @FocusState private var nameFocused: Bool
+    @State private var isSaving = false
+    @State private var errorMessage: String?
 
     private let group: SplitGroup?
     private let onSave: (UUID) -> Void
@@ -65,6 +67,11 @@ struct GroupEditorSheet: View {
                             Text("Ich")
                                 .font(.caption.weight(.semibold))
                                 .foregroundStyle(Color.inkSecondary)
+                        } else if row.usesApp {
+                            Image(systemName: "iphone")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Color.inkSecondary)
+                                .accessibilityLabel("nutzt Barte")
                         }
                     }
                     .deleteDisabled(!row.canRemove)
@@ -79,8 +86,8 @@ struct GroupEditorSheet: View {
                 Text("Wer ist dabei?")
             } footer: {
                 Text(model.isNew
-                     ? "Freund:innen brauchen die App nicht. Teile die Gruppe später, dann können alle mit iPhone selbst Ausgaben eintragen."
-                     : "Personen, die in Ausgaben vorkommen, lassen sich nicht entfernen.")
+                     ? "Freund:innen brauchen die App nicht. Lade sie später mit einem Link ein, dann tragen alle selbst Ausgaben ein."
+                     : "Personen, die in Ausgaben vorkommen oder Barte selbst nutzen, lassen sich nicht entfernen.")
             }
         }
         .scrollDismissesKeyboard(.interactively)
@@ -92,16 +99,36 @@ struct GroupEditorSheet: View {
                 Button("Abbrechen", role: .cancel) { dismiss() }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(model.isNew ? "Erstellen" : "Sichern", role: .confirm) {
-                    let id = model.save(to: app.repository)
-                    app.reload()
-                    dismiss()
-                    onSave(id)
+                if isSaving {
+                    ProgressView()
+                } else {
+                    Button(model.isNew ? "Erstellen" : "Sichern", role: .confirm) {
+                        Task { await save(model) }
+                    }
+                    .disabled(!model.canSave)
                 }
-                .disabled(!model.canSave)
             }
         }
         .onAppear { if model.isNew { nameFocused = true } }
+        .interactiveDismissDisabled(isSaving)
+        .alert("Nicht gesichert", isPresented: .init(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
+    }
+
+    private func save(_ model: GroupEditorModel) async {
+        hideKeyboard()
+        isSaving = true
+        defer { isSaving = false }
+        switch await model.save(with: app) {
+        case .success(let id):
+            dismiss()
+            onSave(id)
+        case .failure(let error):
+            errorMessage = error.message
+        }
     }
 
     private func colorPicker(selection: Binding<CardColor>) -> some View {

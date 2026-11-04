@@ -1,9 +1,13 @@
 import Foundation
 
-/// A person in a group. Members are plain names, so friends without the app can be part of a group too.
+/// A person in a group. Members are names, so friends without the app can be part of a group too.
+/// Someone who uses Barte is linked to their member through `userID`.
 struct Member: Identifiable, Hashable, Sendable {
     let id: UUID
     var name: String
+    var userID: UUID? = nil
+
+    var usesApp: Bool { userID != nil }
 
     var initial: String { String(name.trimmingCharacters(in: .whitespaces).prefix(1)).uppercased() }
 }

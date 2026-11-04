@@ -1,0 +1,8 @@
+// Copy this file to Config.xcconfig (git-ignored) and fill in your values.
+// Note: "//" starts a comment in xcconfig files, so only the host goes here, without https://.
+
+// Supabase Dashboard > Project Settings > API > Project URL (host only)
+SUPABASE_HOST = your-project-ref.supabase.co
+
+// Supabase Dashboard > Project Settings > API > anon / publishable key
+SUPABASE_ANON_KEY = your-anon-key

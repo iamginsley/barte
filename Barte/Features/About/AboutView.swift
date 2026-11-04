@@ -4,9 +4,14 @@ import SwiftUI
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var myName = Identity.myName
+    @State private var myName = Preferences.myName
     @State private var split: CGFloat = 1
     @State private var taps = 0
+    @State private var confirmsSignOut = false
+    @State private var confirmsDeletion = false
+    @State private var isDeleting = false
+    @State private var errorMessage: String?
+    @Environment(AppModel.self) private var app
 
     private static let privacyURL = URL(string: "https://iamginsley.github.io/barte/datenschutz")!
     private static let contactURL = URL(string: "mailto:dominik.gintsberger@outlook.de?subject=Barte")!
@@ -36,17 +41,39 @@ struct AboutView: View {
                     TextField("Dein Name", text: $myName)
                         .textContentType(.givenName)
                         .submitLabel(.done)
-                        .onChange(of: myName) { Identity.myName = myName }
+                        .onChange(of: myName) { Preferences.myName = myName }
                 } header: {
                     Text("Dein Name")
                 } footer: {
-                    Text("Wird bei neuen Gruppen als erste Person eingetragen.")
+                    Text("Wird bei neuen Gruppen und beim Beitreten vorgeschlagen.")
                 }
 
                 Section("So rechnet Barte") {
                     explanation("1", "Jede Ausgabe wird gleichmäßig auf die ausgewählten Personen verteilt, auf den Cent genau.")
                     explanation("2", "Daraus ergibt sich für alle ein Saldo: Wer mehr bezahlt hat, bekommt Geld, wer weniger bezahlt hat, schuldet.")
                     explanation("3", "Barte sucht dann die wenigsten Überweisungen, mit denen alle quitt sind. Statt dass jede:r jeder:m etwas zahlt, reichen oft ein, zwei Überweisungen.")
+                }
+
+                Section {
+                    Button("Abmelden") { confirmsSignOut = true }
+                        .frame(minHeight: Theme.minTapSize)
+                    Button(role: .destructive) {
+                        confirmsDeletion = true
+                    } label: {
+                        HStack {
+                            Text("Konto löschen")
+                            if isDeleting {
+                                Spacer()
+                                ProgressView()
+                            }
+                        }
+                        .frame(minHeight: Theme.minTapSize)
+                    }
+                    .disabled(isDeleting)
+                } header: {
+                    Text("Konto")
+                } footer: {
+                    Text("Angemeldet mit deiner Apple-ID.")
                 }
 
                 Section {
@@ -57,10 +84,28 @@ struct AboutView: View {
                         Label("Feedback senden", systemImage: "envelope.fill")
                     }
                 } footer: {
-                    Text("Barte ist kostenlos, ohne Werbung und ohne Konto. Deine Gruppen liegen nur in deiner iCloud und bei den Personen, mit denen du sie teilst.\n\nVersion \(Self.version)")
+                    Text("Barte ist kostenlos und ohne Werbung. Deine Gruppen sehen nur die Personen, die du einlädst.\n\nVersion \(Self.version)")
                 }
             }
             .scrollDismissesKeyboard(.interactively)
+            .confirmationDialog("Abmelden?", isPresented: $confirmsSignOut, titleVisibility: .visible) {
+                Button("Abmelden", role: .destructive) {
+                    dismiss()
+                    Task { await app.signOut() }
+                }
+            } message: {
+                Text("Deine Gruppen bleiben erhalten. Melde dich wieder mit deiner Apple-ID an, um sie zu sehen.")
+            }
+            .confirmationDialog("Konto endgültig löschen?", isPresented: $confirmsDeletion, titleVisibility: .visible) {
+                Button("Konto löschen", role: .destructive) { Task { await deleteAccount() } }
+            } message: {
+                Text("Du bestätigst gleich mit deiner Apple-ID. Danach wird dein Konto sofort gelöscht und Barte von deiner Apple-ID getrennt. Gruppen, in denen sonst niemand Barte nutzt, werden mitgelöscht. In geteilten Gruppen bleibt dein Name bei den Ausgaben stehen. Das lässt sich nicht rückgängig machen.")
+            }
+            .alert("Konto nicht gelöscht", isPresented: .init(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
+            }
             .navigationTitle("Über Barte")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -68,6 +113,19 @@ struct AboutView: View {
                     Button("Fertig", role: .close) { dismiss() }
                 }
             }
+        }
+    }
+
+    private func deleteAccount() async {
+        isDeleting = true
+        defer { isDeleting = false }
+        do {
+            try await app.deleteAccount()
+            dismiss()
+        } catch AppleReauthentication.Failure.canceled {
+            return
+        } catch {
+            errorMessage = BarteError.from(error).errorDescription
         }
     }
 

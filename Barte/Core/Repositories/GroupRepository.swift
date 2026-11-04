@@ -1,204 +1,268 @@
-@preconcurrency import CloudKit
-@preconcurrency import CoreData
 import Foundation
+import Supabase
 
-/// Reads and writes groups, members and expenses. Hands out value snapshots so views never touch
-/// managed objects; every write saves right away and CloudKit syncs it in the background.
-@MainActor
-final class GroupRepository {
-    enum Failure: LocalizedError {
-        case memberInvolved
-        var errorDescription: String? {
-            "Diese Person kommt in Ausgaben vor und kann nicht entfernt werden."
-        }
-    }
+/// Groups, their people and expenses. Reads go through Row Level Security, writes through SQL functions.
+protocol GroupRepository: Sendable {
+    func fetchGroups() async throws -> [SplitGroup]
 
-    let persistence: Persistence
-    private var context: NSManagedObjectContext { persistence.context }
+    func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID
+    func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws
+    func deleteGroup(_ id: UUID) async throws
+    func leaveGroup(_ id: UUID) async throws
 
-    init(persistence: Persistence) {
-        self.persistence = persistence
-    }
+    func addMember(named name: String, to groupID: UUID) async throws -> UUID
+    func renameMember(_ id: UUID, to name: String) async throws
+    func removeMember(_ id: UUID) async throws
+    /// Makes this person the given member instead of their current one.
+    func claimMember(_ id: UUID) async throws
+
+    func save(_ expense: Expense, in groupID: UUID) async throws
+    func deleteExpense(_ id: UUID) async throws
+
+    func previewInvite(code: String) async throws -> InvitePreview
+    /// Joins as an unclaimed member, or as a new person when `memberID` is nil.
+    func joinGroup(code: String, memberID: UUID?, name: String?) async throws -> UUID
+
+    func deleteAccount(appleAuthorizationCode: String) async throws
+
+    /// Signals whenever something in this person's groups changes, also from other people.
+    func changes() -> AsyncStream<Void>
+}
+
+struct SupabaseGroupRepository: GroupRepository {
+    let client: SupabaseClient
 
     // MARK: Reading
 
-    func fetchGroups() -> [SplitGroup] {
-        let request = GroupEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \GroupEntity.createdAt, ascending: false)]
-        let entities = (try? context.fetch(request)) ?? []
-        let shared = Set(persistence.shares(for: entities.map(\.objectID)).keys)
-        return entities.compactMap { entity in
-            guard var group = Self.snapshot(of: entity) else { return nil }
-            if persistence.isInSharedStore(entity) {
-                group.sharing = .participant
-            } else if shared.contains(entity.objectID) {
-                group.sharing = .owner
-            }
-            return group
+    private struct GroupRow: Decodable {
+        let id: UUID
+        let name: String
+        let currency: String
+        let color: Int
+        let inviteCode: String
+        let createdBy: UUID?
+        let createdAt: Date
+        let members: [MemberRow]
+        let expenses: [ExpenseRow]
+
+        enum CodingKeys: String, CodingKey {
+            case id, name, currency, color, members, expenses
+            case inviteCode = "invite_code"
+            case createdBy = "created_by"
+            case createdAt = "created_at"
         }
     }
 
-    private static func snapshot(of entity: GroupEntity) -> SplitGroup? {
-        guard let id = entity.id else { return nil }
-        let memberEntities = (entity.members as? Set<MemberEntity> ?? [])
-            .sorted { ($0.createdAt ?? .distantPast, $0.id?.uuidString ?? "") < ($1.createdAt ?? .distantPast, $1.id?.uuidString ?? "") }
-        let members = memberEntities.compactMap { member -> Member? in
-            guard let id = member.id else { return nil }
-            return Member(id: id, name: member.name ?? "")
-        }
-        let memberIDs = Set(members.map(\.id))
-        // Records can arrive from CloudKit in any order; skip expenses whose people haven't synced yet.
-        let expenses = (entity.expenses as? Set<ExpenseEntity> ?? []).compactMap { expense -> Expense? in
-            guard let id = expense.id, let payer = expense.payer?.id, memberIDs.contains(payer) else { return nil }
-            let participants = (expense.participants as? Set<MemberEntity> ?? []).compactMap(\.id).filter(memberIDs.contains)
-            guard !participants.isEmpty else { return nil }
-            return Expense(
-                id: id,
-                title: expense.title ?? "",
-                amountCents: Int(expense.amountCents),
-                date: expense.date ?? expense.createdAt ?? .now,
-                payerID: payer,
-                participantIDs: participants.sorted { $0.uuidString < $1.uuidString },
-                isSettlement: expense.isSettlement
-            )
-        }
-        .sorted { ($0.date, $0.id.uuidString) > ($1.date, $1.id.uuidString) }
+    private struct MemberRow: Decodable {
+        let id: UUID
+        let name: String
+        let userID: UUID?
+        let createdAt: Date
 
+        enum CodingKeys: String, CodingKey {
+            case id, name
+            case userID = "user_id"
+            case createdAt = "created_at"
+        }
+    }
+
+    private struct ExpenseRow: Decodable {
+        let id: UUID
+        let title: String
+        let amountCents: Int
+        let spentOn: String
+        let payerID: UUID
+        let participantIDs: [UUID]
+        let isSettlement: Bool
+        let createdAt: Date
+
+        enum CodingKeys: String, CodingKey {
+            case id, title
+            case amountCents = "amount_cents"
+            case spentOn = "spent_on"
+            case payerID = "payer_id"
+            case participantIDs = "participant_ids"
+            case isSettlement = "is_settlement"
+            case createdAt = "created_at"
+        }
+    }
+
+    func fetchGroups() async throws -> [SplitGroup] {
+        let rows: [GroupRow] = try await client.from("groups")
+            .select("id, name, currency, color, invite_code, created_by, created_at, members(id, name, user_id, created_at), expenses(id, title, amount_cents, spent_on, payer_id, participant_ids, is_settlement, created_at)")
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+        return rows.map(Self.group(from:))
+    }
+
+    private static func group(from row: GroupRow) -> SplitGroup {
+        let members = row.members
+            .sorted { ($0.createdAt, $0.id.uuidString) < ($1.createdAt, $1.id.uuidString) }
+            .map { Member(id: $0.id, name: $0.name, userID: $0.userID) }
+        let expenses = row.expenses
+            .map { (row: $0, day: LocalDay.date(from: $0.spentOn) ?? $0.createdAt) }
+            .sorted { ($0.day, $0.row.createdAt) > ($1.day, $1.row.createdAt) }
+            .map { item in
+                Expense(
+                    id: item.row.id,
+                    title: item.row.title,
+                    amountCents: item.row.amountCents,
+                    date: item.day,
+                    payerID: item.row.payerID,
+                    participantIDs: item.row.participantIDs,
+                    isSettlement: item.row.isSettlement
+                )
+            }
         return SplitGroup(
-            id: id,
-            name: entity.name ?? "",
-            currency: entity.currencyCode ?? "EUR",
-            color: CardColor(rawValue: Int(entity.colorIndex)) ?? .blue,
-            createdAt: entity.createdAt ?? .now,
+            id: row.id,
+            name: row.name,
+            currency: row.currency,
+            color: CardColor(rawValue: row.color) ?? .blue,
+            createdAt: row.createdAt,
             members: members,
-            expenses: expenses
+            expenses: expenses,
+            inviteCode: row.inviteCode,
+            createdBy: row.createdBy
         )
     }
 
     // MARK: Groups
 
-    /// Creates a group. The first name is "me" on this device.
-    @discardableResult
-    func createGroup(name: String, currency: String, color: CardColor, memberNames: [String]) -> UUID {
-        let group = GroupEntity(context: context)
-        if let store = persistence.privateStore { context.assign(group, to: store) }
-        let id = UUID()
-        group.id = id
-        group.name = name.trimmingCharacters(in: .whitespaces)
-        group.currencyCode = currency
-        group.colorIndex = Int16(color.rawValue)
-        group.createdAt = .now
-        var first: UUID?
-        for (offset, memberName) in memberNames.enumerated() {
-            let memberID = insertMember(named: memberName, into: group, order: offset)
-            if first == nil { first = memberID }
+    func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID {
+        struct Params: Encodable {
+            let p_name: String
+            let p_currency: String
+            let p_color: Int
+            let p_my_name: String
+            let p_other_names: [String]
         }
-        persistence.save()
-        Identity.setMe(first, in: id)
-        return id
+        return try await client.rpc("create_group", params: Params(
+            p_name: name, p_currency: currency, p_color: color.rawValue, p_my_name: myName, p_other_names: otherNames
+        )).execute().value
     }
 
-    func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) {
-        guard let group = groupEntity(id) else { return }
-        group.name = name.trimmingCharacters(in: .whitespaces)
-        group.currencyCode = currency
-        group.colorIndex = Int16(color.rawValue)
-        persistence.save()
-    }
-
-    /// Deletes a group this person owns, or leaves one that was shared with them.
-    func deleteGroup(_ id: UUID) {
-        guard let group = groupEntity(id) else { return }
-        if persistence.isInSharedStore(group) {
-            persistence.leave(group)
-        } else {
-            context.delete(group)
-            persistence.save()
+    func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws {
+        struct Params: Encodable {
+            let p_group_id: UUID
+            let p_name: String
+            let p_currency: String
+            let p_color: Int
         }
-        Identity.setMe(nil, in: id)
+        try await client.rpc("update_group", params: Params(p_group_id: id, p_name: name, p_currency: currency, p_color: color.rawValue)).execute()
     }
 
-    func share(for groupID: UUID) async throws -> CKShare? {
-        guard let group = groupEntity(groupID) else { return nil }
-        return try await persistence.share(for: group)
+    func deleteGroup(_ id: UUID) async throws {
+        try await client.rpc("delete_group", params: ["p_group_id": id]).execute()
+    }
+
+    func leaveGroup(_ id: UUID) async throws {
+        try await client.rpc("leave_group", params: ["p_group_id": id]).execute()
     }
 
     // MARK: Members
 
-    @discardableResult
-    func addMember(named name: String, to groupID: UUID) -> UUID? {
-        guard let group = groupEntity(groupID) else { return nil }
-        let id = insertMember(named: name, into: group, order: group.members?.count ?? 0)
-        persistence.save()
-        return id
+    func addMember(named name: String, to groupID: UUID) async throws -> UUID {
+        struct Params: Encodable { let p_group_id: UUID; let p_name: String }
+        return try await client.rpc("add_member", params: Params(p_group_id: groupID, p_name: name)).execute().value
     }
 
-    func renameMember(_ id: UUID, to name: String) {
-        guard let member = entity(MemberEntity.self, id: id) else { return }
-        member.name = name.trimmingCharacters(in: .whitespaces)
-        persistence.save()
+    func renameMember(_ id: UUID, to name: String) async throws {
+        struct Params: Encodable { let p_member_id: UUID; let p_name: String }
+        try await client.rpc("rename_member", params: Params(p_member_id: id, p_name: name)).execute()
     }
 
-    func removeMember(_ id: UUID) throws {
-        guard let member = entity(MemberEntity.self, id: id) else { return }
-        guard (member.paidExpenses?.count ?? 0) == 0, (member.sharedExpenses?.count ?? 0) == 0 else {
-            throw Failure.memberInvolved
-        }
-        context.delete(member)
-        persistence.save()
+    func removeMember(_ id: UUID) async throws {
+        try await client.rpc("remove_member", params: ["p_member_id": id]).execute()
     }
 
-    private func insertMember(named name: String, into group: GroupEntity, order: Int) -> UUID {
-        let member = MemberEntity(context: context)
-        if let store = group.objectID.persistentStore { context.assign(member, to: store) }
-        let id = UUID()
-        member.id = id
-        member.name = name.trimmingCharacters(in: .whitespaces)
-        // Spaced by milliseconds so members created together keep their order.
-        member.createdAt = Date.now.addingTimeInterval(Double(order) / 1000)
-        member.group = group
-        return id
+    func claimMember(_ id: UUID) async throws {
+        try await client.rpc("claim_member", params: ["p_member_id": id]).execute()
     }
 
     // MARK: Expenses
 
-    /// Inserts or updates an expense.
-    func save(_ expense: Expense, in groupID: UUID) {
-        guard let group = groupEntity(groupID) else { return }
-        let entity: ExpenseEntity
-        if let existing = self.entity(ExpenseEntity.self, id: expense.id) {
-            entity = existing
-        } else {
-            entity = ExpenseEntity(context: context)
-            if let store = group.objectID.persistentStore { context.assign(entity, to: store) }
-            entity.id = expense.id
-            entity.createdAt = .now
-            entity.group = group
+    func save(_ expense: Expense, in groupID: UUID) async throws {
+        struct Params: Encodable {
+            let p_id: UUID
+            let p_group_id: UUID
+            let p_title: String
+            let p_amount_cents: Int
+            let p_spent_on: String
+            let p_payer_id: UUID
+            let p_participant_ids: [UUID]
+            let p_is_settlement: Bool
         }
-        let members = (group.members as? Set<MemberEntity>) ?? []
-        entity.title = expense.title.trimmingCharacters(in: .whitespaces)
-        entity.amountCents = Int64(expense.amountCents)
-        entity.date = expense.date
-        entity.isSettlement = expense.isSettlement
-        entity.payer = members.first { $0.id == expense.payerID }
-        entity.participants = NSSet(set: members.filter { member in member.id.map(expense.participantIDs.contains) ?? false })
-        persistence.save()
+        try await client.rpc("save_expense", params: Params(
+            p_id: expense.id,
+            p_group_id: groupID,
+            p_title: expense.title,
+            p_amount_cents: expense.amountCents,
+            p_spent_on: LocalDay.string(from: expense.date),
+            p_payer_id: expense.payerID,
+            p_participant_ids: expense.participantIDs,
+            p_is_settlement: expense.isSettlement
+        )).execute()
     }
 
-    func deleteExpense(_ id: UUID) {
-        guard let expense = entity(ExpenseEntity.self, id: id) else { return }
-        context.delete(expense)
-        persistence.save()
+    func deleteExpense(_ id: UUID) async throws {
+        try await client.rpc("delete_expense", params: ["p_id": id]).execute()
     }
 
-    // MARK: Lookup
+    // MARK: Joining
 
-    private func groupEntity(_ id: UUID) -> GroupEntity? { entity(GroupEntity.self, id: id) }
+    func previewInvite(code: String) async throws -> InvitePreview {
+        try await client.rpc("preview_invite", params: ["p_code": code]).execute().value
+    }
 
-    private func entity<T: NSManagedObject>(_ type: T.Type, id: UUID) -> T? {
-        let request = NSFetchRequest<T>(entityName: String(describing: type))
-        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        request.fetchLimit = 1
-        return try? context.fetch(request).first
+    func joinGroup(code: String, memberID: UUID?, name: String?) async throws -> UUID {
+        struct Params: Encodable {
+            let p_code: String
+            let p_member_id: Nullable<UUID>
+            let p_name: Nullable<String>
+        }
+        return try await client.rpc("join_group", params: Params(p_code: code, p_member_id: Nullable(memberID), p_name: Nullable(name))).execute().value
+    }
+
+    // MARK: Account
+
+    func deleteAccount(appleAuthorizationCode: String) async throws {
+        do {
+            try await client.functions.invoke("apple-revoke", options: .init(body: ["authorization_code": appleAuthorizationCode]))
+        } catch {
+            throw BarteError.appleRevocationFailed
+        }
+        try await client.rpc("delete_my_account").execute()
+        try? await client.auth.signOut(scope: .local)
+    }
+
+    // MARK: Realtime
+
+    /// Row Level Security decides which changes reach this person, so no filter is needed.
+    func changes() -> AsyncStream<Void> {
+        let client = client
+        return AsyncStream { continuation in
+            let task = Task {
+                let channel = client.channel("barte-\(UUID().uuidString)")
+                let streams = ["groups", "members", "expenses"].map { table in
+                    channel.postgresChange(AnyAction.self, schema: "public", table: table)
+                }
+                do {
+                    try await channel.subscribeWithError()
+                } catch {
+                    continuation.finish()
+                    return
+                }
+                await withTaskGroup(of: Void.self) { group in
+                    for stream in streams {
+                        group.addTask {
+                            for await _ in stream { continuation.yield() }
+                        }
+                    }
+                }
+                await client.removeChannel(channel)
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
     }
 }
