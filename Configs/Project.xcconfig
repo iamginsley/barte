@@ -1,0 +1,8 @@
+// Shared build settings. Contains no secrets and is committed.
+// Barte has no backend keys: data lives in each person's iCloud (CloudKit).
+
+DEVELOPMENT_TEAM = 2567P974L9
+CODE_SIGN_STYLE = Automatic
+
+// Optional local overrides (git-ignored).
+#include? "../Config.xcconfig"

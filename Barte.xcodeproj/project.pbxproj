@@ -1,0 +1,673 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		037EC181910688197DAF8A3B /* GroupEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B193C6E434151831365ED1 /* GroupEditorModel.swift */; };
+		065F3A7B790EBCA87A4807B6 /* Identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30B261E09D5DC02E078D7CA /* Identity.swift */; };
+		0735CBAABE9F191B7D6A3981 /* ExpenseEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */; };
+		0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093E87CAC05D1A8D71E3898C /* BarteLogo.swift */; };
+		13A24944D862B8AFD90BFB44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 396C129AE54D48D707EBC0F2 /* Assets.xcassets */; };
+		1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */; };
+		2C13836BE12234DF42062517 /* ExpenseIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */; };
+		2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8331077E0535884A22CB08F /* AppDelegate.swift */; };
+		414CF9027973560C983698C4 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
+		5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC77A98173AD0934686C779 /* GroupsView.swift */; };
+		5E188D614CA05A69E6EB9254 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA27A8483504AC612812848 /* GroupCard.swift */; };
+		5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED078948C81E4D89678841 /* GroupDetailView.swift */; };
+		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
+		8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */; };
+		8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72919225A511CF3BEABFF20E /* SplitGroup.swift */; };
+		8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = ADACD81F8F846A944C9F702F /* AppIcon.icon */; };
+		92A934B3595DFB1AD27DB3D0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C73A46C5A8D2E5FABA0042 /* Persistence.swift */; };
+		A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455D96187B57EDABDBC2F55 /* Theme.swift */; };
+		B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EADB85144A27C17B3608AA /* SettleUpSheet.swift */; };
+		D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF4BE01897FD753519138AF /* WhoAmISheet.swift */; };
+		D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E717002048274CB18A03413 /* MemberAvatar.swift */; };
+		D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909B49D515E86B76403FAB2 /* LedgerTests.swift */; };
+		DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CC263F664096A440BB76B /* DemoData.swift */; };
+		DFA44D0C06B9438801CCDDF3 /* SharingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9B64A3CFC6B159A19E2485 /* SharingPresenter.swift */; };
+		E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */; };
+		F05612C834A89957B497627C /* Barte.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7843A0283949E40C1067C64 /* Barte.xcdatamodeld */; };
+		F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE077F805074D7BC5AC052 /* AppModel.swift */; };
+		F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */; };
+		FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B2BBE6996A48CBCED9D623 /* BarteApp.swift */; };
+		FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		24EC44D03D49E2939D4D3D9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B4EDB1E9792DC38F3612D7C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 59901E7B134124FDFF21AE95;
+			remoteInfo = Barte;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		093E87CAC05D1A8D71E3898C /* BarteLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteLogo.swift; sourceTree = "<group>"; };
+		0BA27A8483504AC612812848 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
+		0E717002048274CB18A03413 /* MemberAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAvatar.swift; sourceTree = "<group>"; };
+		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
+		2CEE077F805074D7BC5AC052 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		3909B49D515E86B76403FAB2 /* LedgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerTests.swift; sourceTree = "<group>"; };
+		396C129AE54D48D707EBC0F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3D1EFB70DFDDC97A1DFC2261 /* Barte.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Barte.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3EF4BE01897FD753519138AF /* WhoAmISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhoAmISheet.swift; sourceTree = "<group>"; };
+		488AE27DE478B2716163DE9B /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorModel.swift; sourceTree = "<group>"; };
+		4D11A273440D061376F25DBA /* Barte.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Barte.xcdatamodel; sourceTree = "<group>"; };
+		51EADB85144A27C17B3608AA /* SettleUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpSheet.swift; sourceTree = "<group>"; };
+		6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseIcon.swift; sourceTree = "<group>"; };
+		72919225A511CF3BEABFF20E /* SplitGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitGroup.swift; sourceTree = "<group>"; };
+		79B193C6E434151831365ED1 /* GroupEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorModel.swift; sourceTree = "<group>"; };
+		7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRepository.swift; sourceTree = "<group>"; };
+		8455D96187B57EDABDBC2F55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		8B519AB4E206BA055D174A5F /* BarteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BarteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		92B2BBE6996A48CBCED9D623 /* BarteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteApp.swift; sourceTree = "<group>"; };
+		A5E327F2799EF74336CCF6DA /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
+		A8C73A46C5A8D2E5FABA0042 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		ADACD81F8F846A944C9F702F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		B8331077E0535884A22CB08F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorSheet.swift; sourceTree = "<group>"; };
+		BC1CC263F664096A440BB76B /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
+		C30B261E09D5DC02E078D7CA /* Identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identity.swift; sourceTree = "<group>"; };
+		C9BBB3D0D6AF2AB0E23A21B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CA9B64A3CFC6B159A19E2485 /* SharingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingPresenter.swift; sourceTree = "<group>"; };
+		DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ledger.swift; sourceTree = "<group>"; };
+		DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorSheet.swift; sourceTree = "<group>"; };
+		DEED078948C81E4D89678841 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
+		FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barte.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		01D3E7E7C3E364AD3354FC7E /* Barte */ = {
+			isa = PBXGroup;
+			children = (
+				879CC2F85B505E4CC5B02A94 /* App */,
+				CC98FB0DFBE3975E9CC837F3 /* Core */,
+				427604CF988E8BA2DC2E361C /* Design */,
+				1D8F73BEBB766A36FC4B161A /* Features */,
+				2735E497F3D9A88A46778DF8 /* Resources */,
+			);
+			path = Barte;
+			sourceTree = "<group>";
+		};
+		0899F401404ABB88525102B1 /* GroupDetail */ = {
+			isa = PBXGroup;
+			children = (
+				DEED078948C81E4D89678841 /* GroupDetailView.swift */,
+				3EF4BE01897FD753519138AF /* WhoAmISheet.swift */,
+			);
+			path = GroupDetail;
+			sourceTree = "<group>";
+		};
+		1D8F73BEBB766A36FC4B161A /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				EB0687EFBA7AC7B0F657B4EC /* About */,
+				47C0A9E6A150F260BEED9C18 /* Expense */,
+				0899F401404ABB88525102B1 /* GroupDetail */,
+				6580437194E7EBDE85DF391A /* Groups */,
+				3866369FD54EB6E16F50C0E5 /* SettleUp */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		2735E497F3D9A88A46778DF8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C7843A0283949E40C1067C64 /* Barte.xcdatamodeld */,
+				ADACD81F8F846A944C9F702F /* AppIcon.icon */,
+				396C129AE54D48D707EBC0F2 /* Assets.xcassets */,
+				FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */,
+				C9BBB3D0D6AF2AB0E23A21B4 /* Info.plist */,
+				3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		377EE21823B8826BA5F42BCD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3D1EFB70DFDDC97A1DFC2261 /* Barte.app */,
+				8B519AB4E206BA055D174A5F /* BarteTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3866369FD54EB6E16F50C0E5 /* SettleUp */ = {
+			isa = PBXGroup;
+			children = (
+				51EADB85144A27C17B3608AA /* SettleUpSheet.swift */,
+			);
+			path = SettleUp;
+			sourceTree = "<group>";
+		};
+		427604CF988E8BA2DC2E361C /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				093E87CAC05D1A8D71E3898C /* BarteLogo.swift */,
+				0BA27A8483504AC612812848 /* GroupCard.swift */,
+				0E717002048274CB18A03413 /* MemberAvatar.swift */,
+				8455D96187B57EDABDBC2F55 /* Theme.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		47C0A9E6A150F260BEED9C18 /* Expense */ = {
+			isa = PBXGroup;
+			children = (
+				4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */,
+				BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */,
+			);
+			path = Expense;
+			sourceTree = "<group>";
+		};
+		6426DDA34EE512798A020B53 = {
+			isa = PBXGroup;
+			children = (
+				01D3E7E7C3E364AD3354FC7E /* Barte */,
+				E807992DF7C4784E726B71AD /* BarteTests */,
+				745881004FADA93E8E373646 /* Configs */,
+				377EE21823B8826BA5F42BCD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6580437194E7EBDE85DF391A /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				79B193C6E434151831365ED1 /* GroupEditorModel.swift */,
+				DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */,
+				2AC77A98173AD0934686C779 /* GroupsView.swift */,
+			);
+			path = Groups;
+			sourceTree = "<group>";
+		};
+		745881004FADA93E8E373646 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				488AE27DE478B2716163DE9B /* Project.xcconfig */,
+			);
+			path = Configs;
+			sourceTree = "<group>";
+		};
+		879CC2F85B505E4CC5B02A94 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B8331077E0535884A22CB08F /* AppDelegate.swift */,
+				2CEE077F805074D7BC5AC052 /* AppModel.swift */,
+				92B2BBE6996A48CBCED9D623 /* BarteApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AB1D5A3A5648F17C9E143F94 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */,
+				DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */,
+				A5E327F2799EF74336CCF6DA /* Money.swift */,
+				72919225A511CF3BEABFF20E /* SplitGroup.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AD1CBB367888F1B9DAD500F7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C30B261E09D5DC02E078D7CA /* Identity.swift */,
+				A8C73A46C5A8D2E5FABA0042 /* Persistence.swift */,
+				CA9B64A3CFC6B159A19E2485 /* SharingPresenter.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		CC98FB0DFBE3975E9CC837F3 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				E2136EA1BEE6D780D7C983B5 /* Demo */,
+				AB1D5A3A5648F17C9E143F94 /* Models */,
+				E72E94727C00F33BD1995384 /* Repositories */,
+				AD1CBB367888F1B9DAD500F7 /* Services */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E2136EA1BEE6D780D7C983B5 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				BC1CC263F664096A440BB76B /* DemoData.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		E72E94727C00F33BD1995384 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		E807992DF7C4784E726B71AD /* BarteTests */ = {
+			isa = PBXGroup;
+			children = (
+				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
+			);
+			path = BarteTests;
+			sourceTree = "<group>";
+		};
+		EB0687EFBA7AC7B0F657B4EC /* About */ = {
+			isa = PBXGroup;
+			children = (
+				B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		59901E7B134124FDFF21AE95 /* Barte */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFB42C1A4DFCC3EDA0AD593A /* Build configuration list for PBXNativeTarget "Barte" */;
+			buildPhases = (
+				E966AB2BA93390F54A6CEDDD /* Sources */,
+				C48AB1656C60BE5E9421319E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Barte;
+			packageProductDependencies = (
+			);
+			productName = Barte;
+			productReference = 3D1EFB70DFDDC97A1DFC2261 /* Barte.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9EC1FAF07B33E765F5112DE /* BarteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E43A94ABD0E5CCA5110A538E /* Build configuration list for PBXNativeTarget "BarteTests" */;
+			buildPhases = (
+				F9137C0B72FFFC86BA6ACA71 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				73550E7B33534B7BD70885E6 /* PBXTargetDependency */,
+			);
+			name = BarteTests;
+			packageProductDependencies = (
+			);
+			productName = BarteTests;
+			productReference = 8B519AB4E206BA055D174A5F /* BarteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B4EDB1E9792DC38F3612D7C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					59901E7B134124FDFF21AE95 = {
+						DevelopmentTeam = 2567P974L9;
+						ProvisioningStyle = Automatic;
+					};
+					A9EC1FAF07B33E765F5112DE = {
+						DevelopmentTeam = 2567P974L9;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 12AE4B5FE572B8C7D18E0503 /* Build configuration list for PBXProject "Barte" */;
+			developmentRegion = de;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				de,
+			);
+			mainGroup = 6426DDA34EE512798A020B53;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 377EE21823B8826BA5F42BCD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				59901E7B134124FDFF21AE95 /* Barte */,
+				A9EC1FAF07B33E765F5112DE /* BarteTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C48AB1656C60BE5E9421319E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */,
+				13A24944D862B8AFD90BFB44 /* Assets.xcassets in Resources */,
+				7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E966AB2BA93390F54A6CEDDD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */,
+				2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */,
+				F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */,
+				F05612C834A89957B497627C /* Barte.xcdatamodeld in Sources */,
+				FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */,
+				0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */,
+				DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */,
+				E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */,
+				0735CBAABE9F191B7D6A3981 /* ExpenseEditorSheet.swift in Sources */,
+				2C13836BE12234DF42062517 /* ExpenseIcon.swift in Sources */,
+				5E188D614CA05A69E6EB9254 /* GroupCard.swift in Sources */,
+				5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */,
+				037EC181910688197DAF8A3B /* GroupEditorModel.swift in Sources */,
+				8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */,
+				1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */,
+				5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */,
+				065F3A7B790EBCA87A4807B6 /* Identity.swift in Sources */,
+				F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */,
+				D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */,
+				414CF9027973560C983698C4 /* Money.swift in Sources */,
+				92A934B3595DFB1AD27DB3D0 /* Persistence.swift in Sources */,
+				B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */,
+				DFA44D0C06B9438801CCDDF3 /* SharingPresenter.swift in Sources */,
+				8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */,
+				A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */,
+				D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9137C0B72FFFC86BA6ACA71 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		73550E7B33534B7BD70885E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 59901E7B134124FDFF21AE95 /* Barte */;
+			targetProxy = 24EC44D03D49E2939D4D3D9C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		311E9DE2E0671C530CB0ECC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.iamginsley.barte.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Barte.app/Barte";
+			};
+			name = Debug;
+		};
+		4440A8F1213FB42468102349 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 488AE27DE478B2716163DE9B /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		78DD61400597D9186767205A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 488AE27DE478B2716163DE9B /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		8379332E32A5D6B6365A2D47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Barte/Resources/Barte.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Barte/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iamginsley.barte;
+				PRODUCT_NAME = Barte;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		EB49A91451C51D4103F79AA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.iamginsley.barte.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Barte.app/Barte";
+			};
+			name = Release;
+		};
+		F375ECE0A7B7F5FBA305CEEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Barte/Resources/Barte.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Barte/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iamginsley.barte;
+				PRODUCT_NAME = Barte;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		12AE4B5FE572B8C7D18E0503 /* Build configuration list for PBXProject "Barte" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4440A8F1213FB42468102349 /* Debug */,
+				78DD61400597D9186767205A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CFB42C1A4DFCC3EDA0AD593A /* Build configuration list for PBXNativeTarget "Barte" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8379332E32A5D6B6365A2D47 /* Debug */,
+				F375ECE0A7B7F5FBA305CEEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E43A94ABD0E5CCA5110A538E /* Build configuration list for PBXNativeTarget "BarteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				311E9DE2E0671C530CB0ECC0 /* Debug */,
+				EB49A91451C51D4103F79AA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C7843A0283949E40C1067C64 /* Barte.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4D11A273440D061376F25DBA /* Barte.xcdatamodel */,
+			);
+			currentVersion = 4D11A273440D061376F25DBA /* Barte.xcdatamodel */;
+			path = Barte.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = B4EDB1E9792DC38F3612D7C0 /* Project object */;
+}

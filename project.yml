@@ -1,0 +1,89 @@
+name: Barte
+options:
+  bundleIdPrefix: com.iamginsley
+  deploymentTarget:
+    iOS: "26.0"
+  developmentLanguage: de
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+configFiles:
+  Debug: Configs/Project.xcconfig
+  Release: Configs/Project.xcconfig
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+
+targets:
+  Barte:
+    type: application
+    platform: iOS
+    sources:
+      - path: Barte
+    entitlements:
+      path: Barte/Resources/Barte.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.iamginsley.barte]
+        com.apple.developer.icloud-services: [CloudKit]
+        aps-environment: development
+    info:
+      path: Barte/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: Barte
+        CFBundleDevelopmentRegion: de
+        CFBundleLocalizations: [de]
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        LSApplicationCategoryType: public.app-category.finance
+        ITSAppUsesNonExemptEncryption: false
+        CKSharingSupported: true
+        UIBackgroundModes: [remote-notification]
+        UILaunchScreen:
+          UIColorName: Surface
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        CloudKitContainer: iCloud.com.iamginsley.barte
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.iamginsley.barte
+        PRODUCT_NAME: Barte
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+
+  BarteTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: BarteTests
+    dependencies:
+      - target: Barte
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.iamginsley.barte.tests
+
+schemes:
+  Barte:
+    build:
+      targets:
+        Barte: all
+        BarteTests: [test]
+    test:
+      targets:
+        - BarteTests
+      gatherCoverageData: false
+    run:
+      config: Debug
+    archive:
+      config: Release
