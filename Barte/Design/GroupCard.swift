@@ -5,6 +5,8 @@ import SwiftUI
 struct GroupCard: View {
     let group: SplitGroup
     let me: UUID?
+    /// Off for previews of groups I'm not in yet (joining).
+    var showsStatus = true
 
     var body: some View {
         let balance = group.balance(of: me)
@@ -14,21 +16,23 @@ struct GroupCard: View {
                     Text(group.name)
                         .font(.headline)
                         .lineLimit(1)
-                    if group.sharing != .personal {
+                    if group.isShared {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                             .opacity(0.8)
                     }
                 }
                 Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 1) {
-                    Text(group.expenses.isEmpty ? "Noch keine Ausgaben" : Self.statusText(balance: balance, me: me))
-                        .font(.caption.weight(.medium))
-                        .opacity(0.85)
-                    if balance != 0 {
-                        Text(Money.format(abs(balance), currency: group.currency))
-                            .font(.cardAmount)
-                            .contentTransition(.numericText())
+                if showsStatus {
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text(group.expenses.isEmpty ? "Noch keine Ausgaben" : Self.statusText(balance: balance, me: me))
+                            .font(.caption.weight(.medium))
+                            .opacity(0.85)
+                        if balance != 0 {
+                            Text(Money.format(abs(balance), currency: group.currency))
+                                .font(.cardAmount)
+                                .contentTransition(.numericText())
+                        }
                     }
                 }
             }
@@ -67,7 +71,7 @@ struct GroupCard: View {
             parts.append("\(statusText(balance: balance, me: me)) \(Money.format(abs(balance), currency: group.currency))")
         }
         parts.append("\(group.members.count) Personen")
-        if group.sharing != .personal { parts.append("geteilt") }
+        if group.isShared { parts.append("geteilt") }
         return parts.joined(separator: ", ")
     }
 }

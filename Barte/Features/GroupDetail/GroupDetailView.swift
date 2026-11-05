@@ -13,7 +13,7 @@ struct GroupDetailView: View {
     @State private var showsWhoAmI = false
     @State private var confirmsDelete = false
     @State private var settlementToDelete: Expense?
-    @State private var isPreparingShare = false
+    @State private var showsInvite = false
     @State private var alertMessage: String?
     @State private var didAppear = false
 
@@ -58,7 +58,7 @@ struct GroupDetailView: View {
                             .tint(Color.ink)
                             .swipeActions {
                                 Button("Löschen", systemImage: "trash", role: .destructive) {
-                                    model.repository.deleteExpense(expense.id)
+                                    Task { await perform { try await $0.deleteExpense(expense.id) } }
                                 }
                             }
                         }
@@ -88,26 +88,26 @@ struct GroupDetailView: View {
         .sheet(isPresented: $showsSettle) { SettleUpSheet(groupID: group.id) }
         .sheet(isPresented: $showsEdit) { GroupEditorSheet(group: group) { _ in } }
         .sheet(isPresented: $showsWhoAmI) { WhoAmISheet(group: group) }
+        .sheet(isPresented: $showsInvite) { InviteSheet(groupID: group.id) }
         .confirmationDialog(
-            group.sharing == .participant ? "Gruppe verlassen?" : "Gruppe löschen?",
+            canDelete(group) ? "Gruppe löschen?" : "Gruppe verlassen?",
             isPresented: $confirmsDelete,
             titleVisibility: .visible
         ) {
-            Button(group.sharing == .participant ? "Verlassen" : "Löschen", role: .destructive) {
-                dismiss()
-                model.repository.deleteGroup(group.id)
+            Button(canDelete(group) ? "Löschen" : "Verlassen", role: .destructive) {
+                Task { await removeGroup(group) }
             }
         } message: {
-            Text(Self.deleteMessage(group))
+            Text(deleteMessage(group))
         }
         .confirmationDialog("Ausgleich löschen?", isPresented: .init(
             get: { settlementToDelete != nil }, set: { if !$0 { settlementToDelete = nil } }
         ), titleVisibility: .visible, presenting: settlementToDelete) { settlement in
-            Button("Löschen", role: .destructive) { model.repository.deleteExpense(settlement.id) }
+            Button("Löschen", role: .destructive) { Task { await perform { try await $0.deleteExpense(settlement.id) } } }
         } message: { settlement in
             Text("\(group.name(of: settlement.payerID, me: me)) → \(group.name(of: settlement.participantIDs.first ?? settlement.payerID, me: me)), \(Money.format(settlement.amountCents, currency: group.currency)). Die Salden werden neu berechnet.")
         }
-        .alert("Hinweis", isPresented: .init(get: { alertMessage != nil }, set: { if !$0 { alertMessage = nil } })) {
+        .alert("Das hat nicht geklappt", isPresented: .init(get: { alertMessage != nil }, set: { if !$0 { alertMessage = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(alertMessage ?? "")
@@ -147,24 +147,15 @@ struct GroupDetailView: View {
     @ToolbarContentBuilder
     private func toolbar(_ group: SplitGroup) -> some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                Task { await share(group) }
-            } label: {
-                if isPreparingShare {
-                    ProgressView()
-                } else {
-                    Label("Teilen", systemImage: group.sharing == .personal ? "person.crop.circle.badge.plus" : "person.2.fill")
-                }
-            }
-            .disabled(isPreparingShare)
+            Button("Einladen", systemImage: "person.crop.circle.badge.plus") { showsInvite = true }
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu("Mehr", systemImage: "ellipsis") {
                 Button("Gruppe bearbeiten", systemImage: "pencil") { showsEdit = true }
-                Button("Wer bin ich?", systemImage: "person.fill.questionmark") { showsWhoAmI = true }
+                Button("Das bin nicht ich", systemImage: "person.fill.questionmark") { showsWhoAmI = true }
                 Divider()
-                Button(group.sharing == .participant ? "Gruppe verlassen" : "Gruppe löschen",
-                       systemImage: group.sharing == .participant ? "rectangle.portrait.and.arrow.right" : "trash",
+                Button(canDelete(group) ? "Gruppe löschen" : "Gruppe verlassen",
+                       systemImage: canDelete(group) ? "trash" : "rectangle.portrait.and.arrow.right",
                        role: .destructive) { confirmsDelete = true }
             }
         }
@@ -175,37 +166,38 @@ struct GroupDetailView: View {
     private func appear(_ group: SplitGroup, me: UUID?) {
         guard !didAppear else { return }
         didAppear = true
-        if me == nil, !group.members.isEmpty { showsWhoAmI = true }
         guard model.isDemo else { return }
         switch DemoData.argument(after: "-BarteSheet") {
         case "settle": showsSettle = true
         case "expense": showsNewExpense = true
+        case "invite": showsInvite = true
         default: break
         }
     }
 
-    private func share(_ group: SplitGroup) async {
-        guard !model.isDemo else {
-            alertMessage = "Im Demo-Modus kann nicht geteilt werden."
-            return
-        }
-        isPreparingShare = true
-        defer { isPreparingShare = false }
-        do {
-            if let share = try await model.repository.share(for: group.id) {
-                SharingPresenter.shared.present(share: share, title: group.name, persistence: model.repository.persistence)
-            }
-        } catch {
-            alertMessage = "Teilen klappt gerade nicht. Bist du in den Einstellungen bei iCloud angemeldet?"
+    private func perform(_ work: @escaping @Sendable (GroupRepository) async throws -> Void) async {
+        if let message = await model.run(work) { alertMessage = message }
+    }
+
+    private func canDelete(_ group: SplitGroup) -> Bool { group.canDelete(userID: model.userID) }
+
+    private func removeGroup(_ group: SplitGroup) async {
+        let id = group.id
+        let deletes = canDelete(group)
+        dismiss()
+        await perform { repository in
+            if deletes { try await repository.deleteGroup(id) } else { try await repository.leaveGroup(id) }
         }
     }
 
-    private static func deleteMessage(_ group: SplitGroup) -> String {
-        switch group.sharing {
-        case .participant: "Die Gruppe verschwindet von deinen Geräten. Die anderen behalten sie."
-        case .owner: "Die Gruppe wird für alle gelöscht, mit denen du sie geteilt hast."
-        case .personal: "Alle Ausgaben dieser Gruppe werden gelöscht."
+    private func deleteMessage(_ group: SplitGroup) -> String {
+        let others = group.members.contains { $0.usesApp && $0.userID != model.userID }
+        if !canDelete(group) {
+            return "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen."
         }
+        return others
+            ? "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast."
+            : "Alle Ausgaben dieser Gruppe werden gelöscht."
     }
 
     struct Month { let title: String; let expenses: [Expense] }

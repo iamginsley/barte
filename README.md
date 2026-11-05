@@ -1,12 +1,12 @@
 # Barte
 
-Ausgaben mit Freund:innen teilen – einfach, kostenlos, ohne Konto. Barte = **Bar** + **Karte**.
+Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **Karte**.
 
 <img src="docs/icon/Default.png" width="96" alt="App-Icon: eine diagonal geteilte Karte">
 
 - SwiftUI, Swift 6 (strict concurrency), iOS 26+, MVVM mit `@Observable`, Projekt per XcodeGen
-- Daten in Core Data, synchronisiert über **iCloud (CloudKit)**: kein eigener Server, keine Anmeldung
-- Gruppen teilen über Apples Teilen-Dialog (Nachrichten, Link); alle Eingeladenen können selbst Ausgaben eintragen
+- Backend **Supabase**: Anmeldung mit Apple (iOS) bzw. Google (später Android), Postgres mit Row Level Security, alle Schreibzugriffe über SQL-Funktionen, Live-Updates über Realtime
+- Einladen per Link oder Code; alle Eingeladenen tragen selbst Ausgaben ein, auf iPhone und später Android
 
 ## Funktionen
 
@@ -15,7 +15,8 @@ Ausgaben mit Freund:innen teilen – einfach, kostenlos, ohne Konto. Barte = **B
 | **Gruppen** | Als farbige Karten im Wallet-Stil (Signature-Element), Name, Farbe, Währung pro Gruppe, Personen als einfache Namen (Freund:innen brauchen die App nicht) |
 | **Ausgaben** | Betrag, Titel mit automatischem Symbol („Pizza“ → Besteck), wer bezahlt hat, gleichmäßig auf alle oder ausgewählte Personen, Datum, Vorschau des Anteils pro Person |
 | **Ausgleichen** | Salden pro Person und die **wenigsten Überweisungen**, mit denen alle quitt sind; „Bezahlt“ verbucht einen Ausgleich |
-| **Teilen** | Gruppe per iCloud teilen, Personen verwalten, Gruppe verlassen; jedes iPhone merkt sich, wer „ich“ bin |
+| **Einladen** | Link oder Code teilen; wer beitritt, wählt seinen Namen aus der Gruppe (dann gehören die bisherigen Ausgaben zu ihm) oder trägt sich neu ein |
+| **Konto** | Mit Apple anmelden, abmelden, Konto löschen inkl. Widerruf bei Apple; Gruppe verlassen oder (als Ersteller:in) für alle löschen |
 
 ## Das smarte Rechnen
 
@@ -32,43 +33,63 @@ Die Tests (`BarteTests/LedgerTests.swift`) vergleichen 300 Zufallsgruppen mit ei
 ## Setup
 
 1. Xcode 26 oder neuer und [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
-2. `xcodegen generate`, dann `Barte.xcodeproj` öffnen
-3. Signiert wird mit dem Team `2567P974L9` (`Configs/Project.xcconfig`). Xcode legt die App-ID und den iCloud-Container `iCloud.com.iamginsley.barte` beim ersten Build automatisch an. Falls nicht: im [Developer Portal](https://developer.apple.com/account/resources/identifiers/list/cloudContainer) den Container anlegen und unter *Signing & Capabilities* auswählen.
-4. **CloudKit-Schema:** Einmal in Debug mit dem Launch-Argument `-BarteInitSchema` auf einem Gerät mit iCloud starten. Das legt das Schema in der Development-Umgebung an. Vor dem ersten TestFlight-Build im [CloudKit Dashboard](https://icloud.developer.apple.com) unter *Schema → Deploy Schema Changes* nach Production übernehmen.
-5. Teilen testest du am besten mit zwei echten iPhones und zwei Apple-IDs. Im Simulator braucht es eine angemeldete Apple-ID.
+2. `cp Config.example.xcconfig Config.xcconfig` und Host und Anon Key deines Supabase-Projekts eintragen (die Datei ist git-ignoriert)
+3. `xcodegen generate`, dann `Barte.xcodeproj` öffnen. Signiert wird mit dem Team `2567P974L9` (`Configs/Project.xcconfig`).
+
+Ohne `Config.xcconfig` startet die App mit einem Hinweis; der Demo-Modus funktioniert immer.
+
+### Supabase einrichten
+
+1. Projekt auf [supabase.com](https://supabase.com) anlegen, Region **Frankfurt (eu-central-1)** (so steht es in der Datenschutzerklärung)
+2. Datenbank: `supabase link --project-ref <ref>`, dann `supabase db push` (spielt `supabase/migrations/` ein)
+3. **Mit Apple anmelden:** Authentication → Sign In / Providers → Apple aktivieren, bei *Client IDs* `com.iamginsley.barte` eintragen. Für die native Anmeldung in der App reicht das.
+4. **Konto löschen (Apple-Widerruf):** Im Developer Portal einen Key mit „Sign in with Apple“ erstellen (`AuthKey_XXXX.p8`, nie ins Repo), dann:
+   ```sh
+   supabase secrets set APPLE_TEAM_ID=2567P974L9 APPLE_KEY_ID=<KeyID> APPLE_CLIENT_ID=com.iamginsley.barte APPLE_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"
+   supabase functions deploy apple-revoke
+   ```
+5. **Google (für Android, später):** Authentication → Providers → Google aktivieren und die OAuth-Client-IDs aus der Google Cloud Console eintragen. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
+
+Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code und öffnet die App über `barte://join/<code>`.
+
+**Gratis-Tarif:** Supabase pausiert Gratis-Projekte nach etwa einer Woche ohne Zugriffe. Die Daten bleiben erhalten, das Projekt muss dann im Dashboard wieder gestartet werden.
 
 ### Tests
 
 ```sh
 xcodebuild test -project Barte.xcodeproj -scheme Barte -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+./scripts/test-migrations.sh                         # SQL: Migrationen + RLS/RPC-Tests auf lokalem Postgres (brew install postgresql@17)
+(cd supabase/functions/apple-revoke && deno test)    # Edge Function
 ```
 
 ### Demo-Modus (nur Debug)
 
-Launch-Argumente für Screenshots und Tests, mit einem In-Memory-Store und Beispieldaten:
+Launch-Argumente für Screenshots und Tests, ohne Server, mit Beispieldaten im Speicher:
 
 | Flag | Wirkung |
 | --- | --- |
-| `-BarteDemo` | Beispielgruppen, „ich“ ist Dominik |
+| `-BarteDemo` | Beispielgruppen, angemeldet als Dominik |
 | `-BarteEmpty` | zusammen mit `-BarteDemo`: ohne Gruppen starten |
+| `-BarteSignedOut` | zusammen mit `-BarteDemo`: Anmeldebildschirm zeigen |
 | `-BarteGroup <n>` | n-te Karte öffnen (0 = oberste) |
-| `-BarteSheet settle\|expense\|group\|about` | zusätzlich ein Sheet öffnen |
+| `-BarteSheet settle\|expense\|group\|about\|invite\|join` | zusätzlich ein Sheet öffnen (`join` zeigt eine Beispiel-Einladung) |
 
 ## Projektstruktur
 
 ```
 Barte/
-  App/            App-Einstieg, AppModel, AppDelegate (Push, angenommene Einladungen)
+  App/            App-Einstieg, AppModel (Anmeldung, Gruppen, Realtime), RootView
   Core/
-    Models/       Money, Ledger (Split, Balances, Settlement), SplitGroup, ExpenseIcon
-    Repositories/ GroupRepository (Core Data ↔ Werte)
-    Services/     Persistence (CloudKit-Stores), SharingPresenter, Identity
-    Demo/         DemoData
+    Models/       Money, Ledger (Split, Balances, Settlement), SplitGroup, ExpenseIcon, Invite, LocalDay
+    Repositories/ GroupRepository (Supabase)
+    Services/     Backend, AppleReauthentication, Preferences
+    Demo/         DemoData, DemoGroupRepository
   Design/         Theme, GroupCard (Signature), BarteLogo, MemberAvatar
-  Features/       Groups, GroupDetail, Expense, SettleUp, About
-  Resources/      Assets (Farb-Tokens), AppIcon.icon, Core-Data-Modell, PrivacyInfo
-BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen
-docs/             Datenschutz (GitHub Page), App-Store-Texte, Icon-Vorschau
+  Features/       Auth, Groups, GroupDetail (inkl. Einladen), Join, Expense, SettleUp, About
+  Resources/      Assets (Farb-Tokens), AppIcon.icon, PrivacyInfo
+BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen, Einladungen, Tage
+supabase/         Migrationen, SQL-Tests, Edge Function apple-revoke
+docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
 
 ## Design
@@ -79,6 +100,12 @@ docs/             Datenschutz (GitHub Page), App-Store-Texte, Icon-Vorschau
 - System-Schrift, Rounded nur für große Beträge und Titel; Beträge `monospacedDigit`; Dynamic Type überall
 - Easter Egg: Tippe in „Über Barte“ ein paar Mal auf das Logo. Und schreib mal „Dackel“ als Ausgabe.
 
+## Datenmodell
+
+- `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`)
+- Lesen nur über RLS (`is_group_member`), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`
+- Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert.
+
 ## Datenschutz
 
-Barte hat keinen Server und sammelt nichts. Gruppen liegen in der iCloud der Person, die sie erstellt, und sind nur für eingeladene Personen sichtbar. Siehe [docs/datenschutz.md](docs/datenschutz.md).
+Anmeldung mit Apple, Daten bei Supabase in Frankfurt, keine Werbung und kein Tracking. Eine Gruppe sehen nur ihre Mitglieder. Siehe [docs/datenschutz.md](docs/datenschutz.md).

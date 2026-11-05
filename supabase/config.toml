@@ -1,0 +1,40 @@
+# Supabase CLI settings for `supabase link`, `supabase db push` and `supabase functions deploy`.
+# Secrets never go here; set them with `supabase secrets set` (see README).
+project_id = "barte"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
+
+[realtime]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "barte://auth"
+jwt_expiry = 3600
+enable_signup = true
+
+# iOS: native Sign in with Apple (ID token). client_id is the app's bundle ID.
+[auth.external.apple]
+enabled = true
+client_id = "com.iamginsley.barte"
+secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
+
+# Android (later): Sign in with Google.
+[auth.external.google]
+enabled = false
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+skip_nonce_check = false
+
+[functions.apple-revoke]
+enabled = true
+verify_jwt = true

@@ -19,18 +19,24 @@ settings:
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
     SWIFT_EMIT_LOC_STRINGS: YES
 
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: "2.55.0"
+
 targets:
   Barte:
     type: application
     platform: iOS
     sources:
       - path: Barte
+    dependencies:
+      - package: Supabase
+        product: Supabase
     entitlements:
       path: Barte/Resources/Barte.entitlements
       properties:
-        com.apple.developer.icloud-container-identifiers: [iCloud.com.iamginsley.barte]
-        com.apple.developer.icloud-services: [CloudKit]
-        aps-environment: development
+        com.apple.developer.applesignin: [Default]
     info:
       path: Barte/Resources/Info.plist
       properties:
@@ -41,21 +47,23 @@ targets:
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         LSApplicationCategoryType: public.app-category.finance
         ITSAppUsesNonExemptEncryption: false
-        CKSharingSupported: true
-        UIBackgroundModes: [remote-notification]
+        CFBundleURLTypes:
+          - CFBundleURLName: com.iamginsley.barte
+            CFBundleURLSchemes: [barte]
+        SupabaseHost: "$(SUPABASE_HOST)"
+        SupabaseAnonKey: "$(SUPABASE_ANON_KEY)"
         UILaunchScreen:
           UIColorName: Surface
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        CloudKitContainer: iCloud.com.iamginsley.barte
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.iamginsley.barte
         PRODUCT_NAME: Barte
         MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        CURRENT_PROJECT_VERSION: "2"
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

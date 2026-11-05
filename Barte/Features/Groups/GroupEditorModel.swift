@@ -11,6 +11,7 @@ final class GroupEditorModel {
         let memberID: UUID?
         var name: String
         var isMe: Bool
+        var usesApp = false
         var canRemove: Bool
     }
 
@@ -28,11 +29,11 @@ final class GroupEditorModel {
         currency = group?.currency ?? "EUR"
         if let group {
             rows = group.members.map {
-                Row(id: $0.id, memberID: $0.id, name: $0.name, isMe: $0.id == me, canRemove: !group.isInvolved($0.id))
+                Row(id: $0.id, memberID: $0.id, name: $0.name, isMe: $0.id == me, usesApp: $0.usesApp, canRemove: !$0.usesApp && !group.isInvolved($0.id))
             }
         } else {
             rows = [
-                Row(id: UUID(), memberID: nil, name: Identity.myName, isMe: true, canRemove: false),
+                Row(id: UUID(), memberID: nil, name: Preferences.myName, isMe: true, canRemove: false),
                 Row(id: UUID(), memberID: nil, name: "", isMe: false, canRemove: true),
             ]
         }
@@ -56,9 +57,8 @@ final class GroupEditorModel {
             currency: currency,
             color: color,
             createdAt: .now,
-            members: namedRows.map { Member(id: $0.id, name: $0.name) },
-            expenses: existing?.expenses ?? [],
-            sharing: existing?.sharing ?? .personal
+            members: namedRows.map { Member(id: $0.id, name: $0.name, userID: existing?.member($0.id)?.userID) },
+            expenses: existing?.expenses ?? []
         )
     }
 
@@ -75,21 +75,33 @@ final class GroupEditorModel {
         rows = rows.enumerated().filter { !offsets.contains($0.offset) || !$0.element.canRemove }.map(\.element)
     }
 
-    /// Writes the changes. Returns the group's id.
-    func save(to repository: GroupRepository) -> UUID {
+    /// Writes the changes. Returns the group's id, or a message when something failed.
+    func save(with app: AppModel) async -> Result<UUID, SaveError> {
+        let name = name.trimmingCharacters(in: .whitespaces)
+        let currency = currency
+        let color = color
         if let existing {
-            repository.updateGroup(existing.id, name: name, currency: currency, color: color)
-            for memberID in removed { try? repository.removeMember(memberID) }
-            for row in namedRows {
-                if let memberID = row.memberID {
-                    if existing.member(memberID)?.name != row.name { repository.renameMember(memberID, to: row.name) }
-                } else {
-                    repository.addMember(named: row.name, to: existing.id)
-                }
+            let removed = removed
+            let renamed = namedRows.compactMap { row in
+                row.memberID.flatMap { id in existing.member(id)?.name != row.name ? (id, row.name) : nil }
             }
-            return existing.id
+            let added = namedRows.filter { $0.memberID == nil }.map(\.name)
+            let message = await app.run { repository in
+                try await repository.updateGroup(existing.id, name: name, currency: currency, color: color)
+                for id in removed { try await repository.removeMember(id) }
+                for (id, newName) in renamed { try await repository.renameMember(id, to: newName) }
+                for newName in added { _ = try await repository.addMember(named: newName, to: existing.id) }
+            }
+            return message.map { .failure(SaveError(message: $0)) } ?? .success(existing.id)
         }
-        Identity.myName = rows.first?.name ?? ""
-        return repository.createGroup(name: name, currency: currency, color: color, memberNames: namedRows.map(\.name))
+        let myName = rows.first?.name.trimmingCharacters(in: .whitespaces) ?? ""
+        let others = namedRows.dropFirst().map(\.name)
+        Preferences.myName = myName
+        let result = await app.runReturning { repository in
+            try await repository.createGroup(name: name, currency: currency, color: color, myName: myName, otherNames: Array(others))
+        }
+        return result.mapError { SaveError(message: $0.message) }
     }
+
+    struct SaveError: Error { let message: String }
 }

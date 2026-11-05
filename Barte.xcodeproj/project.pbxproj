@@ -8,31 +8,40 @@
 
 /* Begin PBXBuildFile section */
 		037EC181910688197DAF8A3B /* GroupEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B193C6E434151831365ED1 /* GroupEditorModel.swift */; };
-		065F3A7B790EBCA87A4807B6 /* Identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30B261E09D5DC02E078D7CA /* Identity.swift */; };
 		0735CBAABE9F191B7D6A3981 /* ExpenseEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */; };
+		0878937D7F433422CD660252 /* JoinModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D04D16346050D36FE20267 /* JoinModel.swift */; };
 		0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093E87CAC05D1A8D71E3898C /* BarteLogo.swift */; };
+		0FE9B6F665DECFD7EA1DCA18 /* InviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */; };
 		13A24944D862B8AFD90BFB44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 396C129AE54D48D707EBC0F2 /* Assets.xcassets */; };
+		152762DCE255D7E4E6F3909F /* JoinSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DAA9B35F39B488FBAC32F8 /* JoinSheet.swift */; };
 		1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */; };
+		26420B5C34528CD6BAADA056 /* LocalDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E68124ABC0C1BF5115F5172 /* LocalDay.swift */; };
 		2C13836BE12234DF42062517 /* ExpenseIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */; };
-		2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8331077E0535884A22CB08F /* AppDelegate.swift */; };
+		30970F009773D7C626104940 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD7E8FAA874AD3AD11C693 /* SignInViewModel.swift */; };
 		414CF9027973560C983698C4 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
+		4BF8AB095C87DBB08EB9F0E1 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A8AEC534DABD9DE65E7FF0 /* Invite.swift */; };
+		4F3C5202C2F1BD8EFB65A8D6 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 768498438C98CA5E77E3CF39 /* Supabase */; };
+		517328480C59FBFF8071972F /* AppleReauthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */; };
 		5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC77A98173AD0934686C779 /* GroupsView.swift */; };
 		5E188D614CA05A69E6EB9254 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA27A8483504AC612812848 /* GroupCard.swift */; };
 		5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED078948C81E4D89678841 /* GroupDetailView.swift */; };
+		67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A41797BC57A6CE57A59669 /* RootView.swift */; };
+		792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */; };
+		7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B6E09233AD6FFBE45E63EB /* Nullable.swift */; };
 		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
 		8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */; };
 		8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72919225A511CF3BEABFF20E /* SplitGroup.swift */; };
 		8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = ADACD81F8F846A944C9F702F /* AppIcon.icon */; };
-		92A934B3595DFB1AD27DB3D0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C73A46C5A8D2E5FABA0042 /* Persistence.swift */; };
+		982B6053768E2AE5124EC58B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0211324505177E7B775948 /* SignInView.swift */; };
 		A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455D96187B57EDABDBC2F55 /* Theme.swift */; };
 		B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EADB85144A27C17B3608AA /* SettleUpSheet.swift */; };
+		C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */; };
 		D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF4BE01897FD753519138AF /* WhoAmISheet.swift */; };
 		D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E717002048274CB18A03413 /* MemberAvatar.swift */; };
 		D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909B49D515E86B76403FAB2 /* LedgerTests.swift */; };
 		DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CC263F664096A440BB76B /* DemoData.swift */; };
-		DFA44D0C06B9438801CCDDF3 /* SharingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9B64A3CFC6B159A19E2485 /* SharingPresenter.swift */; };
 		E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */; };
-		F05612C834A89957B497627C /* Barte.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7843A0283949E40C1067C64 /* Barte.xcdatamodeld */; };
+		E7D7A058D3E2CEFC6D4D423C /* Backend.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E183DF598AC540D90608CC /* Backend.swift */; };
 		F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE077F805074D7BC5AC052 /* AppModel.swift */; };
 		F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */; };
 		FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B2BBE6996A48CBCED9D623 /* BarteApp.swift */; };
@@ -52,9 +61,13 @@
 /* Begin PBXFileReference section */
 		093E87CAC05D1A8D71E3898C /* BarteLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteLogo.swift; sourceTree = "<group>"; };
 		0BA27A8483504AC612812848 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
+		0E68124ABC0C1BF5115F5172 /* LocalDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDay.swift; sourceTree = "<group>"; };
 		0E717002048274CB18A03413 /* MemberAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAvatar.swift; sourceTree = "<group>"; };
+		12A8AEC534DABD9DE65E7FF0 /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
+		2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
 		2CEE077F805074D7BC5AC052 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		35B6E09233AD6FFBE45E63EB /* Nullable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nullable.swift; sourceTree = "<group>"; };
 		3909B49D515E86B76403FAB2 /* LedgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerTests.swift; sourceTree = "<group>"; };
 		396C129AE54D48D707EBC0F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -62,8 +75,8 @@
 		3EF4BE01897FD753519138AF /* WhoAmISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhoAmISheet.swift; sourceTree = "<group>"; };
 		488AE27DE478B2716163DE9B /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorModel.swift; sourceTree = "<group>"; };
-		4D11A273440D061376F25DBA /* Barte.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Barte.xcdatamodel; sourceTree = "<group>"; };
 		51EADB85144A27C17B3608AA /* SettleUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpSheet.swift; sourceTree = "<group>"; };
+		5E0211324505177E7B775948 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseIcon.swift; sourceTree = "<group>"; };
 		72919225A511CF3BEABFF20E /* SplitGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitGroup.swift; sourceTree = "<group>"; };
 		79B193C6E434151831365ED1 /* GroupEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorModel.swift; sourceTree = "<group>"; };
@@ -71,21 +84,36 @@
 		8455D96187B57EDABDBC2F55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		8B519AB4E206BA055D174A5F /* BarteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BarteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B2BBE6996A48CBCED9D623 /* BarteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteApp.swift; sourceTree = "<group>"; };
+		98A41797BC57A6CE57A59669 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteAndDayTests.swift; sourceTree = "<group>"; };
 		A5E327F2799EF74336CCF6DA /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
-		A8C73A46C5A8D2E5FABA0042 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		ADACD81F8F846A944C9F702F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		B5CD7E8FAA874AD3AD11C693 /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		B8331077E0535884A22CB08F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B7DAA9B35F39B488FBAC32F8 /* JoinSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSheet.swift; sourceTree = "<group>"; };
 		BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorSheet.swift; sourceTree = "<group>"; };
 		BC1CC263F664096A440BB76B /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
-		C30B261E09D5DC02E078D7CA /* Identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identity.swift; sourceTree = "<group>"; };
+		C8D04D16346050D36FE20267 /* JoinModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinModel.swift; sourceTree = "<group>"; };
 		C9BBB3D0D6AF2AB0E23A21B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		CA9B64A3CFC6B159A19E2485 /* SharingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingPresenter.swift; sourceTree = "<group>"; };
 		DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ledger.swift; sourceTree = "<group>"; };
 		DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorSheet.swift; sourceTree = "<group>"; };
 		DEED078948C81E4D89678841 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
+		E4E183DF598AC540D90608CC /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
+		F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleReauthentication.swift; sourceTree = "<group>"; };
 		FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barte.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7F08AD449E3F3CBD26B0A6E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F3C5202C2F1BD8EFB65A8D6 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		01D3E7E7C3E364AD3354FC7E /* Barte */ = {
@@ -104,18 +132,30 @@
 			isa = PBXGroup;
 			children = (
 				DEED078948C81E4D89678841 /* GroupDetailView.swift */,
+				2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */,
 				3EF4BE01897FD753519138AF /* WhoAmISheet.swift */,
 			);
 			path = GroupDetail;
+			sourceTree = "<group>";
+		};
+		14CA6CBBF048893BEBB620FE /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				5E0211324505177E7B775948 /* SignInView.swift */,
+				B5CD7E8FAA874AD3AD11C693 /* SignInViewModel.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		1D8F73BEBB766A36FC4B161A /* Features */ = {
 			isa = PBXGroup;
 			children = (
 				EB0687EFBA7AC7B0F657B4EC /* About */,
+				14CA6CBBF048893BEBB620FE /* Auth */,
 				47C0A9E6A150F260BEED9C18 /* Expense */,
 				0899F401404ABB88525102B1 /* GroupDetail */,
 				6580437194E7EBDE85DF391A /* Groups */,
+				D83338721686899A3C497AAA /* Join */,
 				3866369FD54EB6E16F50C0E5 /* SettleUp */,
 			);
 			path = Features;
@@ -124,7 +164,6 @@
 		2735E497F3D9A88A46778DF8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C7843A0283949E40C1067C64 /* Barte.xcdatamodeld */,
 				ADACD81F8F846A944C9F702F /* AppIcon.icon */,
 				396C129AE54D48D707EBC0F2 /* Assets.xcassets */,
 				FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */,
@@ -202,9 +241,9 @@
 		879CC2F85B505E4CC5B02A94 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				B8331077E0535884A22CB08F /* AppDelegate.swift */,
 				2CEE077F805074D7BC5AC052 /* AppModel.swift */,
 				92B2BBE6996A48CBCED9D623 /* BarteApp.swift */,
+				98A41797BC57A6CE57A59669 /* RootView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -213,7 +252,9 @@
 			isa = PBXGroup;
 			children = (
 				6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */,
+				12A8AEC534DABD9DE65E7FF0 /* Invite.swift */,
 				DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */,
+				0E68124ABC0C1BF5115F5172 /* LocalDay.swift */,
 				A5E327F2799EF74336CCF6DA /* Money.swift */,
 				72919225A511CF3BEABFF20E /* SplitGroup.swift */,
 			);
@@ -223,9 +264,10 @@
 		AD1CBB367888F1B9DAD500F7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				C30B261E09D5DC02E078D7CA /* Identity.swift */,
-				A8C73A46C5A8D2E5FABA0042 /* Persistence.swift */,
-				CA9B64A3CFC6B159A19E2485 /* SharingPresenter.swift */,
+				FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */,
+				E4E183DF598AC540D90608CC /* Backend.swift */,
+				35B6E09233AD6FFBE45E63EB /* Nullable.swift */,
+				F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -239,6 +281,15 @@
 				AD1CBB367888F1B9DAD500F7 /* Services */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		D83338721686899A3C497AAA /* Join */ = {
+			isa = PBXGroup;
+			children = (
+				C8D04D16346050D36FE20267 /* JoinModel.swift */,
+				B7DAA9B35F39B488FBAC32F8 /* JoinSheet.swift */,
+			);
+			path = Join;
 			sourceTree = "<group>";
 		};
 		E2136EA1BEE6D780D7C983B5 /* Demo */ = {
@@ -260,6 +311,7 @@
 		E807992DF7C4784E726B71AD /* BarteTests */ = {
 			isa = PBXGroup;
 			children = (
+				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
 			);
 			path = BarteTests;
@@ -282,6 +334,7 @@
 			buildPhases = (
 				E966AB2BA93390F54A6CEDDD /* Sources */,
 				C48AB1656C60BE5E9421319E /* Resources */,
+				7F08AD449E3F3CBD26B0A6E3 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -289,6 +342,7 @@
 			);
 			name = Barte;
 			packageProductDependencies = (
+				768498438C98CA5E77E3CF39 /* Supabase */,
 			);
 			productName = Barte;
 			productReference = 3D1EFB70DFDDC97A1DFC2261 /* Barte.app */;
@@ -340,6 +394,9 @@
 			);
 			mainGroup = 6426DDA34EE512798A020B53;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				202E28E45131C317D9F06BA8 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 377EE21823B8826BA5F42BCD /* Products */;
 			projectDirPath = "";
@@ -370,9 +427,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */,
-				2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */,
 				F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */,
-				F05612C834A89957B497627C /* Barte.xcdatamodeld in Sources */,
+				517328480C59FBFF8071972F /* AppleReauthentication.swift in Sources */,
+				E7D7A058D3E2CEFC6D4D423C /* Backend.swift in Sources */,
 				FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */,
 				0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */,
 				DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */,
@@ -385,13 +442,20 @@
 				8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */,
 				1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */,
 				5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */,
-				065F3A7B790EBCA87A4807B6 /* Identity.swift in Sources */,
+				4BF8AB095C87DBB08EB9F0E1 /* Invite.swift in Sources */,
+				0FE9B6F665DECFD7EA1DCA18 /* InviteSheet.swift in Sources */,
+				0878937D7F433422CD660252 /* JoinModel.swift in Sources */,
+				152762DCE255D7E4E6F3909F /* JoinSheet.swift in Sources */,
 				F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */,
+				26420B5C34528CD6BAADA056 /* LocalDay.swift in Sources */,
 				D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */,
 				414CF9027973560C983698C4 /* Money.swift in Sources */,
-				92A934B3595DFB1AD27DB3D0 /* Persistence.swift in Sources */,
+				7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */,
+				792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */,
+				67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */,
 				B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */,
-				DFA44D0C06B9438801CCDDF3 /* SharingPresenter.swift in Sources */,
+				982B6053768E2AE5124EC58B /* SignInView.swift in Sources */,
+				30970F009773D7C626104940 /* SignInViewModel.swift in Sources */,
 				8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */,
 				A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */,
 				D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */,
@@ -402,6 +466,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -571,7 +636,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Barte/Resources/Barte.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = Barte/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -610,7 +675,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Barte/Resources/Barte.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = Barte/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -656,18 +721,24 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCVersionGroup section */
-		C7843A0283949E40C1067C64 /* Barte.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				4D11A273440D061376F25DBA /* Barte.xcdatamodel */,
-			);
-			currentVersion = 4D11A273440D061376F25DBA /* Barte.xcdatamodel */;
-			path = Barte.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
+/* Begin XCRemoteSwiftPackageReference section */
+		202E28E45131C317D9F06BA8 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.55.0;
+			};
 		};
-/* End XCVersionGroup section */
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		768498438C98CA5E77E3CF39 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 202E28E45131C317D9F06BA8 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B4EDB1E9792DC38F3612D7C0 /* Project object */;
 }

@@ -11,15 +11,15 @@
 Urlaub, WG oder Pizza-Abend: Trag ein, wer was bezahlt hat. Barte rechnet aus, wie ihr mit den wenigsten Überweisungen quitt seid.
 
 **Beschreibung:**
-Barte teilt Ausgaben in Gruppen, ohne Konto, ohne Werbung, kostenlos.
+Barte teilt Ausgaben in Gruppen, ohne Werbung, kostenlos.
 
 • Gruppen als Karten: für jeden Urlaub, jede WG und jeden Abend eine eigene Karte
 • Schnell eingetragen: Betrag, wofür, wer bezahlt hat und für wen
 • Smartes Ausgleichen: Barte verrechnet alle Schulden und zeigt die wenigsten Überweisungen, mit denen alle quitt sind
-• Gemeinsam: Teile eine Gruppe über iCloud, dann können alle selbst Ausgaben eintragen
-• Freund:innen ohne iPhone sind trotzdem dabei, als Name in der Gruppe
+• Gemeinsam: Lade Freund:innen per Link oder Code ein, dann tragen alle selbst Ausgaben ein
+• Wer die App nicht hat, ist trotzdem dabei, als Name in der Gruppe
 • Eine Währung pro Gruppe, auf den Cent genau
-• Privat: Deine Daten liegen in deiner iCloud, nicht bei uns
+• Privat: Anmeldung mit Apple, keine Werbung, kein Tracking
 
 **Schlüsselwörter (100):** splitten,ausgaben,teilen,gruppe,urlaub,wg,schulden,abrechnung,freunde,reise,kosten,quitt
 
@@ -28,19 +28,28 @@ Barte teilt Ausgaben in Gruppen, ohne Konto, ohne Werbung, kostenlos.
 
 ## Datenschutz-Etiketten
 
-**Keine Daten erfasst.** Barte hat keinen Server; alles liegt in der iCloud der Nutzer:innen (CloudKit), und der Entwickler hat keinen Zugriff darauf. Nach Apples Definition gilt das nicht als Erfassung.
+Frage „Erfasst die App Daten?“ → **Ja**. Für alle Datentypen gilt: **mit der Identität verknüpft: ja**, **für Tracking verwendet: nein**, **Zweck: App-Funktionalität**.
+
+| Kategorie in App Store Connect | Datentyp |
+| --- | --- |
+| Kontaktinformationen | Name (Namen in Gruppen), E-Mail-Adresse (von „Mit Apple anmelden“) |
+| Finanzinformationen | Andere Finanzinformationen (Beträge der Ausgaben und Ausgleiche) |
+| Benutzerinhalte | Andere Benutzerinhalte (Gruppen- und Ausgabentitel) |
+| Kennungen | Benutzer-ID |
+
+Nicht erfasst: Standort, Kontakte, Nutzungsdaten, Diagnosedaten, Geräte-ID für Werbung. Das deckt sich mit `Barte/Resources/PrivacyInfo.xcprivacy`.
 
 ## Prüfhinweise
 
-> Barte braucht kein Konto. Zum Ausprobieren: „+“ → Gruppe mit zwei Namen anlegen → „Ausgabe“ → „Ausgleichen“. Teilen nutzt den iCloud-Teilen-Dialog von Apple und funktioniert, wenn auf dem Gerät eine Apple-ID mit iCloud angemeldet ist.
+> Anmeldung nur mit „Mit Apple anmelden“. Zum Ausprobieren: „+“ → „Neue Gruppe“ → Gruppe mit zwei Namen anlegen → „Ausgabe“ → „Ausgleichen“. Einladen: in einer Gruppe oben auf das Personen-Symbol, dann den Link oder Code teilen; ein zweites Gerät tritt über „+“ → „Mit Code beitreten“ bei. Konto löschen: „Über Barte“ (i-Symbol) → „Konto löschen“.
 
 ## Checkliste
 
 - [ ] Build-Nummer in `project.yml` hochzählen, `xcodegen generate`
-- [ ] CloudKit-Schema nach Production übernommen (CloudKit Dashboard → Deploy Schema Changes)
-- [ ] `aps-environment` wird beim Archivieren automatisch zu `production`
-- [ ] Teilen mit zwei echten iPhones und zwei Apple-IDs getestet
+- [ ] Supabase: Migrationen eingespielt, `apple-revoke` deployt, Apple-Secrets gesetzt (siehe README)
+- [ ] Einladen und Beitreten mit zwei echten iPhones und zwei Apple-IDs getestet
+- [ ] Konto löschen getestet (Apple-ID → Mit Apple anmelden: Barte ist danach verschwunden)
 - [ ] TestFlight-Build mit Freund:innen getestet
 - [ ] GitHub Pages aktiv (Settings → Pages → `main` / `docs`), Datenschutz-URL erreichbar
-- [ ] Screenshots ohne Alpha in 1206 × 2622 (Demo-Modus: `-BarteDemo`, `-BarteGroup 0`, `-BarteSheet settle|expense`)
+- [ ] Screenshots ohne Alpha in 1206 × 2622 (Demo-Modus: `-BarteDemo`, `-BarteGroup 0`, `-BarteSheet settle|expense|invite|join`)
 - [ ] Texte und Datenschutz-Etiketten in App Store Connect eingetragen

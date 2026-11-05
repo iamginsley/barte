@@ -21,17 +21,8 @@ enum CardColor: Int, CaseIterable, Identifiable, Sendable {
     }
 }
 
-/// A group of people sharing expenses, as the UI sees it (a value snapshot of the store).
+/// A group of people sharing expenses, as the UI sees it.
 struct SplitGroup: Identifiable, Hashable, Sendable {
-    enum Sharing: Hashable, Sendable {
-        /// Only on this person's devices.
-        case personal
-        /// This person created the group and shared it.
-        case owner
-        /// Someone else shared the group with this person.
-        case participant
-    }
-
     let id: UUID
     var name: String
     var currency: String
@@ -41,7 +32,8 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     var members: [Member]
     /// Newest first.
     var expenses: [Expense]
-    var sharing: Sharing = .personal
+    var inviteCode: String = ""
+    var createdBy: UUID? = nil
 
     var balances: [UUID: Int] { Balances.compute(members: members.map(\.id), expenses: expenses) }
 
@@ -57,6 +49,21 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     var totalSpent: Int { expenses.filter { !$0.isSettlement }.reduce(0) { $0 + $1.amountCents } }
 
     func member(_ id: UUID) -> Member? { members.first { $0.id == id } }
+
+    /// The member linked to this person.
+    func me(userID: UUID?) -> UUID? {
+        guard let userID else { return nil }
+        return members.first { $0.userID == userID }?.id
+    }
+
+    /// More than one person uses the app in this group.
+    var isShared: Bool { members.filter(\.usesApp).count > 1 }
+
+    /// The creator deletes for everyone; so does the last person with the app. Everyone else leaves.
+    func canDelete(userID: UUID?) -> Bool {
+        guard let userID else { return false }
+        return createdBy == userID || !members.contains { $0.usesApp && $0.userID != userID }
+    }
 
     func name(of id: UUID, me: UUID?) -> String {
         id == me ? "Du" : member(id)?.name ?? "Unbekannt"
