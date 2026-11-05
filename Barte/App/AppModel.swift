@@ -33,10 +33,13 @@ final class AppModel {
     private(set) var loadError: String?
     /// Set when an invite link opens the app; GroupsView shows the join sheet.
     var pendingInviteCode: String?
+    /// Set when a notification or widget opens a group; GroupsView navigates there.
+    var pendingGroupID: UUID?
 
     let isDemo: Bool
     let client: SupabaseClient?
     let repository: GroupRepository?
+    private let notifier: GroupNotifier?
 
     private var authTask: Task<Void, Never>?
     private var changesTask: Task<Void, Never>?
@@ -48,11 +51,13 @@ final class AppModel {
             Preferences.myName = "Dominik"
             self.client = nil
             self.repository = DemoGroupRepository()
+            self.notifier = nil
             self.isDemo = true
             return
         }
         self.client = client
         self.repository = client.map(SupabaseGroupRepository.init(client:))
+        self.notifier = client.map(GroupNotifier.init(client:))
         self.isDemo = false
     }
 
@@ -100,6 +105,12 @@ final class AppModel {
         userID = id
         phase = .ready
         Task { await reload() }
+        if !isDemo {
+            Task {
+                await PushToken.register(client: client)
+                await Notifications.registerForPushIfAllowed()
+            }
+        }
         changesTask?.cancel()
         guard let repository else { return }
         changesTask = Task { [weak self] in
@@ -115,6 +126,7 @@ final class AppModel {
         userID = nil
         groups = []
         payments = [:]
+        WidgetSync.clear()
         hasLoaded = false
         phase = .signedOut
     }
@@ -130,6 +142,7 @@ final class AppModel {
             groups = try await fetchedGroups
             if let fetched = await fetchedPayments { payments = fetched }
             loadError = nil
+            WidgetSync.update(groups: groups, userID: userID)
         } catch is CancellationError {
             return
         } catch {
@@ -184,7 +197,19 @@ final class AppModel {
     // MARK: Links
 
     func open(_ url: URL) {
-        if let code = InviteLink.code(from: url) { pendingInviteCode = code }
+        if let code = InviteLink.code(from: url) {
+            pendingInviteCode = code
+        } else if let id = BarteLink.groupID(from: url) {
+            pendingGroupID = id
+        }
+    }
+
+    // MARK: Notifications
+
+    /// Pushes a new expense or payback to the others in the group, if anyone else there uses the app.
+    func notify(_ kind: GroupNotifier.Kind, expenseID: UUID, in groupID: UUID) {
+        guard let notifier, group(groupID)?.isShared == true else { return }
+        notifier.send(kind, expenseID: expenseID)
     }
 
     // MARK: Account
@@ -194,6 +219,7 @@ final class AppModel {
             signedOut()
             return
         }
+        await PushToken.unregister(client: client)
         try? await client?.auth.signOut()
     }
 

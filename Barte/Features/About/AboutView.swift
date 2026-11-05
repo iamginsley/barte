@@ -59,8 +59,10 @@ struct AboutView: View {
                         }
                     }
                     .frame(minHeight: Theme.minTapSize)
+                    NotificationSettingsRow()
+                        .frame(minHeight: Theme.minTapSize)
                 } footer: {
-                    Text("PayPal.me oder IBAN, damit dir andere beim Ausgleichen direkt zahlen können.")
+                    Text("Mit PayPal.me oder IBAN können dir andere beim Ausgleichen direkt zahlen. Mitteilungen sagen dir, wenn jemand eine Ausgabe einträgt oder dir etwas zurückzahlt.")
                 }
 
                 Section("So rechnet Barte") {

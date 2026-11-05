@@ -191,5 +191,7 @@ struct JoinSheet: View {
         guard let id = await model.join(with: app) else { return }
         dismiss()
         onJoin(id)
+        // Now the others' expenses matter: ask once whether Barte may tell about them.
+        Task { await Notifications.requestAuthorization() }
     }
 }

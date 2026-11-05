@@ -24,6 +24,8 @@ struct InviteSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
+        // Inviting is when news from the others starts to matter.
+        .task { await Notifications.requestAuthorization() }
     }
 
     private func content(_ group: SplitGroup) -> some View {

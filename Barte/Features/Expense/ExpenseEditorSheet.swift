@@ -258,6 +258,7 @@ struct ExpenseEditorSheet: View {
         if let message = await app.run({ try await $0.save(expense, in: groupID) }) {
             errorMessage = message
         } else {
+            if model.existing == nil { app.notify(.expenseAdded, expenseID: expense.id, in: groupID) }
             dismiss()
         }
     }

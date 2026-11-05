@@ -63,4 +63,21 @@ select pg_temp.check((select count(*) = 0 from public.payment_details where user
 select public.set_payment_details('annah', null, 'Anna');
 select pg_temp.check((select account_holder is null from public.payment_details where user_id = :a), 'holder only with IBAN');
 
+-- Devices: only your own rows ----------------------------------------------------
+select public.register_device(repeat('ab', 32), 'sandbox');
+select pg_temp.check((select count(*) = 1 from public.device_tokens), 'A sees the own device');
+select pg_temp.act_as(:b);
+select pg_temp.check((select count(*) = 0 from public.device_tokens), 'B does not see A''s device');
+-- The same phone signed in as B moves the token over.
+select public.register_device(repeat('AB', 32), 'production');
+select pg_temp.check((select user_id = :b and environment = 'production' from public.device_tokens), 'token moves to the new account');
+select public.unregister_device(repeat('ab', 32));
+select pg_temp.check((select count(*) = 0 from public.device_tokens), 'unregister removes it');
+
+-- Deleting the account removes payment details and devices -------------------------
+select pg_temp.act_as(:a);
+select public.register_device(repeat('cd', 32), 'sandbox');
+select public.delete_my_account();
 reset role;
+select pg_temp.check((select count(*) = 0 from public.payment_details where user_id = :a), 'payment details deleted with the account');
+select pg_temp.check((select count(*) = 0 from public.device_tokens where user_id = :a), 'devices deleted with the account');

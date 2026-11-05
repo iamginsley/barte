@@ -134,6 +134,7 @@ struct SettleUpSheet: View {
         if let message = await model.run({ try await $0.save(settlement, in: groupID) }) {
             errorMessage = message
         } else {
+            model.notify(.settlementAdded, expenseID: settlement.id, in: groupID)
             paidCount += 1
         }
     }
