@@ -47,8 +47,10 @@ enum DemoData {
                 .add("Taxi zum Lift", 4500, by: "David", for: ["Ben", "David"], daysAgo: 4)
                 .add("Pizza", 9850, by: "Clara", for: ["Dominik", "Anna", "Clara"], daysAgo: 5)
                 .add("Hüttengaudi", 6200, by: "Dominik", for: ["Dominik", "Ben", "David"], daysAgo: 6)
+                .add("Abendessen Alpenrose", 21000, by: "David", split: .shares(["Dominik": 1, "Anna": 1, "Ben": 2, "Clara": 1, "David": 2]), daysAgo: 7)
                 .add("Einkauf Spar", 18640, by: "Ben", daysAgo: 8)
                 .add("Skipässe", 114_000, by: "Anna", daysAgo: 8)
+                .add("Skischule Kinder", 36000, by: "Ben", for: ["Ben", "Clara"], split: .exact(["Ben": 24000, "Clara": 12000]), daysAgo: 8)
                 .add("Chalet", 120_000, by: "Dominik", daysAgo: 9)
                 .group,
             Builder("WG Leopoldstraße", .indigo, "EUR", ["Dominik", "Lena", "Max"], appUsers: ["Lena", "Max"], daysAgo: 20)
@@ -99,16 +101,32 @@ enum DemoData {
             )
         }
 
-        func add(_ title: String, _ cents: Int, by payer: String, for participants: [String]? = nil, daysAgo: Int, settlement: Bool = false) -> Builder {
+        enum DemoSplit {
+            case shares([String: Int])
+            case exact([String: Int])
+        }
+
+        func add(_ title: String, _ cents: Int, by payer: String, for participants: [String]? = nil, split: DemoSplit? = nil, daysAgo: Int, settlement: Bool = false) -> Builder {
             var copy = self
             let date = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: -daysAgo, to: .now) ?? .now)
             copy.group.expenses.append(Expense(
                 id: UUID(), title: title, amountCents: cents, date: date,
                 payerID: ids[payer]!,
                 participantIDs: (participants ?? group.members.map(\.name)).compactMap { ids[$0] },
-                isSettlement: settlement
+                isSettlement: settlement,
+                split: split.map(mode) ?? .equal
             ))
             return copy
+        }
+
+        private func mode(_ split: DemoSplit) -> SplitMode {
+            func byID(_ values: [String: Int]) -> [UUID: Int] {
+                Dictionary(uniqueKeysWithValues: values.compactMap { name, value in ids[name].map { ($0, value) } })
+            }
+            switch split {
+            case .shares(let values): return .shares(byID(values))
+            case .exact(let values): return .exact(byID(values))
+            }
         }
     }
 }
@@ -116,10 +134,29 @@ enum DemoData {
 /// In-memory repository for demo mode: no server, changes live until the app quits.
 actor DemoGroupRepository: GroupRepository {
     private var groups: [SplitGroup]
+    private var payments: [UUID: PaymentDetails]
     private let stream = AsyncStream<Void>.makeStream()
 
     init(groups: [SplitGroup] = DemoData.groups()) {
         self.groups = groups
+        // Everyone else with the app has PayPal and a bank account; Dominik has nothing yet.
+        var payments: [UUID: PaymentDetails] = [:]
+        for member in groups.flatMap(\.members) {
+            guard let userID = member.userID, userID != DemoData.userID else { continue }
+            payments[userID] = PaymentDetails(
+                paypal: member.name.lowercased() + "demo",
+                iban: "DE89370400440532013000",
+                accountHolder: "\(member.name) Beispiel"
+            )
+        }
+        self.payments = payments
+    }
+
+    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails] { payments }
+
+    func savePaymentDetails(_ details: PaymentDetails) async throws {
+        payments[DemoData.userID] = details.isEmpty ? nil : details
+        stream.continuation.yield()
     }
 
     nonisolated func changes() -> AsyncStream<Void> { stream.stream }

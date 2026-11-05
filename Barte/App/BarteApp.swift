@@ -2,14 +2,14 @@ import SwiftUI
 
 @main
 struct BarteApp: App {
-    @State private var model = AppModel()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(model)
-                .onOpenURL { model.open($0) }
-                .onAppear { model.start() }
+                .environment(appDelegate.model)
+                .onOpenURL { appDelegate.model.open($0) }
+                .onAppear { appDelegate.model.start() }
         }
     }
 }

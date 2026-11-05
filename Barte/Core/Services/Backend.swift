@@ -56,6 +56,9 @@ enum BarteError: LocalizedError, Equatable {
             case "not_member": "Du bist nicht mehr in dieser Gruppe."
             case "unknown_member": "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe."
             case "empty_name": "Bitte gib einen Namen ein."
+            case "invalid_split": "Die Beträge ergeben nicht die Summe der Ausgabe."
+            case "invalid_paypal": "Das sieht nicht nach einem PayPal.me-Namen aus."
+            case "invalid_iban": "Bitte prüfe die IBAN."
             default: "Das hat nicht geklappt. Versuch es noch einmal."
             }
         }

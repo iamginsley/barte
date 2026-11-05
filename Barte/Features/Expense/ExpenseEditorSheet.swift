@@ -8,9 +8,10 @@ struct ExpenseEditorSheet: View {
     @State private var isSaving = false
     @State private var errorMessage: String?
     @FocusState private var focus: Field?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .largeTitle) private var amountSize: CGFloat = 56
 
-    private enum Field { case amount, title }
+    private enum Field: Hashable { case amount, title, exact(UUID) }
 
     init(group: SplitGroup, expense: Expense?, me: UUID?) {
         _model = State(initialValue: ExpenseEditorModel(group: group, expense: expense, me: me))
@@ -64,22 +65,40 @@ struct ExpenseEditorSheet: View {
                 }
 
                 Section {
+                    Picker("Aufteilung", selection: Binding(get: { model.mode }, set: { mode in
+                        focus = nil
+                        withAnimation(reduceMotion ? nil : .snappy) { model.setMode(mode) }
+                    })) {
+                        ForEach(ExpenseEditorModel.Mode.allCases) { mode in
+                            Text(mode.title).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
+
                     ForEach(group.members) { member in
-                        participantRow(member)
+                        switch model.mode {
+                        case .equal: participantRow(member)
+                        case .shares: weightRow(member)
+                        case .exact: exactRow(member)
+                        }
                     }
                 } header: {
                     HStack {
                         Text("Aufgeteilt auf")
                         Spacer()
-                        Button(model.allSelected ? "Keine" : "Alle") { model.toggleAll() }
-                            .font(.subheadline)
-                            .textCase(nil)
+                        if model.mode == .equal {
+                            Button(model.allSelected ? "Keine" : "Alle") { model.toggleAll() }
+                                .font(.subheadline)
+                                .textCase(nil)
+                        }
                     }
                 } footer: {
-                    if model.participants.isEmpty {
-                        Text("Wähle mindestens eine Person aus.")
-                    } else if let text = model.perPersonText {
+                    if let text = model.footerText {
                         Text(text)
+                            .foregroundStyle((model.exactDifference ?? 0) != 0 ? Color.negative : Color.inkSecondary)
+                            .contentTransition(.numericText())
                     }
                 }
 
@@ -123,7 +142,7 @@ struct ExpenseEditorSheet: View {
     }
 
     private func participantRow(_ member: Member) -> some View {
-        let selected = model.participants.contains(member.id)
+        let selected = model.isSelected(member.id)
         return Button {
             model.toggle(member.id)
         } label: {
@@ -133,7 +152,7 @@ struct ExpenseEditorSheet: View {
                     .foregroundStyle(selected ? AnyShapeStyle(.tint) : AnyShapeStyle(Color.inkSecondary))
                     .contentTransition(.symbolEffect(.replace))
                 MemberAvatar(name: member.name, isMe: member.id == model.me, size: 30)
-                Text(member.id == model.me ? "\(member.name) (ich)" : member.name)
+                Text(memberName(member))
                     .foregroundStyle(Color.ink)
                 Spacer()
                 if selected, let share = model.shares[member.id], share > 0 {
@@ -151,6 +170,85 @@ struct ExpenseEditorSheet: View {
         .sensoryFeedback(.selection, trigger: selected)
     }
 
+    private func memberName(_ member: Member) -> String {
+        member.id == model.me ? "\(member.name) (ich)" : member.name
+    }
+
+    /// Shares mode: tap the row to include someone, the stepper for couples and families.
+    private func weightRow(_ member: Member) -> some View {
+        let weight = model.weights[member.id] ?? 0
+        let share = model.shares[member.id] ?? 0
+        return HStack(spacing: 12) {
+            Button {
+                model.toggle(member.id)
+            } label: {
+                HStack(spacing: 12) {
+                    MemberAvatar(name: member.name, isMe: member.id == model.me, size: 30)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(memberName(member))
+                            .foregroundStyle(weight > 0 ? Color.ink : Color.inkSecondary)
+                        if share > 0 {
+                            Text(Money.format(share, currency: model.group.currency))
+                                .font(.subheadline.monospacedDigit())
+                                .foregroundStyle(Color.inkSecondary)
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    Spacer(minLength: 4)
+                }
+                .frame(minHeight: Theme.minTapSize)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHidden(true)
+
+            Text(weight == 0 ? "–" : "\(weight)×")
+                .font(.amount)
+                .foregroundStyle(weight > 0 ? Color.ink : Color.inkSecondary)
+                .frame(minWidth: 32, alignment: .trailing)
+                .contentTransition(.numericText())
+                .accessibilityHidden(true)
+            Stepper("Anteile", value: Binding(get: { weight }, set: { model.weights[member.id] = $0 }), in: 0...ExpenseEditorModel.maxWeight)
+                .labelsHidden()
+                .accessibilityLabel(memberName(member))
+                .accessibilityValue(weight == 0 ? "nicht beteiligt" : "\(weight) \(weight == 1 ? "Anteil" : "Anteile"), \(Money.format(share, currency: model.group.currency))")
+        }
+        .sensoryFeedback(.selection, trigger: weight)
+    }
+
+    /// Exact mode: a fixed amount per person. Tapping the name puts the rest on them.
+    private func exactRow(_ member: Member) -> some View {
+        let text = Binding(get: { model.exactTexts[member.id] ?? "" }, set: { model.exactTexts[member.id] = $0 })
+        let canTakeRest = (model.exactDifference ?? 0) < 0 || ((model.exactDifference ?? 0) > 0 && (model.exactCents(member.id) ?? 0) > 0)
+        return HStack(spacing: 12) {
+            MemberAvatar(name: member.name, isMe: member.id == model.me, size: 30)
+                .accessibilityHidden(true)
+            Text(memberName(member))
+                .accessibilityHidden(true)
+            Spacer(minLength: 4)
+            if canTakeRest {
+                Button("Rest") { model.assignRest(to: member.id) }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .frame(minHeight: Theme.minTapSize)
+                    .accessibilityLabel("Rest auf \(member.name)")
+            }
+            TextField("0,00", text: text)
+                .font(.amount)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .focused($focus, equals: .exact(member.id))
+                .frame(width: 96)
+                .frame(minHeight: Theme.minTapSize)
+                .accessibilityLabel("Betrag für \(member.name)")
+            Text(Money.symbol(for: model.group.currency))
+                .foregroundStyle(Color.inkSecondary)
+                .accessibilityHidden(true)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { focus = .exact(member.id) }
+    }
+
     private func save() async {
         guard let expense = model.makeExpense() else { return }
         focus = nil
@@ -160,6 +258,7 @@ struct ExpenseEditorSheet: View {
         if let message = await app.run({ try await $0.save(expense, in: groupID) }) {
             errorMessage = message
         } else {
+            if model.existing == nil { app.notify(.expenseAdded, expenseID: expense.id, in: groupID) }
             dismiss()
         }
     }

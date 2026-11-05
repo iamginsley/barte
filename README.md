@@ -22,7 +22,7 @@ Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **
 
 Alle Beträge sind ganze Cent (`Int`), es gibt keine Rundungsfehler.
 
-1. **Aufteilen** (`Split.equal`): gleich große Anteile, übrige Cent zuerst an die zahlende Person, dann in fester Reihenfolge. Alle Geräte rechnen gleich, und die Summe der Anteile ergibt immer genau den Betrag.
+1. **Aufteilen** (`Split.equal`, `Split.weighted`): gleich große Anteile, nach Anteilen (ein Paar zählt doppelt) oder mit festen Beträgen pro Person. Bei gleichen Anteilen gehen übrige Cent zuerst an die zahlende Person, dann in fester Reihenfolge; nach Anteilen bekommen die größten Reste je einen Cent, bei Gleichstand genauso. Alle Geräte rechnen gleich, und die Summe der Anteile ergibt immer genau den Betrag.
 2. **Salden** (`Balances.compute`): Wer bezahlt hat, bekommt den Betrag gutgeschrieben, alle Beteiligten ihren Anteil abgezogen. Die Summe aller Salden ist immer 0.
 3. **Vereinfachen** (`Settlement.transfers`): Jede Person mit offenem Saldo braucht mindestens eine Überweisung, und eine Teilgruppe aus k Personen, deren Salden sich zu 0 aufheben, lässt sich mit k − 1 Überweisungen ausgleichen. Das Minimum ist also *n − (größte Anzahl disjunkter Null-Summen-Teilgruppen)*. Barte findet diese Aufteilung exakt mit einer Teilmengen-DP (bis 16 Personen mit offenem Saldo, in Millisekunden) und gleicht jede Teilgruppe aus, indem die größte Schuld mit dem größten Guthaben verrechnet wird. Ab 17 Personen wird nur verrechnet (höchstens n − 1 Überweisungen).
 
@@ -48,7 +48,13 @@ Ohne `Config.xcconfig` startet die App mit einem Hinweis; der Demo-Modus funktio
    supabase secrets set APPLE_TEAM_ID=2567P974L9 APPLE_KEY_ID=<KeyID> APPLE_CLIENT_ID=com.iamginsley.barte APPLE_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"
    supabase functions deploy apple-revoke
    ```
-5. **Google (für Android, später):** Authentication → Providers → Google aktivieren und die OAuth-Client-IDs aus der Google Cloud Console eintragen. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
+5. **Mitteilungen:** Im Developer Portal beim Key zusätzlich „Apple Push Notifications service“ aktivieren (oder einen eigenen APNs-Key erstellen), dann:
+   ```sh
+   supabase secrets set APNS_KEY_ID=<KeyID> APNS_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"   # optional, sonst wird der Apple-Key von oben genutzt
+   supabase functions deploy notify-group
+   ```
+   Debug-Builds registrieren sich für die Sandbox, TestFlight und App Store für Production.
+6. **Google (für Android, später):** Authentication → Providers → Google aktivieren und die OAuth-Client-IDs aus der Google Cloud Console eintragen. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
 
 Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code und öffnet die App über `barte://join/<code>`.
 
@@ -59,7 +65,7 @@ Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code
 ```sh
 xcodebuild test -project Barte.xcodeproj -scheme Barte -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ./scripts/test-migrations.sh                         # SQL: Migrationen + RLS/RPC-Tests auf lokalem Postgres (brew install postgresql@17)
-(cd supabase/functions/apple-revoke && deno test)    # Edge Function
+(cd supabase/functions && deno test)                 # Edge Functions apple-revoke und notify-group
 ```
 
 ### Demo-Modus (nur Debug)
@@ -80,15 +86,17 @@ Launch-Argumente für Screenshots und Tests, ohne Server, mit Beispieldaten im S
 Barte/
   App/            App-Einstieg, AppModel (Anmeldung, Gruppen, Realtime), RootView
   Core/
-    Models/       Money, Ledger (Split, Balances, Settlement), SplitGroup, ExpenseIcon, Invite, LocalDay
+    Models/       Money, Ledger (Split, Balances, Settlement), SplitGroup, PaymentDetails, ExpenseIcon, Invite, LocalDay
     Repositories/ GroupRepository (Supabase)
-    Services/     Backend, AppleReauthentication, Preferences
+    Services/     Backend, AppleReauthentication, Notifications (Push), WidgetSync, Preferences
     Demo/         DemoData, DemoGroupRepository
   Design/         Theme, GroupCard (Signature), BarteLogo, MemberAvatar
-  Features/       Auth, Groups, GroupDetail (inkl. Einladen), Join, Expense, SettleUp, About
+  Features/       Auth, Groups, GroupDetail (inkl. Einladen), Join, Expense, SettleUp, Payment, About
   Resources/      Assets (Farb-Tokens), AppIcon.icon, PrivacyInfo
+BarteWidgets/     Widget „Saldo“ (klein, mittel, Sperrbildschirm), liest den Snapshot aus der App Group
+Shared/           Widget-Snapshot und barte://-Links, in App und Widget
 BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen, Einladungen, Tage
-supabase/         Migrationen, SQL-Tests, Edge Function apple-revoke
+supabase/         Migrationen, SQL-Tests, Edge Functions apple-revoke und notify-group
 docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
 
@@ -102,9 +110,10 @@ docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Text
 
 ## Datenmodell
 
-- `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`)
+- `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
+- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` liest nur die Edge Function `notify-group`
 - Lesen nur über RLS (`is_group_member`), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`
-- Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert.
+- Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` und `Split.weighted` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert (bei Anteilen zuerst nach dem größten Rest).
 
 ## Datenschutz
 

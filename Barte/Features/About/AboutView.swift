@@ -48,8 +48,25 @@ struct AboutView: View {
                     Text("Wird bei neuen Gruppen und beim Beitreten vorgeschlagen.")
                 }
 
+                Section {
+                    NavigationLink {
+                        PaymentDetailsView(details: app.myPayment)
+                    } label: {
+                        LabeledContent {
+                            Text(paymentSummary)
+                        } label: {
+                            Label("Zahlungsdaten", systemImage: "creditcard")
+                        }
+                    }
+                    .frame(minHeight: Theme.minTapSize)
+                    NotificationSettingsRow()
+                        .frame(minHeight: Theme.minTapSize)
+                } footer: {
+                    Text("Mit PayPal.me oder IBAN können dir andere beim Ausgleichen direkt zahlen. Mitteilungen sagen dir, wenn jemand eine Ausgabe einträgt oder dir etwas zurückzahlt.")
+                }
+
                 Section("So rechnet Barte") {
-                    explanation("1", "Jede Ausgabe wird gleichmäßig auf die ausgewählten Personen verteilt, auf den Cent genau.")
+                    explanation("1", "Jede Ausgabe wird auf die ausgewählten Personen verteilt: gleichmäßig, nach Anteilen oder mit festen Beträgen, immer auf den Cent genau.")
                     explanation("2", "Daraus ergibt sich für alle ein Saldo: Wer mehr bezahlt hat, bekommt Geld, wer weniger bezahlt hat, schuldet.")
                     explanation("3", "Barte sucht dann die wenigsten Überweisungen, mit denen alle quitt sind. Statt dass jede:r jeder:m etwas zahlt, reichen oft ein, zwei Überweisungen.")
                 }
@@ -113,6 +130,15 @@ struct AboutView: View {
                     Button("Fertig", role: .close) { dismiss() }
                 }
             }
+        }
+    }
+
+    private var paymentSummary: String {
+        switch (app.myPayment?.paypal, app.myPayment?.iban) {
+        case (_?, _?): "PayPal, IBAN"
+        case (_?, nil): "PayPal"
+        case (nil, _?): "IBAN"
+        default: "Keine"
         }
     }
 

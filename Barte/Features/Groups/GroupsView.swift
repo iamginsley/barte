@@ -64,8 +64,15 @@ struct GroupsView: View {
             .sheet(item: inviteBinding) { invite in
                 JoinSheet(code: invite.code) { id in path = [id] }
             }
-            .onAppear(perform: applyLaunchFlags)
-            .onChange(of: model.hasLoaded) { applyLaunchFlags() }
+            .onAppear {
+                applyLaunchFlags()
+                openPendingGroup()
+            }
+            .onChange(of: model.hasLoaded) {
+                applyLaunchFlags()
+                openPendingGroup()
+            }
+            .onChange(of: model.pendingGroupID) { openPendingGroup() }
         }
     }
 
@@ -168,6 +175,13 @@ struct GroupsView: View {
             get: { model.pendingInviteCode.map(PendingInvite.init(code:)) },
             set: { if $0 == nil { model.pendingInviteCode = nil } }
         )
+    }
+
+    /// A notification or the widget asked for a group; open it once the groups are there.
+    private func openPendingGroup() {
+        guard let id = model.pendingGroupID, model.hasLoaded else { return }
+        model.pendingGroupID = nil
+        if model.group(id) != nil { path = [id] }
     }
 
     private func applyLaunchFlags() {

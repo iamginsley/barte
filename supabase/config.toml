@@ -38,3 +38,7 @@ skip_nonce_check = false
 [functions.apple-revoke]
 enabled = true
 verify_jwt = true
+
+[functions.notify-group]
+enabled = true
+verify_jwt = true

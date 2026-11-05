@@ -23,6 +23,11 @@ protocol GroupRepository: Sendable {
     /// Joins as an unclaimed member, or as a new person when `memberID` is nil.
     func joinGroup(code: String, memberID: UUID?, name: String?) async throws -> UUID
 
+    /// Payment details of everyone this person shares a group with, and their own, by user id.
+    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails]
+    /// Empty details remove them.
+    func savePaymentDetails(_ details: PaymentDetails) async throws
+
     func deleteAccount(appleAuthorizationCode: String) async throws
 
     /// Signals whenever something in this person's groups changes, also from other people.
@@ -74,10 +79,14 @@ struct SupabaseGroupRepository: GroupRepository {
         let payerID: UUID
         let participantIDs: [UUID]
         let isSettlement: Bool
+        let splitKind: String
+        let splitValues: [Int]?
         let createdAt: Date
 
         enum CodingKeys: String, CodingKey {
             case id, title
+            case splitKind = "split_kind"
+            case splitValues = "split_values"
             case amountCents = "amount_cents"
             case spentOn = "spent_on"
             case payerID = "payer_id"
@@ -89,7 +98,7 @@ struct SupabaseGroupRepository: GroupRepository {
 
     func fetchGroups() async throws -> [SplitGroup] {
         let rows: [GroupRow] = try await client.from("groups")
-            .select("id, name, currency, color, invite_code, created_by, created_at, members(id, name, user_id, created_at), expenses(id, title, amount_cents, spent_on, payer_id, participant_ids, is_settlement, created_at)")
+            .select("id, name, currency, color, invite_code, created_by, created_at, members(id, name, user_id, created_at), expenses(id, title, amount_cents, spent_on, payer_id, participant_ids, is_settlement, split_kind, split_values, created_at)")
             .order("created_at", ascending: false)
             .execute()
             .value
@@ -111,7 +120,8 @@ struct SupabaseGroupRepository: GroupRepository {
                     date: item.day,
                     payerID: item.row.payerID,
                     participantIDs: item.row.participantIDs,
-                    isSettlement: item.row.isSettlement
+                    isSettlement: item.row.isSettlement,
+                    split: SplitMode(kind: item.row.splitKind, values: item.row.splitValues, participants: item.row.participantIDs)
                 )
             }
         return SplitGroup(
@@ -192,6 +202,8 @@ struct SupabaseGroupRepository: GroupRepository {
             let p_payer_id: UUID
             let p_participant_ids: [UUID]
             let p_is_settlement: Bool
+            let p_split_kind: String
+            let p_split_values: Nullable<[Int]>
         }
         try await client.rpc("save_expense", params: Params(
             p_id: expense.id,
@@ -201,7 +213,9 @@ struct SupabaseGroupRepository: GroupRepository {
             p_spent_on: LocalDay.string(from: expense.date),
             p_payer_id: expense.payerID,
             p_participant_ids: expense.participantIDs,
-            p_is_settlement: expense.isSettlement
+            p_is_settlement: expense.isSettlement,
+            p_split_kind: expense.split.kind,
+            p_split_values: Nullable(expense.splitValues)
         )).execute()
     }
 
@@ -224,6 +238,41 @@ struct SupabaseGroupRepository: GroupRepository {
         return try await client.rpc("join_group", params: Params(p_code: code, p_member_id: Nullable(memberID), p_name: Nullable(name))).execute().value
     }
 
+    // MARK: Payment details
+
+    private struct PaymentRow: Decodable {
+        let userID: UUID
+        let paypal: String?
+        let iban: String?
+        let accountHolder: String?
+
+        enum CodingKeys: String, CodingKey {
+            case paypal, iban
+            case userID = "user_id"
+            case accountHolder = "account_holder"
+        }
+    }
+
+    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails] {
+        let rows: [PaymentRow] = try await client.from("payment_details")
+            .select("user_id, paypal, iban, account_holder")
+            .execute()
+            .value
+        return Dictionary(rows.map { ($0.userID, PaymentDetails(paypal: $0.paypal, iban: $0.iban, accountHolder: $0.accountHolder)) },
+                          uniquingKeysWith: { first, _ in first })
+    }
+
+    func savePaymentDetails(_ details: PaymentDetails) async throws {
+        struct Params: Encodable {
+            let p_paypal: Nullable<String>
+            let p_iban: Nullable<String>
+            let p_account_holder: Nullable<String>
+        }
+        try await client.rpc("set_payment_details", params: Params(
+            p_paypal: Nullable(details.paypal), p_iban: Nullable(details.iban), p_account_holder: Nullable(details.accountHolder)
+        )).execute()
+    }
+
     // MARK: Account
 
     func deleteAccount(appleAuthorizationCode: String) async throws {
@@ -244,7 +293,7 @@ struct SupabaseGroupRepository: GroupRepository {
         return AsyncStream { continuation in
             let task = Task {
                 let channel = client.channel("barte-\(UUID().uuidString)")
-                let streams = ["groups", "members", "expenses"].map { table in
+                let streams = ["groups", "members", "expenses", "payment_details"].map { table in
                     channel.postgresChange(AnyAction.self, schema: "public", table: table)
                 }
                 do {

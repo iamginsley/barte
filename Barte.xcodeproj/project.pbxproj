@@ -11,39 +11,58 @@
 		0735CBAABE9F191B7D6A3981 /* ExpenseEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */; };
 		0878937D7F433422CD660252 /* JoinModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D04D16346050D36FE20267 /* JoinModel.swift */; };
 		0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093E87CAC05D1A8D71E3898C /* BarteLogo.swift */; };
+		0D1AD3E0570BB7C1F2778D69 /* BarteWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C61639BB094CF97F5EE89D /* BarteWidgets.swift */; };
 		0FE9B6F665DECFD7EA1DCA18 /* InviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */; };
 		13A24944D862B8AFD90BFB44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 396C129AE54D48D707EBC0F2 /* Assets.xcassets */; };
 		152762DCE255D7E4E6F3909F /* JoinSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DAA9B35F39B488FBAC32F8 /* JoinSheet.swift */; };
 		1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */; };
 		26420B5C34528CD6BAADA056 /* LocalDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E68124ABC0C1BF5115F5172 /* LocalDay.swift */; };
 		2C13836BE12234DF42062517 /* ExpenseIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */; };
+		2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8331077E0535884A22CB08F /* AppDelegate.swift */; };
 		30970F009773D7C626104940 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD7E8FAA874AD3AD11C693 /* SignInViewModel.swift */; };
+		36C30A5179FA23E3E762BAA2 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C250BC52F146572F356D78 /* WidgetSnapshot.swift */; };
 		414CF9027973560C983698C4 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
+		4796451C2E81661F65622418 /* BarteWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4BF8AB095C87DBB08EB9F0E1 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A8AEC534DABD9DE65E7FF0 /* Invite.swift */; };
 		4F3C5202C2F1BD8EFB65A8D6 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 768498438C98CA5E77E3CF39 /* Supabase */; };
 		517328480C59FBFF8071972F /* AppleReauthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */; };
 		5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC77A98173AD0934686C779 /* GroupsView.swift */; };
+		5D798362D14E638C609F8FC0 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD35959716BA80250481075D /* Notifications.swift */; };
 		5E188D614CA05A69E6EB9254 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA27A8483504AC612812848 /* GroupCard.swift */; };
 		5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED078948C81E4D89678841 /* GroupDetailView.swift */; };
+		5FD4C82CFDC87B09A4513956 /* NotificationSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFF40B9C82CC320B10483E1 /* NotificationSettingsRow.swift */; };
 		67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A41797BC57A6CE57A59669 /* RootView.swift */; };
+		6B11864462EBAAA726885C01 /* BarteLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2385E66B63964F36178DE7 /* BarteLink.swift */; };
+		7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC235A4715776991373586 /* PaymentDetailsTests.swift */; };
+		729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */; };
 		792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */; };
 		7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B6E09233AD6FFBE45E63EB /* Nullable.swift */; };
 		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
+		829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */; };
 		8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */; };
 		8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72919225A511CF3BEABFF20E /* SplitGroup.swift */; };
 		8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = ADACD81F8F846A944C9F702F /* AppIcon.icon */; };
+		97D1E8BD833269D810937705 /* SplitModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */; };
 		982B6053768E2AE5124EC58B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0211324505177E7B775948 /* SignInView.swift */; };
 		A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455D96187B57EDABDBC2F55 /* Theme.swift */; };
+		A58CC780C8E69D656C2D83A9 /* BalanceWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4258DD07CEED97267C50436A /* BalanceWidget.swift */; };
 		B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EADB85144A27C17B3608AA /* SettleUpSheet.swift */; };
+		B592C90468C86179C73640AF /* BarteLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2385E66B63964F36178DE7 /* BarteLink.swift */; };
+		BC75D7418369CDE98FB94FFB /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
 		C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */; };
+		CE41BFE03C63812A131DF6F1 /* WidgetAndLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7965253B6D373C9130DBFE6C /* WidgetAndLinkTests.swift */; };
 		D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF4BE01897FD753519138AF /* WhoAmISheet.swift */; };
 		D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E717002048274CB18A03413 /* MemberAvatar.swift */; };
 		D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909B49D515E86B76403FAB2 /* LedgerTests.swift */; };
 		DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CC263F664096A440BB76B /* DemoData.swift */; };
+		E1C5D6608F049173F5ED538D /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C250BC52F146572F356D78 /* WidgetSnapshot.swift */; };
 		E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */; };
 		E7D7A058D3E2CEFC6D4D423C /* Backend.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E183DF598AC540D90608CC /* Backend.swift */; };
+		EA7255F7616264995904681D /* PaymentDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */; };
+		EEC3C6A34E0FF5280DA86D75 /* WidgetSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAAD7867B182D9084D1F53 /* WidgetSync.swift */; };
 		F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE077F805074D7BC5AC052 /* AppModel.swift */; };
 		F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */; };
+		F64F24B5B96DA94020CA6FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 396C129AE54D48D707EBC0F2 /* Assets.xcassets */; };
 		FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B2BBE6996A48CBCED9D623 /* BarteApp.swift */; };
 		FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */; };
 /* End PBXBuildFile section */
@@ -56,14 +75,37 @@
 			remoteGlobalIDString = 59901E7B134124FDFF21AE95;
 			remoteInfo = Barte;
 		};
+		58115124BC5CBDD6D73EBB36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B4EDB1E9792DC38F3612D7C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 45A46F66731A6C0E0995D742;
+			remoteInfo = BarteWidgets;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		6FFD86AA19D88A65E6333076 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4796451C2E81661F65622418 /* BarteWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		068F8AA9DEAD43BC0AF45C30 /* BarteWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BarteWidgets.entitlements; sourceTree = "<group>"; };
 		093E87CAC05D1A8D71E3898C /* BarteLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteLogo.swift; sourceTree = "<group>"; };
 		0BA27A8483504AC612812848 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
 		0E68124ABC0C1BF5115F5172 /* LocalDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDay.swift; sourceTree = "<group>"; };
 		0E717002048274CB18A03413 /* MemberAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAvatar.swift; sourceTree = "<group>"; };
 		12A8AEC534DABD9DE65E7FF0 /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
+		24C250BC52F146572F356D78 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
 		2CEE077F805074D7BC5AC052 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -71,35 +113,50 @@
 		3909B49D515E86B76403FAB2 /* LedgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerTests.swift; sourceTree = "<group>"; };
 		396C129AE54D48D707EBC0F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = BarteWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1EFB70DFDDC97A1DFC2261 /* Barte.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Barte.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EF4BE01897FD753519138AF /* WhoAmISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhoAmISheet.swift; sourceTree = "<group>"; };
+		41EC235A4715776991373586 /* PaymentDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsTests.swift; sourceTree = "<group>"; };
+		4258DD07CEED97267C50436A /* BalanceWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceWidget.swift; sourceTree = "<group>"; };
 		488AE27DE478B2716163DE9B /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorModel.swift; sourceTree = "<group>"; };
+		4F2385E66B63964F36178DE7 /* BarteLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteLink.swift; sourceTree = "<group>"; };
 		51EADB85144A27C17B3608AA /* SettleUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpSheet.swift; sourceTree = "<group>"; };
 		5E0211324505177E7B775948 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseIcon.swift; sourceTree = "<group>"; };
 		72919225A511CF3BEABFF20E /* SplitGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitGroup.swift; sourceTree = "<group>"; };
+		7965253B6D373C9130DBFE6C /* WidgetAndLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAndLinkTests.swift; sourceTree = "<group>"; };
 		79B193C6E434151831365ED1 /* GroupEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorModel.swift; sourceTree = "<group>"; };
 		7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRepository.swift; sourceTree = "<group>"; };
 		8455D96187B57EDABDBC2F55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		89DAAD7867B182D9084D1F53 /* WidgetSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSync.swift; sourceTree = "<group>"; };
 		8B519AB4E206BA055D174A5F /* BarteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BarteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B2BBE6996A48CBCED9D623 /* BarteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteApp.swift; sourceTree = "<group>"; };
 		98A41797BC57A6CE57A59669 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteAndDayTests.swift; sourceTree = "<group>"; };
+		A0C47330813B77DC2EF11DB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A5E327F2799EF74336CCF6DA /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
+		AD35959716BA80250481075D /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		ADACD81F8F846A944C9F702F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		ADFF40B9C82CC320B10483E1 /* NotificationSettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsRow.swift; sourceTree = "<group>"; };
 		B5CD7E8FAA874AD3AD11C693 /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B7DAA9B35F39B488FBAC32F8 /* JoinSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSheet.swift; sourceTree = "<group>"; };
+		B8331077E0535884A22CB08F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB0DB619212A8FE5B6D95E05 /* ExpenseEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorSheet.swift; sourceTree = "<group>"; };
 		BC1CC263F664096A440BB76B /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
 		C8D04D16346050D36FE20267 /* JoinModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinModel.swift; sourceTree = "<group>"; };
 		C9BBB3D0D6AF2AB0E23A21B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D3C61639BB094CF97F5EE89D /* BarteWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteWidgets.swift; sourceTree = "<group>"; };
+		D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitModeTests.swift; sourceTree = "<group>"; };
 		DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ledger.swift; sourceTree = "<group>"; };
 		DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorSheet.swift; sourceTree = "<group>"; };
+		DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetails.swift; sourceTree = "<group>"; };
 		DEED078948C81E4D89678841 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
 		E4E183DF598AC540D90608CC /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
+		F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsModel.swift; sourceTree = "<group>"; };
 		F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsView.swift; sourceTree = "<group>"; };
 		FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleReauthentication.swift; sourceTree = "<group>"; };
 		FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barte.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -156,6 +213,7 @@
 				0899F401404ABB88525102B1 /* GroupDetail */,
 				6580437194E7EBDE85DF391A /* Groups */,
 				D83338721686899A3C497AAA /* Join */,
+				F9DC4AF2083654BC32E3E585 /* Payment */,
 				3866369FD54EB6E16F50C0E5 /* SettleUp */,
 			);
 			path = Features;
@@ -178,6 +236,7 @@
 			children = (
 				3D1EFB70DFDDC97A1DFC2261 /* Barte.app */,
 				8B519AB4E206BA055D174A5F /* BarteTests.xctest */,
+				3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,7 +274,9 @@
 			children = (
 				01D3E7E7C3E364AD3354FC7E /* Barte */,
 				E807992DF7C4784E726B71AD /* BarteTests */,
+				FF659511F769A4B7FDC5ED52 /* BarteWidgets */,
 				745881004FADA93E8E373646 /* Configs */,
+				C81FED15944630B609A794B2 /* Shared */,
 				377EE21823B8826BA5F42BCD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -241,6 +302,7 @@
 		879CC2F85B505E4CC5B02A94 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				B8331077E0535884A22CB08F /* AppDelegate.swift */,
 				2CEE077F805074D7BC5AC052 /* AppModel.swift */,
 				92B2BBE6996A48CBCED9D623 /* BarteApp.swift */,
 				98A41797BC57A6CE57A59669 /* RootView.swift */,
@@ -256,6 +318,7 @@
 				DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */,
 				0E68124ABC0C1BF5115F5172 /* LocalDay.swift */,
 				A5E327F2799EF74336CCF6DA /* Money.swift */,
+				DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */,
 				72919225A511CF3BEABFF20E /* SplitGroup.swift */,
 			);
 			path = Models;
@@ -266,10 +329,21 @@
 			children = (
 				FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */,
 				E4E183DF598AC540D90608CC /* Backend.swift */,
+				AD35959716BA80250481075D /* Notifications.swift */,
 				35B6E09233AD6FFBE45E63EB /* Nullable.swift */,
 				F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */,
+				89DAAD7867B182D9084D1F53 /* WidgetSync.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		C81FED15944630B609A794B2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				4F2385E66B63964F36178DE7 /* BarteLink.swift */,
+				24C250BC52F146572F356D78 /* WidgetSnapshot.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		CC98FB0DFBE3975E9CC837F3 /* Core */ = {
@@ -313,6 +387,9 @@
 			children = (
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
+				41EC235A4715776991373586 /* PaymentDetailsTests.swift */,
+				D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */,
+				7965253B6D373C9130DBFE6C /* WidgetAndLinkTests.swift */,
 			);
 			path = BarteTests;
 			sourceTree = "<group>";
@@ -321,13 +398,52 @@
 			isa = PBXGroup;
 			children = (
 				B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */,
+				ADFF40B9C82CC320B10483E1 /* NotificationSettingsRow.swift */,
 			);
 			path = About;
+			sourceTree = "<group>";
+		};
+		F9DC4AF2083654BC32E3E585 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */,
+				FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
+		FF659511F769A4B7FDC5ED52 /* BarteWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				4258DD07CEED97267C50436A /* BalanceWidget.swift */,
+				068F8AA9DEAD43BC0AF45C30 /* BarteWidgets.entitlements */,
+				D3C61639BB094CF97F5EE89D /* BarteWidgets.swift */,
+				A0C47330813B77DC2EF11DB7 /* Info.plist */,
+			);
+			path = BarteWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		45A46F66731A6C0E0995D742 /* BarteWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AAF0B3D99E0CC36ED63D484E /* Build configuration list for PBXNativeTarget "BarteWidgets" */;
+			buildPhases = (
+				A17238FC978645FB1EC9A76D /* Sources */,
+				3501460D9D30797AE202053F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BarteWidgets;
+			packageProductDependencies = (
+			);
+			productName = BarteWidgets;
+			productReference = 3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		59901E7B134124FDFF21AE95 /* Barte */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFB42C1A4DFCC3EDA0AD593A /* Build configuration list for PBXNativeTarget "Barte" */;
@@ -335,10 +451,12 @@
 				E966AB2BA93390F54A6CEDDD /* Sources */,
 				C48AB1656C60BE5E9421319E /* Resources */,
 				7F08AD449E3F3CBD26B0A6E3 /* Frameworks */,
+				6FFD86AA19D88A65E6333076 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A97C09156BBC8D1F201043BC /* PBXTargetDependency */,
 			);
 			name = Barte;
 			packageProductDependencies = (
@@ -375,6 +493,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					45A46F66731A6C0E0995D742 = {
+						DevelopmentTeam = 2567P974L9;
+						ProvisioningStyle = Automatic;
+					};
 					59901E7B134124FDFF21AE95 = {
 						DevelopmentTeam = 2567P974L9;
 						ProvisioningStyle = Automatic;
@@ -403,12 +525,21 @@
 			projectRoot = "";
 			targets = (
 				59901E7B134124FDFF21AE95 /* Barte */,
+				45A46F66731A6C0E0995D742 /* BarteWidgets */,
 				A9EC1FAF07B33E765F5112DE /* BarteTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3501460D9D30797AE202053F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F64F24B5B96DA94020CA6FD9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C48AB1656C60BE5E9421319E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -422,15 +553,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A17238FC978645FB1EC9A76D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A58CC780C8E69D656C2D83A9 /* BalanceWidget.swift in Sources */,
+				6B11864462EBAAA726885C01 /* BarteLink.swift in Sources */,
+				0D1AD3E0570BB7C1F2778D69 /* BarteWidgets.swift in Sources */,
+				BC75D7418369CDE98FB94FFB /* Money.swift in Sources */,
+				E1C5D6608F049173F5ED538D /* WidgetSnapshot.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E966AB2BA93390F54A6CEDDD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */,
+				2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */,
 				F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */,
 				517328480C59FBFF8071972F /* AppleReauthentication.swift in Sources */,
 				E7D7A058D3E2CEFC6D4D423C /* Backend.swift in Sources */,
 				FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */,
+				B592C90468C86179C73640AF /* BarteLink.swift in Sources */,
 				0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */,
 				DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */,
 				E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */,
@@ -450,7 +595,12 @@
 				26420B5C34528CD6BAADA056 /* LocalDay.swift in Sources */,
 				D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */,
 				414CF9027973560C983698C4 /* Money.swift in Sources */,
+				5FD4C82CFDC87B09A4513956 /* NotificationSettingsRow.swift in Sources */,
+				5D798362D14E638C609F8FC0 /* Notifications.swift in Sources */,
 				7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */,
+				EA7255F7616264995904681D /* PaymentDetails.swift in Sources */,
+				729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */,
+				829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */,
 				792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */,
 				67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */,
 				B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */,
@@ -459,6 +609,8 @@
 				8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */,
 				A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */,
 				D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */,
+				36C30A5179FA23E3E762BAA2 /* WidgetSnapshot.swift in Sources */,
+				EEC3C6A34E0FF5280DA86D75 /* WidgetSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,6 +620,9 @@
 			files = (
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
+				7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */,
+				97D1E8BD833269D810937705 /* SplitModeTests.swift in Sources */,
+				CE41BFE03C63812A131DF6F1 /* WidgetAndLinkTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,9 +634,36 @@
 			target = 59901E7B134124FDFF21AE95 /* Barte */;
 			targetProxy = 24EC44D03D49E2939D4D3D9C /* PBXContainerItemProxy */;
 		};
+		A97C09156BBC8D1F201043BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 45A46F66731A6C0E0995D742 /* BarteWidgets */;
+			targetProxy = 58115124BC5CBDD6D73EBB36 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		2749AD74B30151B93382D120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BarteWidgets/BarteWidgets.entitlements;
+				CURRENT_PROJECT_VERSION = 3;
+				INFOPLIST_FILE = BarteWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iamginsley.barte.widgets;
+				PRODUCT_NAME = BarteWidgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 		311E9DE2E0671C530CB0ECC0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -636,7 +818,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Barte/Resources/Barte.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = Barte/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -667,6 +849,28 @@
 			};
 			name = Release;
 		};
+		F1027671003466B8BB40E18F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BarteWidgets/BarteWidgets.entitlements;
+				CURRENT_PROJECT_VERSION = 3;
+				INFOPLIST_FILE = BarteWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iamginsley.barte.widgets;
+				PRODUCT_NAME = BarteWidgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		F375ECE0A7B7F5FBA305CEEC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -675,7 +879,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Barte/Resources/Barte.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = Barte/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -697,6 +901,15 @@
 			buildConfigurations = (
 				4440A8F1213FB42468102349 /* Debug */,
 				78DD61400597D9186767205A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AAF0B3D99E0CC36ED63D484E /* Build configuration list for PBXNativeTarget "BarteWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2749AD74B30151B93382D120 /* Debug */,
+				F1027671003466B8BB40E18F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

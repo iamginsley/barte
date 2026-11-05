@@ -30,13 +30,17 @@ targets:
     platform: iOS
     sources:
       - path: Barte
+      - path: Shared
     dependencies:
       - package: Supabase
         product: Supabase
+      - target: BarteWidgets
     entitlements:
       path: Barte/Resources/Barte.entitlements
       properties:
         com.apple.developer.applesignin: [Default]
+        com.apple.security.application-groups: [group.com.iamginsley.barte]
+        aps-environment: development
     info:
       path: Barte/Resources/Info.plist
       properties:
@@ -63,11 +67,43 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.iamginsley.barte
         PRODUCT_NAME: Barte
         MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "2"
+        CURRENT_PROJECT_VERSION: "3"
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+
+  BarteWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: BarteWidgets
+      - path: Shared
+      - path: Barte/Core/Models/Money.swift
+      - path: Barte/Resources/Assets.xcassets
+    entitlements:
+      path: BarteWidgets/BarteWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.iamginsley.barte]
+    info:
+      path: BarteWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Barte
+        CFBundleDevelopmentRegion: de
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.iamginsley.barte.widgets
+        PRODUCT_NAME: BarteWidgets
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "3"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+        SKIP_INSTALL: YES
 
   BarteTests:
     type: bundle.unit-test
