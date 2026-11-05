@@ -74,10 +74,14 @@ struct SupabaseGroupRepository: GroupRepository {
         let payerID: UUID
         let participantIDs: [UUID]
         let isSettlement: Bool
+        let splitKind: String
+        let splitValues: [Int]?
         let createdAt: Date
 
         enum CodingKeys: String, CodingKey {
             case id, title
+            case splitKind = "split_kind"
+            case splitValues = "split_values"
             case amountCents = "amount_cents"
             case spentOn = "spent_on"
             case payerID = "payer_id"
@@ -89,7 +93,7 @@ struct SupabaseGroupRepository: GroupRepository {
 
     func fetchGroups() async throws -> [SplitGroup] {
         let rows: [GroupRow] = try await client.from("groups")
-            .select("id, name, currency, color, invite_code, created_by, created_at, members(id, name, user_id, created_at), expenses(id, title, amount_cents, spent_on, payer_id, participant_ids, is_settlement, created_at)")
+            .select("id, name, currency, color, invite_code, created_by, created_at, members(id, name, user_id, created_at), expenses(id, title, amount_cents, spent_on, payer_id, participant_ids, is_settlement, split_kind, split_values, created_at)")
             .order("created_at", ascending: false)
             .execute()
             .value
@@ -111,7 +115,8 @@ struct SupabaseGroupRepository: GroupRepository {
                     date: item.day,
                     payerID: item.row.payerID,
                     participantIDs: item.row.participantIDs,
-                    isSettlement: item.row.isSettlement
+                    isSettlement: item.row.isSettlement,
+                    split: SplitMode(kind: item.row.splitKind, values: item.row.splitValues, participants: item.row.participantIDs)
                 )
             }
         return SplitGroup(
@@ -192,6 +197,8 @@ struct SupabaseGroupRepository: GroupRepository {
             let p_payer_id: UUID
             let p_participant_ids: [UUID]
             let p_is_settlement: Bool
+            let p_split_kind: String
+            let p_split_values: Nullable<[Int]>
         }
         try await client.rpc("save_expense", params: Params(
             p_id: expense.id,
@@ -201,7 +208,9 @@ struct SupabaseGroupRepository: GroupRepository {
             p_spent_on: LocalDay.string(from: expense.date),
             p_payer_id: expense.payerID,
             p_participant_ids: expense.participantIDs,
-            p_is_settlement: expense.isSettlement
+            p_is_settlement: expense.isSettlement,
+            p_split_kind: expense.split.kind,
+            p_split_values: Nullable(expense.splitValues)
         )).execute()
     }
 

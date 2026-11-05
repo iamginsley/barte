@@ -268,7 +268,7 @@ struct ExpenseRow: View {
 
     private var impact: (text: String, color: Color)? {
         guard let me, !expense.isSettlement else { return nil }
-        let share = Split.equal(amountCents: expense.amountCents, participants: expense.participantIDs, payer: expense.payerID)[me] ?? 0
+        let share = expense.shares[me] ?? 0
         if expense.payerID == me {
             let lent = expense.amountCents - share
             return lent > 0 ? ("du bekommst \(Money.format(lent, currency: group.currency))", .positive) : ("nur für dich", .inkSecondary)

@@ -49,7 +49,7 @@ struct AboutView: View {
                 }
 
                 Section("So rechnet Barte") {
-                    explanation("1", "Jede Ausgabe wird gleichmäßig auf die ausgewählten Personen verteilt, auf den Cent genau.")
+                    explanation("1", "Jede Ausgabe wird auf die ausgewählten Personen verteilt: gleichmäßig, nach Anteilen oder mit festen Beträgen, immer auf den Cent genau.")
                     explanation("2", "Daraus ergibt sich für alle ein Saldo: Wer mehr bezahlt hat, bekommt Geld, wer weniger bezahlt hat, schuldet.")
                     explanation("3", "Barte sucht dann die wenigsten Überweisungen, mit denen alle quitt sind. Statt dass jede:r jeder:m etwas zahlt, reichen oft ein, zwei Überweisungen.")
                 }

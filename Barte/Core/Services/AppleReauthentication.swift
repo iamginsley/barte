@@ -57,10 +57,10 @@ extension AppleReauthentication: ASAuthorizationControllerDelegate, ASAuthorizat
 
     nonisolated func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         MainActor.assumeIsolated {
-            UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap(\.windows)
-                .first(where: \.isKeyWindow) ?? ASPresentationAnchor()
+            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            if let window = scenes.flatMap(\.windows).first(where: \.isKeyWindow) { return window }
+            // Sign in with Apple only runs from a visible screen, so there is always a scene.
+            return ASPresentationAnchor(windowScene: scenes.first!)
         }
     }
 }
