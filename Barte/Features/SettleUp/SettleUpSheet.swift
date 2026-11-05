@@ -10,6 +10,7 @@ struct SettleUpSheet: View {
     @State private var pending: Transfer?
     @State private var paidCount = 0
     @State private var errorMessage: String?
+    @State private var showsPaymentDetails = false
 
     var body: some View {
         NavigationStack {
@@ -27,6 +28,7 @@ struct SettleUpSheet: View {
             }
         }
         .sensoryFeedback(.success, trigger: paidCount)
+        .sheet(isPresented: $showsPaymentDetails) { PaymentDetailsSheet() }
         .alert("Nicht verbucht", isPresented: .init(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -59,7 +61,10 @@ struct SettleUpSheet: View {
             } else {
                 Section {
                     ForEach(transfers, id: \.self) { transfer in
-                        TransferRow(transfer: transfer, group: group, me: me) { pending = transfer }
+                        TransferRow(
+                            transfer: transfer, group: group, me: me,
+                            payment: transfer.from == me ? model.payment(for: group.member(transfer.to)) : nil
+                        ) { pending = transfer }
                     }
                 } header: {
                     Text(transfers.count == 1 ? "Mit 1 Überweisung seid ihr quitt" : "Mit \(transfers.count) Überweisungen seid ihr quitt")
@@ -68,6 +73,26 @@ struct SettleUpSheet: View {
                 } footer: {
                     if direct > transfers.count {
                         Label("Barte hat die Schulden verrechnet: \(transfers.count) statt \(direct) einzelner Rückzahlungen.", systemImage: "sparkles")
+                    }
+                }
+
+                if transfers.contains(where: { $0.to == me }), model.myPayment == nil {
+                    Section {
+                        Button {
+                            showsPaymentDetails = true
+                        } label: {
+                            Label {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Zahlungsdaten hinterlegen")
+                                    Text("Mit PayPal.me oder IBAN können dir die anderen direkt aus Barte zahlen.")
+                                        .font(.footnote)
+                                        .foregroundStyle(Color.inkSecondary)
+                                }
+                            } icon: {
+                                Image(systemName: "creditcard")
+                            }
+                            .frame(minHeight: Theme.minTapSize)
+                        }
                     }
                 }
             }
@@ -118,35 +143,87 @@ private struct TransferRow: View {
     let transfer: Transfer
     let group: SplitGroup
     let me: UUID?
+    /// The recipient's details, when I am the one paying.
+    let payment: PaymentDetails?
     let markPaid: () -> Void
+
+    @State private var copied = 0
 
     var body: some View {
         let from = group.member(transfer.from)?.name ?? "?"
         let to = group.member(transfer.to)?.name ?? "?"
         let involvesMe = transfer.from == me || transfer.to == me
-        HStack(spacing: 12) {
-            HStack(spacing: 3) {
-                MemberAvatar(name: from, isMe: transfer.from == me, size: 28)
-                Image(systemName: "arrow.right")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(Color.inkSecondary)
-                MemberAvatar(name: to, isMe: transfer.to == me, size: 28)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                HStack(spacing: 3) {
+                    MemberAvatar(name: from, isMe: transfer.from == me, size: 28)
+                    Image(systemName: "arrow.right")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(Color.inkSecondary)
+                    MemberAvatar(name: to, isMe: transfer.to == me, size: 28)
+                }
+                .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(sentence)
+                        .font(involvesMe ? .body.weight(.semibold) : .body)
+                    Text(Money.format(transfer.amountCents, currency: group.currency))
+                        .font(.amount)
+                        .foregroundStyle(transfer.from == me ? Color.negative : transfer.to == me ? Color.positive : Color.inkSecondary)
+                }
+                .accessibilityElement(children: .combine)
+                Spacer()
+                Button("Bezahlt", action: markPaid)
+                    .buttonStyle(.bordered)
+                    .frame(minHeight: Theme.minTapSize)
+                    .accessibilityLabel("\(from) an \(to) als bezahlt markieren")
             }
-            .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(sentence)
-                    .font(involvesMe ? .body.weight(.semibold) : .body)
-                Text(Money.format(transfer.amountCents, currency: group.currency))
-                    .font(.amount)
-                    .foregroundStyle(transfer.from == me ? Color.negative : transfer.to == me ? Color.positive : Color.inkSecondary)
+            if let payment, !payment.isEmpty {
+                payButtons(payment, to: to)
             }
-            Spacer()
-            Button("Bezahlt", action: markPaid)
-                .buttonStyle(.bordered)
-                .frame(minHeight: Theme.minTapSize)
-                .accessibilityLabel("\(from) an \(to) als bezahlt markieren")
         }
         .padding(.vertical, 2)
+        .sensoryFeedback(.success, trigger: copied)
+    }
+
+    /// PayPal with the amount filled in, and the bank details to copy.
+    private func payButtons(_ payment: PaymentDetails, to name: String) -> some View {
+        HStack(spacing: 8) {
+            if let url = payment.paypalURL(amountCents: transfer.amountCents, currency: group.currency) {
+                Link(destination: url) {
+                    Label("PayPal", systemImage: "arrow.up.forward")
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, minHeight: 30)
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityLabel("\(name) mit PayPal \(Money.format(transfer.amountCents, currency: group.currency)) zahlen")
+            }
+            if let iban = payment.iban {
+                Menu {
+                    Section("\(payment.accountHolder ?? name)\n\(IBAN.formatted(iban))") {
+                        Button("IBAN kopieren", systemImage: "doc.on.doc") {
+                            UIPasteboard.general.string = iban
+                            copied += 1
+                        }
+                        Button("Betrag kopieren", systemImage: "banknote") {
+                            UIPasteboard.general.string = Money.editString(transfer.amountCents)
+                            copied += 1
+                        }
+                        if let holder = payment.accountHolder {
+                            Button("Name kopieren", systemImage: "person") {
+                                UIPasteboard.general.string = holder
+                                copied += 1
+                            }
+                        }
+                    }
+                } label: {
+                    Label("Überweisen", systemImage: "building.columns")
+                        .frame(maxWidth: .infinity, minHeight: 30)
+                }
+                .buttonStyle(.bordered)
+                .accessibilityLabel("Bankdaten von \(name)")
+            }
+        }
+        .controlSize(.regular)
     }
 
     private var sentence: String {

@@ -48,6 +48,21 @@ struct AboutView: View {
                     Text("Wird bei neuen Gruppen und beim Beitreten vorgeschlagen.")
                 }
 
+                Section {
+                    NavigationLink {
+                        PaymentDetailsView(details: app.myPayment)
+                    } label: {
+                        LabeledContent {
+                            Text(paymentSummary)
+                        } label: {
+                            Label("Zahlungsdaten", systemImage: "creditcard")
+                        }
+                    }
+                    .frame(minHeight: Theme.minTapSize)
+                } footer: {
+                    Text("PayPal.me oder IBAN, damit dir andere beim Ausgleichen direkt zahlen können.")
+                }
+
                 Section("So rechnet Barte") {
                     explanation("1", "Jede Ausgabe wird auf die ausgewählten Personen verteilt: gleichmäßig, nach Anteilen oder mit festen Beträgen, immer auf den Cent genau.")
                     explanation("2", "Daraus ergibt sich für alle ein Saldo: Wer mehr bezahlt hat, bekommt Geld, wer weniger bezahlt hat, schuldet.")
@@ -113,6 +128,15 @@ struct AboutView: View {
                     Button("Fertig", role: .close) { dismiss() }
                 }
             }
+        }
+    }
+
+    private var paymentSummary: String {
+        switch (app.myPayment?.paypal, app.myPayment?.iban) {
+        case (_?, _?): "PayPal, IBAN"
+        case (_?, nil): "PayPal"
+        case (nil, _?): "IBAN"
+        default: "Keine"
         }
     }
 

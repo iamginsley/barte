@@ -26,9 +26,12 @@
 		5E188D614CA05A69E6EB9254 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA27A8483504AC612812848 /* GroupCard.swift */; };
 		5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED078948C81E4D89678841 /* GroupDetailView.swift */; };
 		67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A41797BC57A6CE57A59669 /* RootView.swift */; };
+		7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC235A4715776991373586 /* PaymentDetailsTests.swift */; };
+		729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */; };
 		792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */; };
 		7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B6E09233AD6FFBE45E63EB /* Nullable.swift */; };
 		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
+		829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */; };
 		8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */; };
 		8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72919225A511CF3BEABFF20E /* SplitGroup.swift */; };
 		8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = ADACD81F8F846A944C9F702F /* AppIcon.icon */; };
@@ -43,6 +46,7 @@
 		DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CC263F664096A440BB76B /* DemoData.swift */; };
 		E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */; };
 		E7D7A058D3E2CEFC6D4D423C /* Backend.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E183DF598AC540D90608CC /* Backend.swift */; };
+		EA7255F7616264995904681D /* PaymentDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */; };
 		F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE077F805074D7BC5AC052 /* AppModel.swift */; };
 		F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */; };
 		FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B2BBE6996A48CBCED9D623 /* BarteApp.swift */; };
@@ -74,6 +78,7 @@
 		3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3D1EFB70DFDDC97A1DFC2261 /* Barte.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Barte.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EF4BE01897FD753519138AF /* WhoAmISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhoAmISheet.swift; sourceTree = "<group>"; };
+		41EC235A4715776991373586 /* PaymentDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsTests.swift; sourceTree = "<group>"; };
 		488AE27DE478B2716163DE9B /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorModel.swift; sourceTree = "<group>"; };
 		51EADB85144A27C17B3608AA /* SettleUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpSheet.swift; sourceTree = "<group>"; };
@@ -99,9 +104,12 @@
 		D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitModeTests.swift; sourceTree = "<group>"; };
 		DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ledger.swift; sourceTree = "<group>"; };
 		DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorSheet.swift; sourceTree = "<group>"; };
+		DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetails.swift; sourceTree = "<group>"; };
 		DEED078948C81E4D89678841 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
 		E4E183DF598AC540D90608CC /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
+		F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsModel.swift; sourceTree = "<group>"; };
 		F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsView.swift; sourceTree = "<group>"; };
 		FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleReauthentication.swift; sourceTree = "<group>"; };
 		FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barte.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,6 +166,7 @@
 				0899F401404ABB88525102B1 /* GroupDetail */,
 				6580437194E7EBDE85DF391A /* Groups */,
 				D83338721686899A3C497AAA /* Join */,
+				F9DC4AF2083654BC32E3E585 /* Payment */,
 				3866369FD54EB6E16F50C0E5 /* SettleUp */,
 			);
 			path = Features;
@@ -258,6 +267,7 @@
 				DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */,
 				0E68124ABC0C1BF5115F5172 /* LocalDay.swift */,
 				A5E327F2799EF74336CCF6DA /* Money.swift */,
+				DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */,
 				72919225A511CF3BEABFF20E /* SplitGroup.swift */,
 			);
 			path = Models;
@@ -315,6 +325,7 @@
 			children = (
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
+				41EC235A4715776991373586 /* PaymentDetailsTests.swift */,
 				D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */,
 			);
 			path = BarteTests;
@@ -326,6 +337,15 @@
 				B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */,
 			);
 			path = About;
+			sourceTree = "<group>";
+		};
+		F9DC4AF2083654BC32E3E585 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */,
+				FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */,
+			);
+			path = Payment;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -454,6 +474,9 @@
 				D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */,
 				414CF9027973560C983698C4 /* Money.swift in Sources */,
 				7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */,
+				EA7255F7616264995904681D /* PaymentDetails.swift in Sources */,
+				729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */,
+				829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */,
 				792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */,
 				67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */,
 				B57FDCFA805DA21A04A043A5 /* SettleUpSheet.swift in Sources */,
@@ -471,6 +494,7 @@
 			files = (
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
+				7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */,
 				97D1E8BD833269D810937705 /* SplitModeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

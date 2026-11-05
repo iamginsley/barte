@@ -25,6 +25,8 @@ final class AppModel {
 
     private(set) var phase: Phase = .launching
     private(set) var groups: [SplitGroup] = []
+    /// How people want to be paid, by user id.
+    private(set) var payments: [UUID: PaymentDetails] = [:]
     private(set) var userID: UUID?
     /// False until the first fetch finished, so the empty state doesn't flash.
     private(set) var hasLoaded = false
@@ -112,6 +114,7 @@ final class AppModel {
         changesTask = nil
         userID = nil
         groups = []
+        payments = [:]
         hasLoaded = false
         phase = .signedOut
     }
@@ -121,7 +124,11 @@ final class AppModel {
     func reload() async {
         guard let repository, userID != nil else { return }
         do {
-            groups = try await repository.fetchGroups()
+            async let fetchedGroups = repository.fetchGroups()
+            // Payment details are a nice-to-have: groups still load without them.
+            async let fetchedPayments = try? repository.fetchPaymentDetails()
+            groups = try await fetchedGroups
+            if let fetched = await fetchedPayments { payments = fetched }
             loadError = nil
         } catch is CancellationError {
             return
@@ -166,6 +173,13 @@ final class AppModel {
     func group(_ id: UUID) -> SplitGroup? { groups.first { $0.id == id } }
 
     func me(in groupID: UUID) -> UUID? { group(groupID)?.me(userID: userID) }
+
+    /// How this member wants to be paid, if they use the app and set it up.
+    func payment(for member: Member?) -> PaymentDetails? {
+        member?.userID.flatMap { payments[$0] }
+    }
+
+    var myPayment: PaymentDetails? { userID.flatMap { payments[$0] } }
 
     // MARK: Links
 

@@ -23,6 +23,11 @@ protocol GroupRepository: Sendable {
     /// Joins as an unclaimed member, or as a new person when `memberID` is nil.
     func joinGroup(code: String, memberID: UUID?, name: String?) async throws -> UUID
 
+    /// Payment details of everyone this person shares a group with, and their own, by user id.
+    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails]
+    /// Empty details remove them.
+    func savePaymentDetails(_ details: PaymentDetails) async throws
+
     func deleteAccount(appleAuthorizationCode: String) async throws
 
     /// Signals whenever something in this person's groups changes, also from other people.
@@ -233,6 +238,41 @@ struct SupabaseGroupRepository: GroupRepository {
         return try await client.rpc("join_group", params: Params(p_code: code, p_member_id: Nullable(memberID), p_name: Nullable(name))).execute().value
     }
 
+    // MARK: Payment details
+
+    private struct PaymentRow: Decodable {
+        let userID: UUID
+        let paypal: String?
+        let iban: String?
+        let accountHolder: String?
+
+        enum CodingKeys: String, CodingKey {
+            case paypal, iban
+            case userID = "user_id"
+            case accountHolder = "account_holder"
+        }
+    }
+
+    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails] {
+        let rows: [PaymentRow] = try await client.from("payment_details")
+            .select("user_id, paypal, iban, account_holder")
+            .execute()
+            .value
+        return Dictionary(rows.map { ($0.userID, PaymentDetails(paypal: $0.paypal, iban: $0.iban, accountHolder: $0.accountHolder)) },
+                          uniquingKeysWith: { first, _ in first })
+    }
+
+    func savePaymentDetails(_ details: PaymentDetails) async throws {
+        struct Params: Encodable {
+            let p_paypal: Nullable<String>
+            let p_iban: Nullable<String>
+            let p_account_holder: Nullable<String>
+        }
+        try await client.rpc("set_payment_details", params: Params(
+            p_paypal: Nullable(details.paypal), p_iban: Nullable(details.iban), p_account_holder: Nullable(details.accountHolder)
+        )).execute()
+    }
+
     // MARK: Account
 
     func deleteAccount(appleAuthorizationCode: String) async throws {
@@ -253,7 +293,7 @@ struct SupabaseGroupRepository: GroupRepository {
         return AsyncStream { continuation in
             let task = Task {
                 let channel = client.channel("barte-\(UUID().uuidString)")
-                let streams = ["groups", "members", "expenses"].map { table in
+                let streams = ["groups", "members", "expenses", "payment_details"].map { table in
                     channel.postgresChange(AnyAction.self, schema: "public", table: table)
                 }
                 do {

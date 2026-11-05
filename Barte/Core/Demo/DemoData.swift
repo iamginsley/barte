@@ -134,10 +134,29 @@ enum DemoData {
 /// In-memory repository for demo mode: no server, changes live until the app quits.
 actor DemoGroupRepository: GroupRepository {
     private var groups: [SplitGroup]
+    private var payments: [UUID: PaymentDetails]
     private let stream = AsyncStream<Void>.makeStream()
 
     init(groups: [SplitGroup] = DemoData.groups()) {
         self.groups = groups
+        // Everyone else with the app has PayPal and a bank account; Dominik has nothing yet.
+        var payments: [UUID: PaymentDetails] = [:]
+        for member in groups.flatMap(\.members) {
+            guard let userID = member.userID, userID != DemoData.userID else { continue }
+            payments[userID] = PaymentDetails(
+                paypal: member.name.lowercased() + "demo",
+                iban: "DE89370400440532013000",
+                accountHolder: "\(member.name) Beispiel"
+            )
+        }
+        self.payments = payments
+    }
+
+    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails] { payments }
+
+    func savePaymentDetails(_ details: PaymentDetails) async throws {
+        payments[DemoData.userID] = details.isEmpty ? nil : details
+        stream.continuation.yield()
     }
 
     nonisolated func changes() -> AsyncStream<Void> { stream.stream }
