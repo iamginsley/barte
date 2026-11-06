@@ -27,9 +27,12 @@ Barte teilt Ausgaben in Gruppen, ohne Werbung, kostenlos.
 
 • Gruppen als Karten: für jeden Urlaub, jede WG und jeden Abend eine eigene Karte
 • Schnell eingetragen: Betrag, wofür, wer bezahlt hat und für wen
+• Fair aufgeteilt: gleichmäßig, nach Anteilen (das Paar zählt doppelt) oder mit festen Beträgen
 • Smartes Ausgleichen: Barte verrechnet alle Schulden und zeigt die wenigsten Überweisungen, mit denen alle quitt sind
+• Direkt zurückzahlen: per PayPal-Link mit eingetragenem Betrag oder mit kopierter IBAN
 • Gemeinsam: Lade Freund:innen per Link oder Code ein, dann tragen alle selbst Ausgaben ein
 • Wer die App nicht hat, ist trotzdem dabei, als Name in der Gruppe
+• Mitteilungen, wenn jemand etwas einträgt, und ein Widget, das zeigt, was du bekommst oder schuldest
 • Eine Währung pro Gruppe, auf den Cent genau
 • Privat: Anmeldung mit Apple, keine Werbung, kein Tracking
 
@@ -37,6 +40,9 @@ Barte teilt Ausgaben in Gruppen, ohne Werbung, kostenlos.
 
 **Support-URL:** https://github.com/iamginsley/barte
 **Datenschutz-URL:** https://iamginsley.github.io/barte/datenschutz
+**Copyright:** 2026 Dominik Gintsberger
+
+„Anmeldung erforderlich“ bei den Prüfhinweisen bleibt aus: Die Prüfer:innen melden sich mit ihrer eigenen Apple-ID an.
 
 ## Datenschutz-Etiketten
 
@@ -67,4 +73,5 @@ Der Push-Token des Geräts wird nur für Mitteilungen gespeichert und ist keine 
 - [ ] TestFlight-Build mit Freund:innen getestet
 - [ ] GitHub Pages aktiv (Settings → Pages → `main` / `docs`), Datenschutz-URL erreichbar
 - [ ] Screenshots ohne Alpha in 1206 × 2622 (Demo-Modus: `-BarteDemo`, `-BarteGroup 0`, `-BarteSheet settle|expense|invite|join`)
-- [ ] Texte und Datenschutz-Etiketten in App Store Connect eingetragen
+- [x] Texte, Preis und Datenschutz-Etiketten in App Store Connect eingetragen und veröffentlicht
+- [ ] Inhaltsrechte („Nein“), Altersfreigabe, Verfügbarkeit und Kontakt für die Prüfung eingetragen
