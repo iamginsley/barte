@@ -1,5 +1,17 @@
 # App Store: Barte
 
+## App Store Connect
+
+In App Store Connect angelegt am 5. November 2026.
+
+| Feld | Wert |
+| --- | --- |
+| Apple-ID der App | 6831268880 |
+| Bundle-ID | com.iamginsley.barte |
+| SKU | barte-ios |
+| Primäre Sprache | Deutsch |
+| Link | https://appstoreconnect.apple.com/apps/6831268880 |
+
 ## Texte
 
 **Name:** Barte
@@ -45,6 +57,7 @@ Der Push-Token des Geräts wird nur für Mitteilungen gespeichert und ist keine 
 
 ## Checkliste
 
+- [x] App in App Store Connect angelegt (Name, Bundle-ID, SKU)
 - [ ] Build-Nummer in `project.yml` hochzählen, `xcodegen generate`
 - [ ] Supabase: Migrationen eingespielt, `apple-revoke` und `notify-group` deployt, Apple- und APNs-Secrets gesetzt (siehe README)
 - [ ] Mitteilungen mit zwei iPhones getestet (Ausgabe eintragen, Ausgleich verbuchen, Tipp öffnet die Gruppe)
