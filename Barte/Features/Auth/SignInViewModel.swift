@@ -2,20 +2,19 @@ import AuthenticationServices
 import CryptoKit
 import Foundation
 import Observation
-import Supabase
 
-/// Sign in with Apple, exchanged for a Supabase session via the ID token.
+/// Sign in with Apple, exchanged for an Nhost session via the ID token.
 @MainActor
 @Observable
 final class SignInViewModel {
     private(set) var isWorking = false
     var errorMessage: String?
 
-    private let client: SupabaseClient?
+    private let session: NhostSession?
     private var currentNonce: String?
 
-    init(client: SupabaseClient?) {
-        self.client = client
+    init(session: NhostSession?) {
+        self.session = session
     }
 
     /// Called by SignInWithAppleButton before the Apple sheet opens.
@@ -33,7 +32,7 @@ final class SignInViewModel {
         case .failure:
             errorMessage = String(localized: "Die Anmeldung mit Apple hat nicht geklappt. Versuch es noch einmal.")
         case .success(let authorization):
-            guard let client,
+            guard let session,
                   let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
                   let tokenData = credential.identityToken,
                   let idToken = String(data: tokenData, encoding: .utf8),
@@ -44,7 +43,7 @@ final class SignInViewModel {
             isWorking = true
             defer { isWorking = false }
             do {
-                try await client.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce))
+                try await session.signIn(appleIDToken: idToken, nonce: nonce)
                 // Apple shares the name only on the very first sign-in; keep it to prefill new groups and joining.
                 if let givenName = credential.fullName?.givenName, !givenName.isEmpty, Preferences.myName.isEmpty {
                     Preferences.myName = givenName

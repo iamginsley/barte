@@ -24,7 +24,6 @@
 		414CF9027973560C983698C4 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
 		4796451C2E81661F65622418 /* BarteWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4BF8AB095C87DBB08EB9F0E1 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A8AEC534DABD9DE65E7FF0 /* Invite.swift */; };
-		4F3C5202C2F1BD8EFB65A8D6 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 768498438C98CA5E77E3CF39 /* Supabase */; };
 		517328480C59FBFF8071972F /* AppleReauthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */; };
 		5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC77A98173AD0934686C779 /* GroupsView.swift */; };
 		5D798362D14E638C609F8FC0 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD35959716BA80250481075D /* Notifications.swift */; };
@@ -36,9 +35,9 @@
 		7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC235A4715776991373586 /* PaymentDetailsTests.swift */; };
 		729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */; };
 		792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */; };
-		7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B6E09233AD6FFBE45E63EB /* Nullable.swift */; };
 		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
 		829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */; };
+		887D863CA9F95222FCD123EC /* NhostAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9604C1F1E391D5C7F48952 /* NhostAPI.swift */; };
 		8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */; };
 		8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72919225A511CF3BEABFF20E /* SplitGroup.swift */; };
 		8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = ADACD81F8F846A944C9F702F /* AppIcon.icon */; };
@@ -63,6 +62,8 @@
 		F2C78DCE82B573DE831A5BA3 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE077F805074D7BC5AC052 /* AppModel.swift */; };
 		F596E7CC808E86B3B05C2420 /* Ledger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */; };
 		F64F24B5B96DA94020CA6FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 396C129AE54D48D707EBC0F2 /* Assets.xcassets */; };
+		FAC9BF2531B696819F3910C8 /* NhostSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5A22974E94CB5FD9D261F7 /* NhostSession.swift */; };
+		FC5D9F463699911106D47B43 /* NhostWireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC4EAACB84203E839CD5B3 /* NhostWireTests.swift */; };
 		FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B2BBE6996A48CBCED9D623 /* BarteApp.swift */; };
 		FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */; };
 /* End PBXBuildFile section */
@@ -101,6 +102,7 @@
 /* Begin PBXFileReference section */
 		068F8AA9DEAD43BC0AF45C30 /* BarteWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BarteWidgets.entitlements; sourceTree = "<group>"; };
 		093E87CAC05D1A8D71E3898C /* BarteLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteLogo.swift; sourceTree = "<group>"; };
+		0B9604C1F1E391D5C7F48952 /* NhostAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NhostAPI.swift; sourceTree = "<group>"; };
 		0BA27A8483504AC612812848 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
 		0E68124ABC0C1BF5115F5172 /* LocalDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDay.swift; sourceTree = "<group>"; };
 		0E717002048274CB18A03413 /* MemberAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAvatar.swift; sourceTree = "<group>"; };
@@ -109,7 +111,6 @@
 		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
 		2CEE077F805074D7BC5AC052 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
-		35B6E09233AD6FFBE45E63EB /* Nullable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nullable.swift; sourceTree = "<group>"; };
 		3909B49D515E86B76403FAB2 /* LedgerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerTests.swift; sourceTree = "<group>"; };
 		396C129AE54D48D707EBC0F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -133,6 +134,7 @@
 		8B519AB4E206BA055D174A5F /* BarteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BarteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B2BBE6996A48CBCED9D623 /* BarteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteApp.swift; sourceTree = "<group>"; };
 		98A41797BC57A6CE57A59669 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		9F5A22974E94CB5FD9D261F7 /* NhostSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NhostSession.swift; sourceTree = "<group>"; };
 		9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteAndDayTests.swift; sourceTree = "<group>"; };
 		A0C47330813B77DC2EF11DB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A5E327F2799EF74336CCF6DA /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
@@ -155,22 +157,12 @@
 		DEED078948C81E4D89678841 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
 		E4E183DF598AC540D90608CC /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
 		F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsModel.swift; sourceTree = "<group>"; };
+		F3FC4EAACB84203E839CD5B3 /* NhostWireTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NhostWireTests.swift; sourceTree = "<group>"; };
 		F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsView.swift; sourceTree = "<group>"; };
 		FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleReauthentication.swift; sourceTree = "<group>"; };
 		FF86EB9AEF1A54B5A997ADDA /* Barte.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barte.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		7F08AD449E3F3CBD26B0A6E3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4F3C5202C2F1BD8EFB65A8D6 /* Supabase in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		01D3E7E7C3E364AD3354FC7E /* Barte */ = {
@@ -329,8 +321,9 @@
 			children = (
 				FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */,
 				E4E183DF598AC540D90608CC /* Backend.swift */,
+				0B9604C1F1E391D5C7F48952 /* NhostAPI.swift */,
+				9F5A22974E94CB5FD9D261F7 /* NhostSession.swift */,
 				AD35959716BA80250481075D /* Notifications.swift */,
-				35B6E09233AD6FFBE45E63EB /* Nullable.swift */,
 				F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */,
 				89DAAD7867B182D9084D1F53 /* WidgetSync.swift */,
 			);
@@ -387,6 +380,7 @@
 			children = (
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
+				F3FC4EAACB84203E839CD5B3 /* NhostWireTests.swift */,
 				41EC235A4715776991373586 /* PaymentDetailsTests.swift */,
 				D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */,
 				7965253B6D373C9130DBFE6C /* WidgetAndLinkTests.swift */,
@@ -450,7 +444,6 @@
 			buildPhases = (
 				E966AB2BA93390F54A6CEDDD /* Sources */,
 				C48AB1656C60BE5E9421319E /* Resources */,
-				7F08AD449E3F3CBD26B0A6E3 /* Frameworks */,
 				6FFD86AA19D88A65E6333076 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -460,7 +453,6 @@
 			);
 			name = Barte;
 			packageProductDependencies = (
-				768498438C98CA5E77E3CF39 /* Supabase */,
 			);
 			productName = Barte;
 			productReference = 3D1EFB70DFDDC97A1DFC2261 /* Barte.app */;
@@ -516,9 +508,6 @@
 			);
 			mainGroup = 6426DDA34EE512798A020B53;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				202E28E45131C317D9F06BA8 /* XCRemoteSwiftPackageReference "supabase-swift" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 377EE21823B8826BA5F42BCD /* Products */;
 			projectDirPath = "";
@@ -595,9 +584,10 @@
 				26420B5C34528CD6BAADA056 /* LocalDay.swift in Sources */,
 				D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */,
 				414CF9027973560C983698C4 /* Money.swift in Sources */,
+				887D863CA9F95222FCD123EC /* NhostAPI.swift in Sources */,
+				FAC9BF2531B696819F3910C8 /* NhostSession.swift in Sources */,
 				5FD4C82CFDC87B09A4513956 /* NotificationSettingsRow.swift in Sources */,
 				5D798362D14E638C609F8FC0 /* Notifications.swift in Sources */,
-				7A43A9DB795C48C7D80591A0 /* Nullable.swift in Sources */,
 				EA7255F7616264995904681D /* PaymentDetails.swift in Sources */,
 				729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */,
 				829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */,
@@ -620,6 +610,7 @@
 			files = (
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
+				FC5D9F463699911106D47B43 /* NhostWireTests.swift in Sources */,
 				7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */,
 				97D1E8BD833269D810937705 /* SplitModeTests.swift in Sources */,
 				CE41BFE03C63812A131DF6F1 /* WidgetAndLinkTests.swift in Sources */,
@@ -933,25 +924,6 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		202E28E45131C317D9F06BA8 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.55.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		768498438C98CA5E77E3CF39 /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 202E28E45131C317D9F06BA8 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B4EDB1E9792DC38F3612D7C0 /* Project object */;
 }

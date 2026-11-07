@@ -19,11 +19,6 @@ settings:
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
     SWIFT_EMIT_LOC_STRINGS: YES
 
-packages:
-  Supabase:
-    url: https://github.com/supabase/supabase-swift
-    from: "2.55.0"
-
 targets:
   Barte:
     type: application
@@ -32,8 +27,6 @@ targets:
       - path: Barte
       - path: Shared
     dependencies:
-      - package: Supabase
-        product: Supabase
       - target: BarteWidgets
     entitlements:
       path: Barte/Resources/Barte.entitlements
@@ -54,8 +47,6 @@ targets:
         CFBundleURLTypes:
           - CFBundleURLName: com.iamginsley.barte
             CFBundleURLSchemes: [barte]
-        SupabaseHost: "$(SUPABASE_HOST)"
-        SupabaseAnonKey: "$(SUPABASE_ANON_KEY)"
         UILaunchScreen:
           UIColorName: Surface
         UIApplicationSceneManifest:

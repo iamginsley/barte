@@ -65,7 +65,7 @@ Der Push-Token des Geräts wird nur für Mitteilungen gespeichert und ist keine 
 
 - [x] App in App Store Connect angelegt (Name, Bundle-ID, SKU)
 - [ ] Build-Nummer in `project.yml` hochzählen, `xcodegen generate`
-- [ ] Supabase: Migrationen eingespielt, `apple-revoke` und `notify-group` deployt, Apple- und APNs-Secrets gesetzt (siehe README)
+- [ ] Nhost: Secrets `APPLE_KEY_ID` und `APPLE_PRIVATE_KEY` gesetzt, GitHub verbunden, erstes Deployment grün, `scripts/test-nhost-api.mjs` bestanden (siehe README)
 - [ ] Mitteilungen mit zwei iPhones getestet (Ausgabe eintragen, Ausgleich verbuchen, Tipp öffnet die Gruppe)
 - [ ] Widget auf dem Homescreen geprüft (klein und mittel, Hell und Dunkel)
 - [ ] Einladen und Beitreten mit zwei echten iPhones und zwei Apple-IDs getestet

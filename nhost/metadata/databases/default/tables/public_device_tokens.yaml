@@ -1,0 +1,4 @@
+# Only the notify function reads these, as admin.
+table:
+  name: device_tokens
+  schema: public

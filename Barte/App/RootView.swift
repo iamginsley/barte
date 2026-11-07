@@ -11,13 +11,6 @@ struct RootView: View {
                     .controlSize(.large)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.surface)
-            case .notConfigured:
-                ContentUnavailableView {
-                    Label("Supabase fehlt noch", systemImage: "gearshape.2")
-                } description: {
-                    Text("Kopiere Config.example.xcconfig nach Config.xcconfig, trage Host und Anon Key deines Supabase-Projekts ein und baue die App neu.")
-                }
-                .background(Color.surface)
             case .signedOut:
                 SignInView()
             case .ready:

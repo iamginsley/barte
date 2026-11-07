@@ -1,37 +1,21 @@
 import Foundation
-import Supabase
 
-/// Values injected at build time from Config.xcconfig via Info.plist.
-enum AppConfig {
-    static var supabaseURL: URL? {
-        guard let host = infoValue("SupabaseHost") else { return nil }
-        return URL(string: "https://\(host)")
-    }
-
-    static var supabaseAnonKey: String? { infoValue("SupabaseAnonKey") }
-
-    private static func infoValue(_ key: String) -> String? {
-        guard let value = Bundle.main.object(forInfoDictionaryKey: key) as? String else { return nil }
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        // Unresolved build settings or placeholders from the example file count as missing.
-        if trimmed.isEmpty || trimmed.contains("$(") || trimmed.hasPrefix("your-") { return nil }
-        return trimmed
-    }
-}
-
-/// The single Supabase client for the app. `nil` when Config.xcconfig is missing.
+/// The Nhost project (Frankfurt). Subdomain and region are public: every request names them anyway.
 enum Backend {
-    static let client: SupabaseClient? = {
-        guard let url = AppConfig.supabaseURL, let key = AppConfig.supabaseAnonKey else { return nil }
-        return SupabaseClient(
-            supabaseURL: url,
-            supabaseKey: key,
-            options: SupabaseClientOptions(auth: .init(emitLocalSessionAsInitialSession: true))
-        )
-    }()
+    static let subdomain = "uenqaayyhyrekjhojdwn"
+    static let region = "eu-central-1"
+
+    /// `https://<subdomain>.<service>.<region>.nhost.run/v1/<path>`
+    static func url(_ service: String, _ path: String = "") -> URL {
+        let base = URL(string: "https://\(subdomain).\(service).\(region).nhost.run/v1")!
+        return path.isEmpty ? base : base.appending(path: path)
+    }
+
+    static let session = NhostSession()
+    static let api = NhostAPI(session: session)
 }
 
-/// Errors with a German message for the UI. Server errors carry a `hint` set by the SQL functions.
+/// Errors with a German message for the UI. Server errors carry the hint the SQL functions raise.
 enum BarteError: LocalizedError, Equatable {
     case notSignedIn
     case offline
@@ -54,11 +38,12 @@ enum BarteError: LocalizedError, Equatable {
             case "member_linked": "Diese Person nutzt Barte selbst und kann nur selbst austreten."
             case "not_creator": "Nur wer die Gruppe erstellt hat, kann sie für alle löschen."
             case "not_member": "Du bist nicht mehr in dieser Gruppe."
-            case "unknown_member": "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe."
+            case "unknown_member", "member_not_found": "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe."
             case "empty_name": "Bitte gib einen Namen ein."
             case "invalid_split": "Die Beträge ergeben nicht die Summe der Ausgabe."
             case "invalid_paypal": "Das sieht nicht nach einem PayPal.me-Namen aus."
             case "invalid_iban": "Bitte prüfe die IBAN."
+            case "not_signed_in": "Du bist nicht mehr angemeldet. Bitte melde dich erneut an."
             default: "Das hat nicht geklappt. Versuch es noch einmal."
             }
         }
@@ -67,17 +52,7 @@ enum BarteError: LocalizedError, Equatable {
     /// Turns any thrown error into one the UI can show.
     static func from(_ error: Error) -> BarteError {
         if let error = error as? BarteError { return error }
-        if let error = error as? PostgrestError { return .server(hint: error.hint) }
         if error is URLError { return .offline }
         return .server(hint: nil)
-    }
-}
-
-extension SupabaseClient {
-    var currentUserID: UUID {
-        get throws {
-            guard let id = auth.currentUser?.id else { throw BarteError.notSignedIn }
-            return id
-        }
     }
 }

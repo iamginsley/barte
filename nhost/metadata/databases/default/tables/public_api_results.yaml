@@ -1,0 +1,14 @@
+# Return type of the API functions; never holds rows. Readable only as a function result.
+table:
+  name: api_results
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - code
+        - preview
+      filter: {}
+    query_root_fields: []
+    subscription_root_fields: []

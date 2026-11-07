@@ -1,6 +1,5 @@
 import Foundation
 import Observation
-import Supabase
 
 /// An error with a message ready for an alert.
 struct UserFacingError: Error {
@@ -18,7 +17,6 @@ struct UserFacingError: Error {
 final class AppModel {
     enum Phase: Equatable {
         case launching
-        case notConfigured
         case signedOut
         case ready
     }
@@ -37,7 +35,8 @@ final class AppModel {
     var pendingGroupID: UUID?
 
     let isDemo: Bool
-    let client: SupabaseClient?
+    /// Nil in the demo.
+    let api: NhostAPI?
     let repository: GroupRepository?
     private let notifier: GroupNotifier?
 
@@ -45,19 +44,19 @@ final class AppModel {
     private var changesTask: Task<Void, Never>?
     private var reloadTask: Task<Void, Never>?
 
-    init(client: SupabaseClient? = Backend.client) {
+    init(api: NhostAPI = Backend.api) {
         if DemoData.isEnabled {
             Preferences.useDemoDefaults()
             Preferences.myName = "Dominik"
-            self.client = nil
+            self.api = nil
             self.repository = DemoGroupRepository()
             self.notifier = nil
             self.isDemo = true
             return
         }
-        self.client = client
-        self.repository = client.map(SupabaseGroupRepository.init(client:))
-        self.notifier = client.map(GroupNotifier.init(client:))
+        self.api = api
+        self.repository = NhostGroupRepository(api: api)
+        self.notifier = GroupNotifier(api: api)
         self.isDemo = false
     }
 
@@ -72,28 +71,19 @@ final class AppModel {
             }
             return
         }
-        guard let client else {
-            phase = .notConfigured
-            return
-        }
-        guard authTask == nil else { return }
+        guard let api, authTask == nil else { return }
         authTask = Task { [weak self] in
-            for await (event, session) in client.auth.authStateChanges {
+            for await event in api.session.events {
                 guard let self else { return }
                 switch event {
-                case .initialSession, .signedIn, .tokenRefreshed, .userUpdated:
-                    if let session, !session.isExpired {
-                        if self.userID != session.user.id { self.signedIn(as: session.user.id) }
-                    } else if event == .initialSession {
-                        self.signedOut()
-                    }
-                case .signedOut, .userDeleted:
-                    self.signedOut()
-                default:
-                    break
+                case .signedIn(let id):
+                    if self.userID != id { self.signedIn(as: id) }
+                case .signedOut:
+                    if self.phase != .signedOut { self.signedOut() }
                 }
             }
         }
+        Task { await api.session.restore() }
     }
 
     /// Used by the demo sign-in button.
@@ -107,7 +97,7 @@ final class AppModel {
         Task { await reload() }
         if !isDemo {
             Task {
-                await PushToken.register(client: client)
+                await PushToken.register(api: api)
                 await Notifications.registerForPushIfAllowed()
             }
         }
@@ -219,8 +209,8 @@ final class AppModel {
             signedOut()
             return
         }
-        await PushToken.unregister(client: client)
-        try? await client?.auth.signOut()
+        await PushToken.unregister(api: api)
+        await api?.session.signOut()
     }
 
     /// Confirms with Apple first; cancelling there throws AppleReauthentication.Failure.canceled.

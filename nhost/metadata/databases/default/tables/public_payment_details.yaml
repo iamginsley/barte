@@ -1,0 +1,32 @@
+# Your own, and those of everyone you share a group with.
+table:
+  name: payment_details
+  schema: public
+array_relationships:
+  - name: memberships
+    using:
+      manual_configuration:
+        column_mapping:
+          user_id: user_id
+        insertion_order: null
+        remote_table:
+          name: members
+          schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - user_id
+        - paypal
+        - iban
+        - account_holder
+        - updated_at
+      filter:
+        _or:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - memberships:
+              group:
+                members:
+                  user_id:
+                    _eq: X-Hasura-User-Id
