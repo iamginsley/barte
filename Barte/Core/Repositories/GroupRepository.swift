@@ -1,7 +1,6 @@
 import Foundation
-import Supabase
 
-/// Groups, their people and expenses. Reads go through Row Level Security, writes through SQL functions.
+/// Groups, their people and expenses. Reads go through the Hasura permissions, writes through SQL functions.
 protocol GroupRepository: Sendable {
     func fetchGroups() async throws -> [SplitGroup]
 
@@ -34,12 +33,12 @@ protocol GroupRepository: Sendable {
     func changes() -> AsyncStream<Void>
 }
 
-struct SupabaseGroupRepository: GroupRepository {
-    let client: SupabaseClient
+struct NhostGroupRepository: GroupRepository {
+    let api: NhostAPI
 
     // MARK: Reading
 
-    private struct GroupRow: Decodable {
+    private struct GroupRow: Decodable, Sendable {
         let id: UUID
         let name: String
         let currency: String
@@ -58,7 +57,7 @@ struct SupabaseGroupRepository: GroupRepository {
         }
     }
 
-    private struct MemberRow: Decodable {
+    private struct MemberRow: Decodable, Sendable {
         let id: UUID
         let name: String
         let userID: UUID?
@@ -71,16 +70,16 @@ struct SupabaseGroupRepository: GroupRepository {
         }
     }
 
-    private struct ExpenseRow: Decodable {
+    private struct ExpenseRow: Decodable, Sendable {
         let id: UUID
         let title: String
         let amountCents: Int
         let spentOn: String
         let payerID: UUID
-        let participantIDs: [UUID]
+        let participantIDs: PGArray<UUID>
         let isSettlement: Bool
         let splitKind: String
-        let splitValues: [Int]?
+        let splitValues: PGArray<Int>?
         let createdAt: Date
 
         enum CodingKeys: String, CodingKey {
@@ -96,13 +95,16 @@ struct SupabaseGroupRepository: GroupRepository {
         }
     }
 
+    private static let groupFields = """
+        id name currency color invite_code created_by created_at
+        members { id name user_id created_at }
+        expenses { id title amount_cents spent_on payer_id participant_ids is_settlement split_kind split_values created_at }
+        """
+
     func fetchGroups() async throws -> [SplitGroup] {
-        let rows: [GroupRow] = try await client.from("groups")
-            .select("id, name, currency, color, invite_code, created_by, created_at, members(id, name, user_id, created_at), expenses(id, title, amount_cents, spent_on, payer_id, participant_ids, is_settlement, split_kind, split_values, created_at)")
-            .order("created_at", ascending: false)
-            .execute()
-            .value
-        return rows.map(Self.group(from:))
+        struct Data: Decodable, Sendable { let groups: [GroupRow] }
+        let data: Data = try await api.query("query Groups { groups(order_by: { created_at: desc }) { \(Self.groupFields) } }")
+        return data.groups.map(Self.group(from:))
     }
 
     private static func group(from row: GroupRow) -> SplitGroup {
@@ -119,9 +121,9 @@ struct SupabaseGroupRepository: GroupRepository {
                     amountCents: item.row.amountCents,
                     date: item.day,
                     payerID: item.row.payerID,
-                    participantIDs: item.row.participantIDs,
+                    participantIDs: item.row.participantIDs.values,
                     isSettlement: item.row.isSettlement,
-                    split: SplitMode(kind: item.row.splitKind, values: item.row.splitValues, participants: item.row.participantIDs)
+                    split: SplitMode(kind: item.row.splitKind, values: item.row.splitValues?.values, participants: item.row.participantIDs.values)
                 )
             }
         return SplitGroup(
@@ -137,110 +139,93 @@ struct SupabaseGroupRepository: GroupRepository {
         )
     }
 
+    /// The id an SQL function returned, or an error when it unexpectedly returned none.
+    private func id(from result: NhostAPI.Result?) throws -> UUID {
+        guard let id = result?.id else { throw BarteError.server(hint: nil) }
+        return id
+    }
+
     // MARK: Groups
 
     func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID {
-        struct Params: Encodable {
-            let p_name: String
-            let p_currency: String
-            let p_color: Int
-            let p_my_name: String
-            let p_other_names: [String]
-        }
-        return try await client.rpc("create_group", params: Params(
-            p_name: name, p_currency: currency, p_color: color.rawValue, p_my_name: myName, p_other_names: otherNames
-        )).execute().value
+        try id(from: await api.call("create_group", [
+            "p_name": .string(name),
+            "p_currency": .string(currency),
+            "p_color": .int(color.rawValue),
+            "p_my_name": .string(myName),
+            "p_other_names": .pgArray(otherNames),
+        ]))
     }
 
     func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws {
-        struct Params: Encodable {
-            let p_group_id: UUID
-            let p_name: String
-            let p_currency: String
-            let p_color: Int
-        }
-        try await client.rpc("update_group", params: Params(p_group_id: id, p_name: name, p_currency: currency, p_color: color.rawValue)).execute()
+        try await api.call("update_group", [
+            "p_group_id": .uuid(id), "p_name": .string(name), "p_currency": .string(currency), "p_color": .int(color.rawValue),
+        ])
     }
 
     func deleteGroup(_ id: UUID) async throws {
-        try await client.rpc("delete_group", params: ["p_group_id": id]).execute()
+        try await api.call("delete_group", ["p_group_id": .uuid(id)])
     }
 
     func leaveGroup(_ id: UUID) async throws {
-        try await client.rpc("leave_group", params: ["p_group_id": id]).execute()
+        try await api.call("leave_group", ["p_group_id": .uuid(id)])
     }
 
     // MARK: Members
 
     func addMember(named name: String, to groupID: UUID) async throws -> UUID {
-        struct Params: Encodable { let p_group_id: UUID; let p_name: String }
-        return try await client.rpc("add_member", params: Params(p_group_id: groupID, p_name: name)).execute().value
+        try id(from: await api.call("add_member", ["p_group_id": .uuid(groupID), "p_name": .string(name)]))
     }
 
     func renameMember(_ id: UUID, to name: String) async throws {
-        struct Params: Encodable { let p_member_id: UUID; let p_name: String }
-        try await client.rpc("rename_member", params: Params(p_member_id: id, p_name: name)).execute()
+        try await api.call("rename_member", ["p_member_id": .uuid(id), "p_name": .string(name)])
     }
 
     func removeMember(_ id: UUID) async throws {
-        try await client.rpc("remove_member", params: ["p_member_id": id]).execute()
+        try await api.call("remove_member", ["p_member_id": .uuid(id)])
     }
 
     func claimMember(_ id: UUID) async throws {
-        try await client.rpc("claim_member", params: ["p_member_id": id]).execute()
+        try await api.call("claim_member", ["p_member_id": .uuid(id)])
     }
 
     // MARK: Expenses
 
     func save(_ expense: Expense, in groupID: UUID) async throws {
-        struct Params: Encodable {
-            let p_id: UUID
-            let p_group_id: UUID
-            let p_title: String
-            let p_amount_cents: Int
-            let p_spent_on: String
-            let p_payer_id: UUID
-            let p_participant_ids: [UUID]
-            let p_is_settlement: Bool
-            let p_split_kind: String
-            let p_split_values: Nullable<[Int]>
-        }
-        try await client.rpc("save_expense", params: Params(
-            p_id: expense.id,
-            p_group_id: groupID,
-            p_title: expense.title,
-            p_amount_cents: expense.amountCents,
-            p_spent_on: LocalDay.string(from: expense.date),
-            p_payer_id: expense.payerID,
-            p_participant_ids: expense.participantIDs,
-            p_is_settlement: expense.isSettlement,
-            p_split_kind: expense.split.kind,
-            p_split_values: Nullable(expense.splitValues)
-        )).execute()
+        try await api.call("save_expense", [
+            "p_id": .uuid(expense.id),
+            "p_group_id": .uuid(groupID),
+            "p_title": .string(expense.title),
+            "p_amount_cents": .int(expense.amountCents),
+            "p_spent_on": .string(LocalDay.string(from: expense.date)),
+            "p_payer_id": .uuid(expense.payerID),
+            "p_participant_ids": .pgArray(expense.participantIDs),
+            "p_is_settlement": .bool(expense.isSettlement),
+            "p_split_kind": .string(expense.split.kind),
+            "p_split_values": .pgArray(expense.splitValues),
+        ])
     }
 
     func deleteExpense(_ id: UUID) async throws {
-        try await client.rpc("delete_expense", params: ["p_id": id]).execute()
+        try await api.call("delete_expense", ["p_id": .uuid(id)])
     }
 
     // MARK: Joining
 
     func previewInvite(code: String) async throws -> InvitePreview {
-        try await client.rpc("preview_invite", params: ["p_code": code]).execute().value
+        guard let preview = try await api.call("preview_invite", ["p_code": .string(code)])?.preview else {
+            throw BarteError.server(hint: "invalid_code")
+        }
+        return preview
     }
 
     func joinGroup(code: String, memberID: UUID?, name: String?) async throws -> UUID {
-        struct Params: Encodable {
-            let p_code: String
-            let p_member_id: Nullable<UUID>
-            let p_name: Nullable<String>
-        }
-        return try await client.rpc("join_group", params: Params(p_code: code, p_member_id: Nullable(memberID), p_name: Nullable(name))).execute().value
+        try id(from: await api.call("join_group", ["p_code": .string(code), "p_member_id": .uuid(memberID), "p_name": .optional(name)]))
     }
 
     // MARK: Payment details
 
-    private struct PaymentRow: Decodable {
+    private struct PaymentRow: Decodable, Sendable {
         let userID: UUID
         let paypal: String?
         let iban: String?
@@ -254,64 +239,37 @@ struct SupabaseGroupRepository: GroupRepository {
     }
 
     func fetchPaymentDetails() async throws -> [UUID: PaymentDetails] {
-        let rows: [PaymentRow] = try await client.from("payment_details")
-            .select("user_id, paypal, iban, account_holder")
-            .execute()
-            .value
-        return Dictionary(rows.map { ($0.userID, PaymentDetails(paypal: $0.paypal, iban: $0.iban, accountHolder: $0.accountHolder)) },
+        struct Data: Decodable, Sendable { let payment_details: [PaymentRow] }
+        let data: Data = try await api.query("query Payments { payment_details { user_id paypal iban account_holder } }")
+        return Dictionary(data.payment_details.map { ($0.userID, PaymentDetails(paypal: $0.paypal, iban: $0.iban, accountHolder: $0.accountHolder)) },
                           uniquingKeysWith: { first, _ in first })
     }
 
     func savePaymentDetails(_ details: PaymentDetails) async throws {
-        struct Params: Encodable {
-            let p_paypal: Nullable<String>
-            let p_iban: Nullable<String>
-            let p_account_holder: Nullable<String>
-        }
-        try await client.rpc("set_payment_details", params: Params(
-            p_paypal: Nullable(details.paypal), p_iban: Nullable(details.iban), p_account_holder: Nullable(details.accountHolder)
-        )).execute()
+        try await api.call("set_payment_details", [
+            "p_paypal": .optional(details.paypal), "p_iban": .optional(details.iban), "p_account_holder": .optional(details.accountHolder),
+        ])
     }
 
     // MARK: Account
 
     func deleteAccount(appleAuthorizationCode: String) async throws {
         do {
-            try await client.functions.invoke("apple-revoke", options: .init(body: ["authorization_code": appleAuthorizationCode]))
+            try await api.invokeFunction("apple-revoke", body: ["authorization_code": .string(appleAuthorizationCode)])
         } catch {
             throw BarteError.appleRevocationFailed
         }
-        try await client.rpc("delete_my_account").execute()
-        try? await client.auth.signOut(scope: .local)
+        try await api.call("delete_my_account")
+        await api.session.signOutLocally()
     }
 
-    // MARK: Realtime
+    // MARK: Live updates
 
-    /// Row Level Security decides which changes reach this person, so no filter is needed.
+    /// Hasura's permissions decide which rows these see, so they cover exactly this person's groups.
     func changes() -> AsyncStream<Void> {
-        let client = client
-        return AsyncStream { continuation in
-            let task = Task {
-                let channel = client.channel("barte-\(UUID().uuidString)")
-                let streams = ["groups", "members", "expenses", "payment_details"].map { table in
-                    channel.postgresChange(AnyAction.self, schema: "public", table: table)
-                }
-                do {
-                    try await channel.subscribeWithError()
-                } catch {
-                    continuation.finish()
-                    return
-                }
-                await withTaskGroup(of: Void.self) { group in
-                    for stream in streams {
-                        group.addTask {
-                            for await _ in stream { continuation.yield() }
-                        }
-                    }
-                }
-                await client.removeChannel(channel)
-            }
-            continuation.onTermination = { _ in task.cancel() }
-        }
+        api.changes(of: [
+            "subscription Groups { groups { id name currency color invite_code members { id name user_id } expenses { id updated_at } } }",
+            "subscription Payments { payment_details { user_id updated_at } }",
+        ])
     }
 }

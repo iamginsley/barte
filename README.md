@@ -5,7 +5,7 @@ Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **
 <img src="docs/icon/Default.png" width="96" alt="App-Icon: eine diagonal geteilte Karte">
 
 - SwiftUI, Swift 6 (strict concurrency), iOS 26+, MVVM mit `@Observable`, Projekt per XcodeGen
-- Backend **Supabase**: Anmeldung mit Apple (iOS) bzw. Google (später Android), Postgres mit Row Level Security, alle Schreibzugriffe über SQL-Funktionen, Live-Updates über Realtime
+- Backend **Nhost** (Frankfurt): Anmeldung mit Apple (iOS) bzw. Google (später Android), Postgres mit Hasura-Rechten, alle Schreibzugriffe über SQL-Funktionen, Live-Updates über GraphQL-Subscriptions. Kein SDK, die App spricht direkt mit Auth, GraphQL und Functions
 - Einladen per Link oder Code; alle Eingeladenen tragen selbst Ausgaben ein, auf iPhone und später Android
 
 ## Funktionen
@@ -33,39 +33,38 @@ Die Tests (`BarteTests/LedgerTests.swift`) vergleichen 300 Zufallsgruppen mit ei
 ## Setup
 
 1. Xcode 26 oder neuer und [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
-2. `cp Config.example.xcconfig Config.xcconfig` und Host und Anon Key deines Supabase-Projekts eintragen (die Datei ist git-ignoriert)
-3. `xcodegen generate`, dann `Barte.xcodeproj` öffnen. Signiert wird mit dem Team `2567P974L9` (`Configs/Project.xcconfig`).
+2. `xcodegen generate`, dann `Barte.xcodeproj` öffnen. Signiert wird mit dem Team `2567P974L9` (`Configs/Project.xcconfig`).
 
-Ohne `Config.xcconfig` startet die App mit einem Hinweis; der Demo-Modus funktioniert immer.
+Subdomain und Region des Nhost-Projekts stehen in `Barte/Core/Services/Backend.swift` (öffentlich, kein Secret). Der Demo-Modus funktioniert ohne Server.
 
-### Supabase einrichten
+### Nhost einrichten
 
-1. Projekt auf [supabase.com](https://supabase.com) anlegen, Region **Frankfurt (eu-central-1)** (so steht es in der Datenschutzerklärung)
-2. Datenbank: `supabase link --project-ref <ref>`, dann `supabase db push` (spielt `supabase/migrations/` ein)
-3. **Mit Apple anmelden:** Authentication → Sign In / Providers → Apple aktivieren, bei *Client IDs* `com.iamginsley.barte` eintragen. Für die native Anmeldung in der App reicht das.
-4. **Konto löschen (Apple-Widerruf):** Im Developer Portal einen Key mit „Sign in with Apple“ erstellen (`AuthKey_XXXX.p8`, nie ins Repo), dann:
-   ```sh
-   supabase secrets set APPLE_TEAM_ID=2567P974L9 APPLE_KEY_ID=<KeyID> APPLE_CLIENT_ID=com.iamginsley.barte APPLE_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"
-   supabase functions deploy apple-revoke
-   ```
-5. **Mitteilungen:** Im Developer Portal beim Key zusätzlich „Apple Push Notifications service“ aktivieren (oder einen eigenen APNs-Key erstellen), dann:
-   ```sh
-   supabase secrets set APNS_KEY_ID=<KeyID> APNS_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"   # optional, sonst wird der Apple-Key von oben genutzt
-   supabase functions deploy notify-group
-   ```
-   Debug-Builds registrieren sich für die Sandbox, TestFlight und App Store für Production.
-6. **Google (für Android, später):** Authentication → Providers → Google aktivieren und die OAuth-Client-IDs aus der Google Cloud Console eintragen. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
+Projekt `Barte` (Subdomain `uenqaayyhyrekjhojdwn`, Region **Frankfurt, eu-central-1**, so steht es in der Datenschutzerklärung). Alles Serverseitige liegt im Repo und wird per Git ausgerollt:
+
+- `nhost/nhost.toml`: Konfiguration (Apple-Anmeldung, Umgebungsvariablen der Functions)
+- `nhost/migrations/`: Tabellen und SQL-Funktionen, `nhost/metadata/`: Hasura-Rechte (Rolle `user`) und die Funktionen als Mutations
+- `functions/`: `apple-revoke` (Konto löschen) und `notify-group` (Mitteilungen)
+
+1. **Secrets** im Nhost-Dashboard unter *Settings → Secrets* anlegen (nie ins Repo). Im Developer Portal einen Key mit „Sign in with Apple“ **und** „Apple Push Notifications service“ erstellen (`AuthKey_XXXX.p8`):
+   - `APPLE_KEY_ID`: die Key ID
+   - `APPLE_PRIVATE_KEY`: der Inhalt der `.p8`-Datei
+
+   Für einen eigenen APNs-Key zusätzlich `APNS_KEY_ID` und `APNS_PRIVATE_KEY` als Umgebungsvariablen eintragen; sonst wird der Apple-Key genutzt. Debug-Builds registrieren sich für die Sandbox, TestFlight und App Store für Production.
+2. **GitHub verbinden:** *Deployments → Settings → Connect to GitHub*, Repo `iamginsley/barte`, Base Directory `/`, Branch `main`. Jeder Merge nach `main` spielt Konfiguration, Migrationen, Metadaten und Functions ein.
+3. **Prüfen** nach dem ersten Deployment: `NHOST_ADMIN_SECRET=… node scripts/test-nhost-api.mjs` legt drei Test-Personen an, prüft Rechte, Fehlermeldungen und Datenformat gegen das echte Projekt und räumt danach auf.
+4. **Google (für Android, später):** in `nhost.toml` unter `auth.method.oauth.google` aktivieren. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
 
 Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code und öffnet die App über `barte://join/<code>`.
 
-**Gratis-Tarif:** Supabase pausiert Gratis-Projekte nach etwa einer Woche ohne Zugriffe. Die Daten bleiben erhalten, das Projekt muss dann im Dashboard wieder gestartet werden.
+**Gratis-Tarif:** Nhost pausiert Gratis-Projekte nach einer Woche ohne Zugriffe. Die Daten bleiben erhalten, das Projekt muss dann im Dashboard wieder gestartet werden. Für den Store-Start ist der Pro-Tarif sinnvoll.
 
 ### Tests
 
 ```sh
 xcodebuild test -project Barte.xcodeproj -scheme Barte -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
-./scripts/test-migrations.sh                         # SQL: Migrationen + RLS/RPC-Tests auf lokalem Postgres (brew install postgresql@17)
-(cd supabase/functions && deno test)                 # Edge Functions apple-revoke und notify-group
+./scripts/test-migrations.sh                         # SQL: Migrationen + Funktions-Tests auf lokalem Postgres (brew install postgresql@17)
+(cd functions && npm install && npm test)            # Nhost Functions apple-revoke und notify-group (vitest)
+NHOST_ADMIN_SECRET=… node scripts/test-nhost-api.mjs # Hasura-Rechte gegen das echte Projekt
 ```
 
 ### Demo-Modus (nur Debug)
@@ -84,11 +83,11 @@ Launch-Argumente für Screenshots und Tests, ohne Server, mit Beispieldaten im S
 
 ```
 Barte/
-  App/            App-Einstieg, AppModel (Anmeldung, Gruppen, Realtime), RootView
+  App/            App-Einstieg, AppModel (Anmeldung, Gruppen, Live-Updates), RootView
   Core/
     Models/       Money, Ledger (Split, Balances, Settlement), SplitGroup, PaymentDetails, ExpenseIcon, Invite, LocalDay
-    Repositories/ GroupRepository (Supabase)
-    Services/     Backend, AppleReauthentication, Notifications (Push), WidgetSync, Preferences
+    Repositories/ GroupRepository (Nhost)
+    Services/     Backend, NhostSession (Anmeldung), NhostAPI (GraphQL, Functions, Subscriptions), AppleReauthentication, Notifications (Push), WidgetSync, Preferences
     Demo/         DemoData, DemoGroupRepository
   Design/         Theme, GroupCard (Signature), BarteLogo, MemberAvatar
   Features/       Auth, Groups, GroupDetail (inkl. Einladen), Join, Expense, SettleUp, Payment, About
@@ -96,7 +95,9 @@ Barte/
 BarteWidgets/     Widget „Saldo“ (klein, mittel, Sperrbildschirm), liest den Snapshot aus der App Group
 Shared/           Widget-Snapshot und barte://-Links, in App und Widget
 BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen, Einladungen, Tage
-supabase/         Migrationen, SQL-Tests, Edge Functions apple-revoke und notify-group
+nhost/            Konfiguration, Migrationen, Hasura-Metadaten, SQL-Tests
+functions/        Nhost Functions apple-revoke und notify-group mit Tests
+scripts/          SQL-Tests auf lokalem Postgres, API-Prüfung gegen das echte Projekt
 docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
 
@@ -111,10 +112,10 @@ docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Text
 ## Datenmodell
 
 - `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
-- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` liest nur die Edge Function `notify-group`
-- Lesen nur über RLS (`is_group_member`), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`
+- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` liest nur die Function `notify-group`
+- Lesen nur über die Hasura-Rechte der Rolle `user` (eigene Gruppen, deren Personen und Ausgaben), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`. Hasura reicht die Sitzung als `hasura_session` an die Funktionen weiter; Fehler kommen als SQLSTATE 22000 mit dem Hinweis (z. B. `not_member`) als Meldung in der App an
 - Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` und `Split.weighted` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert (bei Anteilen zuerst nach dem größten Rest).
 
 ## Datenschutz
 
-Anmeldung mit Apple, Daten bei Supabase in Frankfurt, keine Werbung und kein Tracking. Eine Gruppe sehen nur ihre Mitglieder. Siehe [docs/datenschutz.md](docs/datenschutz.md).
+Anmeldung mit Apple, Daten bei Nhost in Frankfurt, keine Werbung und kein Tracking. Eine Gruppe sehen nur ihre Mitglieder. Siehe [docs/datenschutz.md](docs/datenschutz.md).

@@ -1,0 +1,33 @@
+table:
+  name: groups
+  schema: public
+array_relationships:
+  - name: members
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          name: members
+          schema: public
+  - name: expenses
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          name: expenses
+          schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - currency
+        - color
+        - invite_code
+        - created_by
+        - created_at
+      filter:
+        members:
+          user_id:
+            _eq: X-Hasura-User-Id

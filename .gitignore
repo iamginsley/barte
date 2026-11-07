@@ -29,3 +29,8 @@ build/
 
 # Apple keys (Sign in with Apple, push) never belong in the repo
 *.p8
+
+# Nhost local state and secrets
+.nhost/
+.secrets
+node_modules/

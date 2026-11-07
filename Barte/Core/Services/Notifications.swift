@@ -1,4 +1,3 @@
-import Supabase
 import UIKit
 import UserNotifications
 
@@ -38,24 +37,24 @@ enum PushToken {
         #endif
     }
 
-    static func update(_ data: Data, client: SupabaseClient?) async {
+    static func update(_ data: Data, api: NhostAPI?) async {
         current = data.map { String(format: "%02x", $0) }.joined()
-        await register(client: client)
+        await register(api: api)
     }
 
-    static func register(client: SupabaseClient?) async {
-        guard let client, let current, client.auth.currentUser != nil else { return }
-        _ = try? await client.rpc("register_device", params: ["p_token": current, "p_environment": environment]).execute()
+    static func register(api: NhostAPI?) async {
+        guard let api, let current, await api.session.userID != nil else { return }
+        _ = try? await api.call("register_device", ["p_token": .string(current), "p_environment": .string(environment)])
     }
 
     /// Before signing out, so the next person on this phone doesn't get the previous one's notifications.
-    static func unregister(client: SupabaseClient?) async {
-        guard let client, let current else { return }
-        _ = try? await client.rpc("unregister_device", params: ["p_token": current]).execute()
+    static func unregister(api: NhostAPI?) async {
+        guard let api, let current else { return }
+        _ = try? await api.call("unregister_device", ["p_token": .string(current)])
     }
 }
 
-/// Tells the others in a group about a new expense or payback through the notify-group Edge Function.
+/// Tells the others in a group about a new expense or payback through the notify-group function.
 /// Fire and forget: a missing push never blocks or fails the change itself.
 struct GroupNotifier: Sendable {
     enum Kind: String, Sendable {
@@ -63,15 +62,12 @@ struct GroupNotifier: Sendable {
         case settlementAdded = "settlement_added"
     }
 
-    let client: SupabaseClient
+    let api: NhostAPI
 
     func send(_ kind: Kind, expenseID: UUID) {
-        let client = client
+        let api = api
         Task.detached {
-            _ = try? await client.functions.invoke("notify-group", options: .init(body: [
-                "kind": kind.rawValue,
-                "id": expenseID.uuidString.lowercased(),
-            ]))
+            try? await api.invokeFunction("notify-group", body: ["kind": .string(kind.rawValue), "id": .uuid(expenseID)])
         }
     }
 }
