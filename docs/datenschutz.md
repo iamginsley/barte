@@ -4,14 +4,14 @@ title: Datenschutzerklärung – Barte
 
 # Datenschutzerklärung für Barte
 
-Stand: 5. November 2026
+Stand: 7. November 2026
 
 Barte ist eine kostenlose iOS-App, mit der du Ausgaben mit Freund:innen teilst. Diese Erklärung beschreibt, welche Daten dabei anfallen.
 
 ## Kurz gesagt
 
 - Du meldest dich mit **„Mit Apple anmelden“** an. Barte bekommt kein Passwort.
-- Deine Gruppen liegen auf einem Server von **Supabase in der EU (Frankfurt)**, damit alle in einer Gruppe dieselben Ausgaben sehen.
+- Deine Gruppen liegen bei **Google Firebase in der EU (Frankfurt)**, damit alle in einer Gruppe dieselben Ausgaben sehen.
 - **Keine Werbung, kein Tracking, keine Analyse.** Daten werden nicht verkauft und nicht an Dritte weitergegeben.
 - Du kannst dein Konto jederzeit in der App löschen.
 
@@ -31,11 +31,11 @@ Eine Gruppe sehen nur die Personen, die in ihr Mitglied sind. Mitglied wird man,
 
 Deine Zahlungsdaten sehen nur Personen, mit denen du in mindestens einer Gruppe bist. Push-Tokens sieht niemand außer dir und dem Dienst, der die Mitteilungen verschickt.
 
-Der Zugriff wird auf dem Server geprüft (Row Level Security).
+Der Zugriff wird auf dem Server geprüft (Firestore Security Rules und Cloud Functions).
 
 ## Auftragsverarbeiter
 
-- **Supabase Inc.** betreibt Datenbank und Anmeldung, Serverstandort Frankfurt (EU). [Datenschutz bei Supabase](https://supabase.com/privacy)
+- **Google Ireland Limited** (Gordon House, Barrow Street, Dublin 4, Irland) betreibt mit Firebase die Datenbank (Cloud Firestore) und die Server-Funktionen (Cloud Functions), Standort Frankfurt (EU). Die Anmeldung (Firebase Authentication) speichert Benutzer-ID und E-Mail-Adresse; sie kann dabei auch auf Servern von Google LLC in den USA verarbeitet werden. Google LLC ist nach dem EU-US Data Privacy Framework zertifiziert, zusätzlich gelten die Standardvertragsklauseln der EU-Kommission. [Datenschutz bei Firebase](https://firebase.google.com/support/privacy)
 - **Apple** stellt „Mit Apple anmelden“ bereit und stellt Mitteilungen zu (Apple Push Notification Service). [Datenschutzrichtlinie von Apple](https://www.apple.com/de/legal/privacy/)
 
 Rechtsgrundlage ist die Erfüllung des Nutzungsvertrags (Art. 6 Abs. 1 lit. b DSGVO): Ohne diese Daten kann Barte Ausgaben nicht zwischen euch teilen. Zahlungsdaten und Mitteilungen sind freiwillig und beruhen auf deiner Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Zahlungsdaten löschst du, indem du die Felder leerst; Mitteilungen schaltest du in den iOS-Einstellungen ab.

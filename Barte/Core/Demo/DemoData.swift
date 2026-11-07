@@ -9,7 +9,7 @@ import Foundation
 /// - `-BarteGroup <n>`: open the n-th group (0 = top card)
 /// - `-BarteSheet settle|expense|group|about|join|invite`: also open a sheet
 enum DemoData {
-    static let userID = UUID(uuidString: "D0D0D0D0-0000-4000-8000-000000000001")!
+    static let userID: UserID = "demo-dominik"
     static let inviteCode = "SKI2FUN7"
 
     static var isEnabled: Bool {
@@ -90,7 +90,7 @@ enum DemoData {
             let members = names.map { memberName in
                 Member(
                     id: UUID(), name: memberName,
-                    userID: memberName == "Dominik" ? DemoData.userID : appUsers.contains(memberName) ? UUID() : nil
+                    userID: memberName == "Dominik" ? DemoData.userID : appUsers.contains(memberName) ? "demo-\(memberName.lowercased())" : nil
                 )
             }
             ids = Dictionary(uniqueKeysWithValues: members.map { ($0.name, $0.id) })
@@ -134,13 +134,13 @@ enum DemoData {
 /// In-memory repository for demo mode: no server, changes live until the app quits.
 actor DemoGroupRepository: GroupRepository {
     private var groups: [SplitGroup]
-    private var payments: [UUID: PaymentDetails]
+    private var payments: [UserID: PaymentDetails]
     private let stream = AsyncStream<Void>.makeStream()
 
     init(groups: [SplitGroup] = DemoData.groups()) {
         self.groups = groups
         // Everyone else with the app has PayPal and a bank account; Dominik has nothing yet.
-        var payments: [UUID: PaymentDetails] = [:]
+        var payments: [UserID: PaymentDetails] = [:]
         for member in groups.flatMap(\.members) {
             guard let userID = member.userID, userID != DemoData.userID else { continue }
             payments[userID] = PaymentDetails(
@@ -152,7 +152,7 @@ actor DemoGroupRepository: GroupRepository {
         self.payments = payments
     }
 
-    func fetchPaymentDetails() async throws -> [UUID: PaymentDetails] { payments }
+    func fetchPaymentDetails() async throws -> [UserID: PaymentDetails] { payments }
 
     func savePaymentDetails(_ details: PaymentDetails) async throws {
         payments[DemoData.userID] = details.isEmpty ? nil : details
@@ -165,10 +165,6 @@ actor DemoGroupRepository: GroupRepository {
         guard let index = groups.firstIndex(where: { $0.id == groupID }) else { throw BarteError.server(hint: "not_member") }
         try change(&groups[index])
         stream.continuation.yield()
-    }
-
-    private func groupIndex(ofMember id: UUID) -> Int? {
-        groups.firstIndex { $0.members.contains { $0.id == id } }
     }
 
     func fetchGroups() async throws -> [SplitGroup] { groups }
@@ -204,24 +200,21 @@ actor DemoGroupRepository: GroupRepository {
         return member.id
     }
 
-    func renameMember(_ id: UUID, to name: String) async throws {
-        guard let index = groupIndex(ofMember: id) else { return }
-        try update(groups[index].id) { group in
+    func renameMember(_ id: UUID, in groupID: UUID, to name: String) async throws {
+        try update(groupID) { group in
             if let member = group.members.firstIndex(where: { $0.id == id }) { group.members[member].name = name }
         }
     }
 
-    func removeMember(_ id: UUID) async throws {
-        guard let index = groupIndex(ofMember: id) else { return }
-        try update(groups[index].id) { group in
+    func removeMember(_ id: UUID, from groupID: UUID) async throws {
+        try update(groupID) { group in
             guard !group.isInvolved(id) else { throw BarteError.server(hint: "member_involved") }
             group.members.removeAll { $0.id == id }
         }
     }
 
-    func claimMember(_ id: UUID) async throws {
-        guard let index = groupIndex(ofMember: id) else { return }
-        try update(groups[index].id) { group in
+    func claimMember(_ id: UUID, in groupID: UUID) async throws {
+        try update(groupID) { group in
             for member in group.members.indices where group.members[member].userID == DemoData.userID {
                 group.members[member].userID = nil
             }
@@ -237,9 +230,8 @@ actor DemoGroupRepository: GroupRepository {
         }
     }
 
-    func deleteExpense(_ id: UUID) async throws {
-        guard let index = groups.firstIndex(where: { $0.expenses.contains { $0.id == id } }) else { return }
-        try update(groups[index].id) { $0.expenses.removeAll { $0.id == id } }
+    func deleteExpense(_ id: UUID, in groupID: UUID) async throws {
+        try update(groupID) { $0.expenses.removeAll { $0.id == id } }
     }
 
     func previewInvite(code: String) async throws -> InvitePreview {
@@ -253,7 +245,7 @@ actor DemoGroupRepository: GroupRepository {
     func joinGroup(code: String, memberID: UUID?, name: String?) async throws -> UUID {
         let preview = try await previewInvite(code: code)
         if preview.isMember { return preview.groupID }
-        var members = preview.members.map { Member(id: $0.id, name: $0.name, userID: $0.isClaimed ? UUID() : nil) }
+        var members = preview.members.map { Member(id: $0.id, name: $0.name, userID: $0.isClaimed ? "demo-\($0.name.lowercased())" : nil) }
         if let memberID, let index = members.firstIndex(where: { $0.id == memberID }) {
             members[index].userID = DemoData.userID
         } else {

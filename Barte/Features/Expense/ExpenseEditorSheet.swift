@@ -258,14 +258,14 @@ struct ExpenseEditorSheet: View {
         if let message = await app.run({ try await $0.save(expense, in: groupID) }) {
             errorMessage = message
         } else {
-            if model.existing == nil { app.notify(.expenseAdded, expenseID: expense.id, in: groupID) }
             dismiss()
         }
     }
 
     private func delete() async {
         guard let id = model.existing?.id else { return }
-        if let message = await app.run({ try await $0.deleteExpense(id) }) {
+        let groupID = model.group.id
+        if let message = await app.run({ try await $0.deleteExpense(id, in: groupID) }) {
             errorMessage = message
         } else {
             dismiss()

@@ -3,7 +3,7 @@ import WidgetKit
 
 /// Builds the widget snapshot from the groups and hands it to the widget.
 enum WidgetSync {
-    static func update(groups: [SplitGroup], userID: UUID?) {
+    static func update(groups: [SplitGroup], userID: UserID?) {
         let snapshot = makeSnapshot(groups: groups, userID: userID)
         // Realtime reloads often; only wake the widget when something it shows changed.
         if let old = WidgetStore.read(), old.totals == snapshot.totals, old.groups == snapshot.groups { return }
@@ -16,7 +16,7 @@ enum WidgetSync {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    static func makeSnapshot(groups: [SplitGroup], userID: UUID?, now: Date = .now) -> WidgetSnapshot {
+    static func makeSnapshot(groups: [SplitGroup], userID: UserID?, now: Date = .now) -> WidgetSnapshot {
         let open = groups.compactMap { group -> WidgetSnapshot.Group? in
             let balance = group.balance(of: group.me(userID: userID))
             guard balance != 0 else { return nil }

@@ -1,6 +1,6 @@
 // Sends alerts through Apple Push Notification service with token-based (.p8) authentication.
-import { importPKCS8, SignJWT } from "npm:jose@5.9.6";
-import type { Message } from "./messages.ts";
+import { importPKCS8, SignJWT } from "jose";
+import type { Message } from "./messages.js";
 
 export interface ApnsConfig {
   teamId: string;
@@ -72,7 +72,7 @@ export async function send(
   const reason = await response.json().then((body) => body?.reason as string | undefined).catch(() => undefined);
   // 410: the app was removed. BadDeviceToken: a sandbox token sent to production or vice versa, or garbage.
   if (response.status === 410 || reason === "BadDeviceToken" || reason === "Unregistered") return "gone";
-  console.error(`notify-group: APNs ${response.status} ${reason ?? ""}`);
+  console.error(`notify: APNs ${response.status} ${reason ?? ""}`);
   return "failed";
 }
 

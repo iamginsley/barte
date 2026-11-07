@@ -44,11 +44,6 @@ struct InvitePreview: Decodable, Sendable, Equatable {
         let id: UUID
         let name: String
         let isClaimed: Bool
-
-        enum CodingKeys: String, CodingKey {
-            case id, name
-            case isClaimed = "is_claimed"
-        }
     }
 
     let groupID: UUID
@@ -59,9 +54,8 @@ struct InvitePreview: Decodable, Sendable, Equatable {
     let members: [Person]
 
     enum CodingKeys: String, CodingKey {
-        case name, currency, color, members
-        case groupID = "group_id"
-        case isMember = "is_member"
+        case name, currency, color, members, isMember
+        case groupID = "groupId"
     }
 
     /// A card for the preview, without expenses.

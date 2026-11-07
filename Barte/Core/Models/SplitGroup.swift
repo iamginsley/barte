@@ -33,7 +33,7 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     /// Newest first.
     var expenses: [Expense]
     var inviteCode: String = ""
-    var createdBy: UUID? = nil
+    var createdBy: UserID? = nil
 
     var balances: [UUID: Int] { Balances.compute(members: members.map(\.id), expenses: expenses) }
 
@@ -51,7 +51,7 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     func member(_ id: UUID) -> Member? { members.first { $0.id == id } }
 
     /// The member linked to this person.
-    func me(userID: UUID?) -> UUID? {
+    func me(userID: UserID?) -> UUID? {
         guard let userID else { return nil }
         return members.first { $0.userID == userID }?.id
     }
@@ -60,7 +60,7 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     var isShared: Bool { members.filter(\.usesApp).count > 1 }
 
     /// The creator deletes for everyone; so does the last person with the app. Everyone else leaves.
-    func canDelete(userID: UUID?) -> Bool {
+    func canDelete(userID: UserID?) -> Bool {
         guard let userID else { return false }
         return createdBy == userID || !members.contains { $0.usesApp && $0.userID != userID }
     }

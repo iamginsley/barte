@@ -62,10 +62,10 @@ struct LocalDayTests {
 
 @Suite("Group sharing rules")
 struct GroupRulesTests {
-    let me = UUID()
-    let friend = UUID()
+    let me: UserID = "uid-me"
+    let friend: UserID = "uid-friend"
 
-    private func group(createdBy: UUID?, friendUsesApp: Bool) -> SplitGroup {
+    private func group(createdBy: UserID?, friendUsesApp: Bool) -> SplitGroup {
         SplitGroup(
             id: UUID(), name: "WG", currency: "EUR", color: .blue, createdAt: .now,
             members: [Member(id: UUID(), name: "Ich", userID: me), Member(id: UUID(), name: "Lena", userID: friendUsesApp ? friend : nil)],
@@ -76,7 +76,7 @@ struct GroupRulesTests {
     @Test func findsMyMember() {
         let group = group(createdBy: me, friendUsesApp: true)
         #expect(group.me(userID: me) == group.members[0].id)
-        #expect(group.me(userID: UUID()) == nil)
+        #expect(group.me(userID: "uid-other") == nil)
         #expect(group.me(userID: nil) == nil)
     }
 

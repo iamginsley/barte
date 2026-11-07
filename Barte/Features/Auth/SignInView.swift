@@ -26,7 +26,7 @@ struct SignInView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.surface.ignoresSafeArea())
         .onAppear {
-            if model == nil { model = SignInViewModel(client: app.client) }
+            if model == nil { model = SignInViewModel() }
             // The card halves slide apart once, like the icon.
             withAnimation(reduceMotion ? nil : .spring(duration: 0.8, bounce: 0.45).delay(0.15)) { split = 1 }
         }

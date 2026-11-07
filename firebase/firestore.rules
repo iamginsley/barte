@@ -1,0 +1,33 @@
+rules_version = '2';
+
+// Clients only read. Every write goes through the Cloud Functions in functions/src/api.ts,
+// which check membership and keep expenses consistent with the group's members
+// (the same split as Row Level Security plus SQL functions had on Supabase).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(groupId) {
+      return signedIn()
+        && request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberUids;
+    }
+
+    match /groups/{groupId} {
+      // List queries must filter on memberUids array-contains the caller's uid.
+      allow read: if signedIn() && request.auth.uid in resource.data.memberUids;
+      allow write: if false;
+
+      match /expenses/{expenseId} {
+        allow read: if isMember(groupId);
+        allow write: if false;
+      }
+    }
+
+    // Invite codes, payment details and push tokens are only read by the functions.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

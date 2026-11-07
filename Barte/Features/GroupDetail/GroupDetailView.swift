@@ -58,7 +58,7 @@ struct GroupDetailView: View {
                             .tint(Color.ink)
                             .swipeActions {
                                 Button("Löschen", systemImage: "trash", role: .destructive) {
-                                    Task { await perform { try await $0.deleteExpense(expense.id) } }
+                                    Task { await perform { try await $0.deleteExpense(expense.id, in: groupID) } }
                                 }
                             }
                         }
@@ -103,7 +103,7 @@ struct GroupDetailView: View {
         .confirmationDialog("Ausgleich löschen?", isPresented: .init(
             get: { settlementToDelete != nil }, set: { if !$0 { settlementToDelete = nil } }
         ), titleVisibility: .visible, presenting: settlementToDelete) { settlement in
-            Button("Löschen", role: .destructive) { Task { await perform { try await $0.deleteExpense(settlement.id) } } }
+            Button("Löschen", role: .destructive) { Task { await perform { try await $0.deleteExpense(settlement.id, in: groupID) } } }
         } message: { settlement in
             Text("\(group.name(of: settlement.payerID, me: me)) → \(group.name(of: settlement.participantIDs.first ?? settlement.payerID, me: me)), \(Money.format(settlement.amountCents, currency: group.currency)). Die Salden werden neu berechnet.")
         }

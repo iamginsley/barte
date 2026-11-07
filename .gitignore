@@ -27,5 +27,8 @@ DerivedData/
 # Local build output
 build/
 
+# Firebase project config for the app (download from the Firebase console)
+GoogleService-Info.plist
+
 # Apple keys (Sign in with Apple, push) never belong in the repo
 *.p8

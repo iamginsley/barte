@@ -1,6 +1,6 @@
+import FirebaseAuth
 import Foundation
 import Observation
-import Supabase
 
 /// An error with a message ready for an alert.
 struct UserFacingError: Error {
@@ -26,8 +26,8 @@ final class AppModel {
     private(set) var phase: Phase = .launching
     private(set) var groups: [SplitGroup] = []
     /// How people want to be paid, by user id.
-    private(set) var payments: [UUID: PaymentDetails] = [:]
-    private(set) var userID: UUID?
+    private(set) var payments: [UserID: PaymentDetails] = [:]
+    private(set) var userID: UserID?
     /// False until the first fetch finished, so the empty state doesn't flash.
     private(set) var hasLoaded = false
     private(set) var loadError: String?
@@ -37,27 +37,21 @@ final class AppModel {
     var pendingGroupID: UUID?
 
     let isDemo: Bool
-    let client: SupabaseClient?
     let repository: GroupRepository?
-    private let notifier: GroupNotifier?
 
-    private var authTask: Task<Void, Never>?
+    private var authListener: AuthStateDidChangeListenerHandle?
     private var changesTask: Task<Void, Never>?
     private var reloadTask: Task<Void, Never>?
 
-    init(client: SupabaseClient? = Backend.client) {
+    init() {
         if DemoData.isEnabled {
             Preferences.useDemoDefaults()
             Preferences.myName = "Dominik"
-            self.client = nil
             self.repository = DemoGroupRepository()
-            self.notifier = nil
             self.isDemo = true
             return
         }
-        self.client = client
-        self.repository = client.map(SupabaseGroupRepository.init(client:))
-        self.notifier = client.map(GroupNotifier.init(client:))
+        self.repository = Backend.isConfigured ? FirebaseGroupRepository() : nil
         self.isDemo = false
     }
 
@@ -72,25 +66,20 @@ final class AppModel {
             }
             return
         }
-        guard let client else {
+        guard repository != nil else {
             phase = .notConfigured
             return
         }
-        guard authTask == nil else { return }
-        authTask = Task { [weak self] in
-            for await (event, session) in client.auth.authStateChanges {
+        guard authListener == nil else { return }
+        // Called on the main thread right away with the stored session, then on every sign-in and sign-out.
+        authListener = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            let uid = user?.uid
+            MainActor.assumeIsolated {
                 guard let self else { return }
-                switch event {
-                case .initialSession, .signedIn, .tokenRefreshed, .userUpdated:
-                    if let session, !session.isExpired {
-                        if self.userID != session.user.id { self.signedIn(as: session.user.id) }
-                    } else if event == .initialSession {
-                        self.signedOut()
-                    }
-                case .signedOut, .userDeleted:
+                if let uid {
+                    if self.userID != uid { self.signedIn(as: uid) }
+                } else if self.phase != .signedOut {
                     self.signedOut()
-                default:
-                    break
                 }
             }
         }
@@ -101,13 +90,13 @@ final class AppModel {
         signedIn(as: DemoData.userID)
     }
 
-    private func signedIn(as id: UUID) {
+    private func signedIn(as id: UserID) {
         userID = id
         phase = .ready
         Task { await reload() }
         if !isDemo {
             Task {
-                await PushToken.register(client: client)
+                await PushToken.register()
                 await Notifications.registerForPushIfAllowed()
             }
         }
@@ -204,14 +193,6 @@ final class AppModel {
         }
     }
 
-    // MARK: Notifications
-
-    /// Pushes a new expense or payback to the others in the group, if anyone else there uses the app.
-    func notify(_ kind: GroupNotifier.Kind, expenseID: UUID, in groupID: UUID) {
-        guard let notifier, group(groupID)?.isShared == true else { return }
-        notifier.send(kind, expenseID: expenseID)
-    }
-
     // MARK: Account
 
     func signOut() async {
@@ -219,8 +200,8 @@ final class AppModel {
             signedOut()
             return
         }
-        await PushToken.unregister(client: client)
-        try? await client?.auth.signOut()
+        await PushToken.unregister()
+        try? Auth.auth().signOut()
     }
 
     /// Confirms with Apple first; cancelling there throws AppleReauthentication.Failure.canceled.

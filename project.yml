@@ -20,9 +20,9 @@ settings:
     SWIFT_EMIT_LOC_STRINGS: YES
 
 packages:
-  Supabase:
-    url: https://github.com/supabase/supabase-swift
-    from: "2.55.0"
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "13.1.0"
 
 targets:
   Barte:
@@ -32,8 +32,12 @@ targets:
       - path: Barte
       - path: Shared
     dependencies:
-      - package: Supabase
-        product: Supabase
+      - package: Firebase
+        product: FirebaseAuth
+      - package: Firebase
+        product: FirebaseFirestore
+      - package: Firebase
+        product: FirebaseFunctions
       - target: BarteWidgets
     entitlements:
       path: Barte/Resources/Barte.entitlements
@@ -54,8 +58,8 @@ targets:
         CFBundleURLTypes:
           - CFBundleURLName: com.iamginsley.barte
             CFBundleURLSchemes: [barte]
-        SupabaseHost: "$(SUPABASE_HOST)"
-        SupabaseAnonKey: "$(SUPABASE_ANON_KEY)"
+        # Push tokens go to our own function, not to Firebase Cloud Messaging.
+        FirebaseAppDelegateProxyEnabled: false
         UILaunchScreen:
           UIColorName: Surface
         UIApplicationSceneManifest:

@@ -88,8 +88,8 @@ final class GroupEditorModel {
             let added = namedRows.filter { $0.memberID == nil }.map(\.name)
             let message = await app.run { repository in
                 try await repository.updateGroup(existing.id, name: name, currency: currency, color: color)
-                for id in removed { try await repository.removeMember(id) }
-                for (id, newName) in renamed { try await repository.renameMember(id, to: newName) }
+                for id in removed { try await repository.removeMember(id, from: existing.id) }
+                for (id, newName) in renamed { try await repository.renameMember(id, in: existing.id, to: newName) }
                 for newName in added { _ = try await repository.addMember(named: newName, to: existing.id) }
             }
             return message.map { .failure(SaveError(message: $0)) } ?? .success(existing.id)

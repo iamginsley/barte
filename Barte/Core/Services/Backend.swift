@@ -1,37 +1,38 @@
+import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseFunctions
 import Foundation
-import Supabase
 
-/// Values injected at build time from Config.xcconfig via Info.plist.
-enum AppConfig {
-    static var supabaseURL: URL? {
-        guard let host = infoValue("SupabaseHost") else { return nil }
-        return URL(string: "https://\(host)")
-    }
-
-    static var supabaseAnonKey: String? { infoValue("SupabaseAnonKey") }
-
-    private static func infoValue(_ key: String) -> String? {
-        guard let value = Bundle.main.object(forInfoDictionaryKey: key) as? String else { return nil }
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        // Unresolved build settings or placeholders from the example file count as missing.
-        if trimmed.isEmpty || trimmed.contains("$(") || trimmed.hasPrefix("your-") { return nil }
-        return trimmed
-    }
-}
-
-/// The single Supabase client for the app. `nil` when Config.xcconfig is missing.
+/// The Firebase project, from GoogleService-Info.plist (git-ignored, downloaded from the Firebase console).
 enum Backend {
-    static let client: SupabaseClient? = {
-        guard let url = AppConfig.supabaseURL, let key = AppConfig.supabaseAnonKey else { return nil }
-        return SupabaseClient(
-            supabaseURL: url,
-            supabaseKey: key,
-            options: SupabaseClientOptions(auth: .init(emitLocalSessionAsInitialSession: true))
-        )
+    /// Region of the Cloud Functions and the Firestore database: Frankfurt.
+    static let region = "europe-west3"
+
+    /// Configures Firebase once. False when the plist is missing, so the app shows how to set it up.
+    @MainActor
+    static let isConfigured: Bool = {
+        guard let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+              let options = FirebaseOptions(contentsOfFile: path) else { return false }
+        FirebaseApp.configure(options: options)
+        // Only this person's groups, and only while the app runs: nothing stays behind after signing out.
+        let settings = Firestore.firestore().settings
+        settings.cacheSettings = MemoryCacheSettings()
+        Firestore.firestore().settings = settings
+        return true
     }()
+
+    static var functions: Functions { Functions.functions(region: region) }
+
+    static var currentUserID: String {
+        get throws {
+            guard let id = Auth.auth().currentUser?.uid else { throw BarteError.notSignedIn }
+            return id
+        }
+    }
 }
 
-/// Errors with a German message for the UI. Server errors carry a `hint` set by the SQL functions.
+/// Errors with a German message for the UI. Server errors carry a `hint` set by the Cloud Functions.
 enum BarteError: LocalizedError, Equatable {
     case notSignedIn
     case offline
@@ -54,11 +55,12 @@ enum BarteError: LocalizedError, Equatable {
             case "member_linked": "Diese Person nutzt Barte selbst und kann nur selbst austreten."
             case "not_creator": "Nur wer die Gruppe erstellt hat, kann sie für alle löschen."
             case "not_member": "Du bist nicht mehr in dieser Gruppe."
-            case "unknown_member": "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe."
+            case "unknown_member", "member_not_found": "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe."
             case "empty_name": "Bitte gib einen Namen ein."
             case "invalid_split": "Die Beträge ergeben nicht die Summe der Ausgabe."
             case "invalid_paypal": "Das sieht nicht nach einem PayPal.me-Namen aus."
             case "invalid_iban": "Bitte prüfe die IBAN."
+            case "not_signed_in": "Du bist nicht mehr angemeldet. Bitte melde dich erneut an."
             default: "Das hat nicht geklappt. Versuch es noch einmal."
             }
         }
@@ -67,17 +69,21 @@ enum BarteError: LocalizedError, Equatable {
     /// Turns any thrown error into one the UI can show.
     static func from(_ error: Error) -> BarteError {
         if let error = error as? BarteError { return error }
-        if let error = error as? PostgrestError { return .server(hint: error.hint) }
         if error is URLError { return .offline }
-        return .server(hint: nil)
-    }
-}
-
-extension SupabaseClient {
-    var currentUserID: UUID {
-        get throws {
-            guard let id = auth.currentUser?.id else { throw BarteError.notSignedIn }
-            return id
+        let nsError = error as NSError
+        if nsError.domain == FunctionsErrorDomain {
+            if nsError.code == FunctionsErrorCode.unavailable.rawValue || nsError.code == FunctionsErrorCode.deadlineExceeded.rawValue {
+                return .offline
+            }
+            let details = nsError.userInfo[FunctionsErrorDetailsKey] as? [String: Any]
+            return .server(hint: details?["hint"] as? String)
         }
+        if nsError.domain == FirestoreErrorDomain, nsError.code == FirestoreErrorCode.unavailable.rawValue {
+            return .offline
+        }
+        if nsError.domain == NSURLErrorDomain || nsError.code == AuthErrorCode.networkError.rawValue && nsError.domain == AuthErrorDomain {
+            return .offline
+        }
+        return .server(hint: nil)
     }
 }

@@ -68,9 +68,10 @@ struct WhoAmISheet: View {
     }
 
     private func claim(_ memberID: UUID) async {
+        let groupID = group.id
         isWorking = true
         defer { isWorking = false }
-        if let message = await model.run({ try await $0.claimMember(memberID) }) {
+        if let message = await model.run({ try await $0.claimMember(memberID, in: groupID) }) {
             errorMessage = message
         } else {
             dismiss()
@@ -85,7 +86,7 @@ struct WhoAmISheet: View {
         defer { isWorking = false }
         let message = await model.run { repository in
             let id = try await repository.addMember(named: name, to: groupID)
-            try await repository.claimMember(id)
+            try await repository.claimMember(id, in: groupID)
         }
         if let message {
             errorMessage = message

@@ -5,7 +5,7 @@ Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **
 <img src="docs/icon/Default.png" width="96" alt="App-Icon: eine diagonal geteilte Karte">
 
 - SwiftUI, Swift 6 (strict concurrency), iOS 26+, MVVM mit `@Observable`, Projekt per XcodeGen
-- Backend **Supabase**: Anmeldung mit Apple (iOS) bzw. Google (später Android), Postgres mit Row Level Security, alle Schreibzugriffe über SQL-Funktionen, Live-Updates über Realtime
+- Backend **Firebase** (Frankfurt): Anmeldung mit Apple (iOS) bzw. Google (später Android), Firestore mit Security Rules (Clients lesen nur), alle Schreibzugriffe über Cloud Functions, Live-Updates über Snapshot-Listener
 - Einladen per Link oder Code; alle Eingeladenen tragen selbst Ausgaben ein, auf iPhone und später Android
 
 ## Funktionen
@@ -33,39 +33,36 @@ Die Tests (`BarteTests/LedgerTests.swift`) vergleichen 300 Zufallsgruppen mit ei
 ## Setup
 
 1. Xcode 26 oder neuer und [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
-2. `cp Config.example.xcconfig Config.xcconfig` und Host und Anon Key deines Supabase-Projekts eintragen (die Datei ist git-ignoriert)
+2. `GoogleService-Info.plist` aus der Firebase-Konsole (Projekteinstellungen → Deine Apps → iOS-App `com.iamginsley.barte`) nach `Barte/Resources/` legen (git-ignoriert)
 3. `xcodegen generate`, dann `Barte.xcodeproj` öffnen. Signiert wird mit dem Team `2567P974L9` (`Configs/Project.xcconfig`).
 
-Ohne `Config.xcconfig` startet die App mit einem Hinweis; der Demo-Modus funktioniert immer.
+Ohne `GoogleService-Info.plist` startet die App mit einem Hinweis; der Demo-Modus funktioniert immer.
 
-### Supabase einrichten
+### Firebase einrichten
 
-1. Projekt auf [supabase.com](https://supabase.com) anlegen, Region **Frankfurt (eu-central-1)** (so steht es in der Datenschutzerklärung)
-2. Datenbank: `supabase link --project-ref <ref>`, dann `supabase db push` (spielt `supabase/migrations/` ein)
-3. **Mit Apple anmelden:** Authentication → Sign In / Providers → Apple aktivieren, bei *Client IDs* `com.iamginsley.barte` eintragen. Für die native Anmeldung in der App reicht das.
-4. **Konto löschen (Apple-Widerruf):** Im Developer Portal einen Key mit „Sign in with Apple“ erstellen (`AuthKey_XXXX.p8`, nie ins Repo), dann:
-   ```sh
-   supabase secrets set APPLE_TEAM_ID=2567P974L9 APPLE_KEY_ID=<KeyID> APPLE_CLIENT_ID=com.iamginsley.barte APPLE_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"
-   supabase functions deploy apple-revoke
-   ```
+Werkzeug: `cd firebase/functions && npm ci`, danach `npx firebase login` (einmalig, im Browser).
+
+1. **Projekt:** In der [Firebase-Konsole](https://console.firebase.google.com) ein Projekt `barte` anlegen (ohne Google Analytics) und auf den **Blaze-Tarif** stellen (Cloud Functions brauchen ihn; bei Barte-Größe bleibt es im kostenlosen Kontingent). Dann `cd firebase && npx --prefix functions firebase use --add` und das Projekt wählen (schreibt `.firebaserc`).
+2. **Firestore:** Datenbank im Produktionsmodus anlegen, Standort **europe-west3 (Frankfurt)** (so steht es in der Datenschutzerklärung).
+3. **iOS-App:** In den Projekteinstellungen eine iOS-App mit `com.iamginsley.barte` hinzufügen und `GoogleService-Info.plist` herunterladen (siehe Setup).
+4. **Mit Apple anmelden:** Authentication → Sign-in method → Apple aktivieren. Für „Konto löschen“ (Widerruf bei Apple) unter *OAuth code flow configuration* die Services-ID, Team-ID `2567P974L9`, Key-ID und den privaten Schlüssel eines Keys mit „Sign in with Apple“ eintragen (`AuthKey_XXXX.p8`, nie ins Repo).
 5. **Mitteilungen:** Im Developer Portal beim Key zusätzlich „Apple Push Notifications service“ aktivieren (oder einen eigenen APNs-Key erstellen), dann:
    ```sh
-   supabase secrets set APNS_KEY_ID=<KeyID> APNS_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)"   # optional, sonst wird der Apple-Key von oben genutzt
-   supabase functions deploy notify-group
+   cd firebase
+   npx --prefix functions firebase functions:secrets:set APNS_PRIVATE_KEY < AuthKey_XXXX.p8
+   echo "APNS_KEY_ID=<KeyID>" > functions/.env.<projekt-id>
    ```
    Debug-Builds registrieren sich für die Sandbox, TestFlight und App Store für Production.
-6. **Google (für Android, später):** Authentication → Providers → Google aktivieren und die OAuth-Client-IDs aus der Google Cloud Console eintragen. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
+6. **Deployen:** `cd firebase && npx --prefix functions firebase deploy --only firestore,functions` (Regeln, Indizes und alle Functions in `europe-west3`)
+7. **Google (für Android, später):** Authentication → Sign-in method → Google aktivieren. Das Datenmodell ist dafür schon fertig, die iOS-App bietet nur Apple an.
 
 Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code und öffnet die App über `barte://join/<code>`.
-
-**Gratis-Tarif:** Supabase pausiert Gratis-Projekte nach etwa einer Woche ohne Zugriffe. Die Daten bleiben erhalten, das Projekt muss dann im Dashboard wieder gestartet werden.
 
 ### Tests
 
 ```sh
 xcodebuild test -project Barte.xcodeproj -scheme Barte -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
-./scripts/test-migrations.sh                         # SQL: Migrationen + RLS/RPC-Tests auf lokalem Postgres (brew install postgresql@17)
-(cd supabase/functions && deno test)                 # Edge Functions apple-revoke und notify-group
+./scripts/test-firebase.sh                           # Cloud Functions und Security Rules gegen den Firestore-Emulator (brew install node openjdk)
 ```
 
 ### Demo-Modus (nur Debug)
@@ -87,7 +84,7 @@ Barte/
   App/            App-Einstieg, AppModel (Anmeldung, Gruppen, Realtime), RootView
   Core/
     Models/       Money, Ledger (Split, Balances, Settlement), SplitGroup, PaymentDetails, ExpenseIcon, Invite, LocalDay
-    Repositories/ GroupRepository (Supabase)
+    Repositories/ GroupRepository (Firestore lesen, Cloud Functions schreiben)
     Services/     Backend, AppleReauthentication, Notifications (Push), WidgetSync, Preferences
     Demo/         DemoData, DemoGroupRepository
   Design/         Theme, GroupCard (Signature), BarteLogo, MemberAvatar
@@ -96,7 +93,8 @@ Barte/
 BarteWidgets/     Widget „Saldo“ (klein, mittel, Sperrbildschirm), liest den Snapshot aus der App Group
 Shared/           Widget-Snapshot und barte://-Links, in App und Widget
 BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen, Einladungen, Tage
-supabase/         Migrationen, SQL-Tests, Edge Functions apple-revoke und notify-group
+firebase/         Security Rules, Cloud Functions (functions/src: api, push) und ihre Tests (functions/test)
+scripts/          test-firebase.sh
 docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
 
@@ -110,11 +108,11 @@ docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Text
 
 ## Datenmodell
 
-- `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
-- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` liest nur die Edge Function `notify-group`
-- Lesen nur über RLS (`is_group_member`), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`
+- `groups/{id}` mit Name, Währung, Farbe, Einladungscode, den Personen (`members`: Name, optional verknüpft mit einem Konto über `uid`) und `memberUids` für Abfragen und Regeln; `groups/{id}/expenses/{id}` mit Betrag in Cent, `spentOn` als Wandzeit-Tag des eintragenden iPhones, `participantIds`, `splitKind` und `splitValues` in derselben Reihenfolge wie die Beteiligten
+- `invites/{code}`, `paymentDetails/{uid}` (PayPal.me, IBAN, Kontoinhaber:in) und `devices/{token}` liest nur der Server; Zahlungsdaten gibt die Function `paymentDetails` nur an Personen aus denselben Gruppen heraus
+- Lesen nur über die Security Rules (`firebase/firestore.rules`), Schreiben nur über Cloud Functions wie `createGroup`, `joinGroup`, `saveExpense`, `deleteAccount`. Mitteilungen verschickt der Trigger `notifyOnExpense` direkt über APNs.
 - Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` und `Split.weighted` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert (bei Anteilen zuerst nach dem größten Rest).
 
 ## Datenschutz
 
-Anmeldung mit Apple, Daten bei Supabase in Frankfurt, keine Werbung und kein Tracking. Eine Gruppe sehen nur ihre Mitglieder. Siehe [docs/datenschutz.md](docs/datenschutz.md).
+Anmeldung mit Apple, Daten bei Google Firebase in Frankfurt, keine Werbung und kein Tracking. Eine Gruppe sehen nur ihre Mitglieder. Siehe [docs/datenschutz.md](docs/datenschutz.md).

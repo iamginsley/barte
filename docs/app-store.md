@@ -65,7 +65,7 @@ Der Push-Token des Geräts wird nur für Mitteilungen gespeichert und ist keine 
 
 - [x] App in App Store Connect angelegt (Name, Bundle-ID, SKU)
 - [ ] Build-Nummer in `project.yml` hochzählen, `xcodegen generate`
-- [ ] Supabase: Migrationen eingespielt, `apple-revoke` und `notify-group` deployt, Apple- und APNs-Secrets gesetzt (siehe README)
+- [ ] Firebase: Projekt auf Blaze, Firestore in Frankfurt, Apple-Anmeldung mit Code-Flow-Key, APNs-Secret gesetzt, Regeln und Functions deployt (siehe README)
 - [ ] Mitteilungen mit zwei iPhones getestet (Ausgabe eintragen, Ausgleich verbuchen, Tipp öffnet die Gruppe)
 - [ ] Widget auf dem Homescreen geprüft (klein und mittel, Hell und Dunkel)
 - [ ] Einladen und Beitreten mit zwei echten iPhones und zwei Apple-IDs getestet

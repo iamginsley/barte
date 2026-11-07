@@ -13,9 +13,9 @@ struct RootView: View {
                     .background(Color.surface)
             case .notConfigured:
                 ContentUnavailableView {
-                    Label("Supabase fehlt noch", systemImage: "gearshape.2")
+                    Label("Firebase fehlt noch", systemImage: "gearshape.2")
                 } description: {
-                    Text("Kopiere Config.example.xcconfig nach Config.xcconfig, trage Host und Anon Key deines Supabase-Projekts ein und baue die App neu.")
+                    Text("Lade GoogleService-Info.plist aus der Firebase-Konsole, leg sie nach Barte/Resources, führ xcodegen generate aus und bau die App neu.")
                 }
                 .background(Color.surface)
             case .signedOut:

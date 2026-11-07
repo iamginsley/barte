@@ -1,4 +1,4 @@
-// What the others in a group see. Pure functions, so the wording is tested without Supabase or APNs.
+// What the others in a group see. Pure functions, so the wording is tested without Firestore or APNs.
 
 export type Event =
   | {

@@ -1,9 +1,7 @@
 // Shared build settings. Contains no secrets and is committed.
-// Local values (Supabase host and anon key) live in ../Config.xcconfig, which is git-ignored.
-// Copy Config.example.xcconfig to get started.
+// The Firebase project comes from Barte/Resources/GoogleService-Info.plist, which is git-ignored.
+// ../Config.xcconfig (also git-ignored) may override settings locally.
 
-SUPABASE_HOST =
-SUPABASE_ANON_KEY =
 DEVELOPMENT_TEAM = 2567P974L9
 CODE_SIGN_STYLE = Automatic
 

@@ -1,4 +1,5 @@
-import Supabase
+import FirebaseAuth
+import FirebaseFunctions
 import UIKit
 import UserNotifications
 
@@ -26,6 +27,7 @@ enum Notifications {
 }
 
 /// The device token lives here between APNs handing it over and a signed-in session to store it with.
+/// The server pushes new expenses and paybacks to the others in a group (functions/src/push).
 @MainActor
 enum PushToken {
     private(set) static var current: String?
@@ -38,40 +40,28 @@ enum PushToken {
         #endif
     }
 
-    static func update(_ data: Data, client: SupabaseClient?) async {
-        current = data.map { String(format: "%02x", $0) }.joined()
-        await register(client: client)
+    private struct Device: Encodable, Sendable {
+        let token: String
+        let environment: String?
     }
 
-    static func register(client: SupabaseClient?) async {
-        guard let client, let current, client.auth.currentUser != nil else { return }
-        _ = try? await client.rpc("register_device", params: ["p_token": current, "p_environment": environment]).execute()
+    private struct Empty: Decodable, Sendable {}
+
+    static func update(_ data: Data) async {
+        current = data.map { String(format: "%02x", $0) }.joined()
+        await register()
+    }
+
+    static func register() async {
+        guard Backend.isConfigured, let current, Auth.auth().currentUser != nil else { return }
+        let callable = Backend.functions.httpsCallable("registerDevice", requestAs: Device.self, responseAs: Empty.self)
+        _ = try? await callable(Device(token: current, environment: environment))
     }
 
     /// Before signing out, so the next person on this phone doesn't get the previous one's notifications.
-    static func unregister(client: SupabaseClient?) async {
-        guard let client, let current else { return }
-        _ = try? await client.rpc("unregister_device", params: ["p_token": current]).execute()
-    }
-}
-
-/// Tells the others in a group about a new expense or payback through the notify-group Edge Function.
-/// Fire and forget: a missing push never blocks or fails the change itself.
-struct GroupNotifier: Sendable {
-    enum Kind: String, Sendable {
-        case expenseAdded = "expense_added"
-        case settlementAdded = "settlement_added"
-    }
-
-    let client: SupabaseClient
-
-    func send(_ kind: Kind, expenseID: UUID) {
-        let client = client
-        Task.detached {
-            _ = try? await client.functions.invoke("notify-group", options: .init(body: [
-                "kind": kind.rawValue,
-                "id": expenseID.uuidString.lowercased(),
-            ]))
-        }
+    static func unregister() async {
+        guard Backend.isConfigured, let current, Auth.auth().currentUser != nil else { return }
+        let callable = Backend.functions.httpsCallable("unregisterDevice", requestAs: Device.self, responseAs: Empty.self)
+        _ = try? await callable(Device(token: current, environment: nil))
     }
 }

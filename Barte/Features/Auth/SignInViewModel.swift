@@ -1,22 +1,17 @@
 import AuthenticationServices
 import CryptoKit
 import Foundation
+import FirebaseAuth
 import Observation
-import Supabase
 
-/// Sign in with Apple, exchanged for a Supabase session via the ID token.
+/// Sign in with Apple, exchanged for a Firebase session via the ID token.
 @MainActor
 @Observable
 final class SignInViewModel {
     private(set) var isWorking = false
     var errorMessage: String?
 
-    private let client: SupabaseClient?
     private var currentNonce: String?
-
-    init(client: SupabaseClient?) {
-        self.client = client
-    }
 
     /// Called by SignInWithAppleButton before the Apple sheet opens.
     func prepare(_ request: ASAuthorizationAppleIDRequest) {
@@ -33,7 +28,7 @@ final class SignInViewModel {
         case .failure:
             errorMessage = String(localized: "Die Anmeldung mit Apple hat nicht geklappt. Versuch es noch einmal.")
         case .success(let authorization):
-            guard let client,
+            guard Backend.isConfigured,
                   let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
                   let tokenData = credential.identityToken,
                   let idToken = String(data: tokenData, encoding: .utf8),
@@ -44,14 +39,15 @@ final class SignInViewModel {
             isWorking = true
             defer { isWorking = false }
             do {
-                try await client.auth.signInWithIdToken(credentials: .init(provider: .apple, idToken: idToken, nonce: nonce))
+                let firebaseCredential = OAuthProvider.appleCredential(withIDToken: idToken, rawNonce: nonce, fullName: credential.fullName)
+                try await Auth.auth().signIn(with: firebaseCredential)
                 // Apple shares the name only on the very first sign-in; keep it to prefill new groups and joining.
                 if let givenName = credential.fullName?.givenName, !givenName.isEmpty, Preferences.myName.isEmpty {
                     Preferences.myName = givenName
                 }
                 errorMessage = nil
             } catch {
-                errorMessage = (error as? URLError) != nil
+                errorMessage = BarteError.from(error) == .offline
                     ? String(localized: "Keine Verbindung. Prüf dein Internet und versuch es noch einmal.")
                     : String(localized: "Die Anmeldung mit Apple hat nicht geklappt. Versuch es noch einmal.")
             }

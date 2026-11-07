@@ -4,7 +4,7 @@ import Testing
 
 @Suite("Widget and links")
 struct WidgetAndLinkTests {
-    private let me = UUID()
+    private let me: UserID = "uid-me"
 
     private func group(_ name: String, currency: String = "EUR", myShare: Int, color: CardColor = .blue) -> SplitGroup {
         let mine = Member(id: UUID(), name: "Ich", userID: me)

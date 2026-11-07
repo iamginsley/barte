@@ -1,11 +1,14 @@
 import Foundation
 
+/// Who is signed in: the Firebase Auth uid.
+typealias UserID = String
+
 /// A person in a group. Members are names, so friends without the app can be part of a group too.
 /// Someone who uses Barte is linked to their member through `userID`.
 struct Member: Identifiable, Hashable, Sendable {
     let id: UUID
     var name: String
-    var userID: UUID? = nil
+    var userID: UserID? = nil
 
     var usesApp: Bool { userID != nil }
 

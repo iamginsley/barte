@@ -2,7 +2,7 @@ import Foundation
 
 /// How someone wants to get money: a PayPal.me name and/or a bank account.
 /// Visible to everyone who shares a group with them, so paying back needs no "where to?".
-struct PaymentDetails: Hashable, Sendable {
+struct PaymentDetails: Hashable, Sendable, Codable {
     /// The name behind paypal.me/, without the domain.
     var paypal: String?
     /// Upper case, without spaces.
