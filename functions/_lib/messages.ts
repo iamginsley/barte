@@ -1,30 +1,38 @@
 // What the others in a group see. Pure functions, so the wording is tested without a server or APNs.
 
+/** Who paid, from the recipient's point of view. */
+export type Payer = { type: "actor" } | { type: "recipient" } | { type: "other"; name: string };
+
+interface Common {
+  group: string;
+  groupId: string;
+  /** Who made the change. */
+  actor: string;
+  currency: string;
+}
+
 export type Event =
-  | {
-    kind: "expense_added";
-    group: string;
-    groupId: string;
-    actor: string;
-    title: string;
+  | Common & { kind: "expense_added"; title: string; amountCents: number; payer: Payer }
+  | Common & {
+    kind: "settlement_added" | "settlement_deleted";
     amountCents: number;
-    currency: string;
-    /** Who paid, from the recipient's point of view. */
-    payer: { type: "actor" } | { type: "recipient" } | { type: "other"; name: string };
-  }
-  | {
-    kind: "settlement_added";
-    group: string;
-    groupId: string;
-    actor: string;
-    amountCents: number;
-    currency: string;
     from: string;
     to: string;
     actorIsFrom: boolean;
     /** The recipient got the money, or paid it. */
     recipient: "to" | "from";
-  };
+  }
+  | Common & {
+    kind: "expense_changed";
+    title: string;
+    /** The most telling difference: the amount, else who paid, else how it's split. */
+    change:
+      | { type: "amount"; from: number; to: number }
+      | { type: "payer"; from: string; to: string }
+      | { type: "split" };
+  }
+  | Common & { kind: "expense_deleted"; title: string; amountCents: number }
+  | Common & { kind: "group_closed" };
 
 export interface Message {
   title: string;
@@ -42,29 +50,46 @@ export function money(cents: number, currency: string): string {
 }
 
 export function compose(event: Event): Message {
-  const amount = money(event.amountCents, event.currency);
   const base = { title: event.group, link: `barte://group/${event.groupId}`, threadId: event.groupId };
+  const message = (body: string, passive = false): Message => ({ ...base, body, passive });
   switch (event.kind) {
     case "expense_added": {
-      const body = event.payer.type === "actor"
-        ? `${event.actor} hat „${event.title}“ bezahlt: ${amount}`
-        : event.payer.type === "recipient"
-        ? `${event.actor} hat „${event.title}“ eingetragen, bezahlt von dir: ${amount}`
-        : `${event.actor} hat „${event.title}“ eingetragen, bezahlt von ${event.payer.name}: ${amount}`;
-      return { ...base, body, passive: false };
+      const amount = money(event.amountCents, event.currency);
+      return message(
+        event.payer.type === "actor"
+          ? `${event.actor} hat „${event.title}“ bezahlt: ${amount}`
+          : event.payer.type === "recipient"
+          ? `${event.actor} hat „${event.title}“ eingetragen, bezahlt von dir: ${amount}`
+          : `${event.actor} hat „${event.title}“ eingetragen, bezahlt von ${event.payer.name}: ${amount}`,
+      );
     }
     case "settlement_added": {
+      const amount = money(event.amountCents, event.currency);
       if (event.recipient === "to") {
-        const body = event.actorIsFrom
-          ? `${event.actor} hat dir ${amount} zurückgezahlt.`
-          : `${event.actor} hat verbucht: ${event.from} hat dir ${amount} zurückgezahlt.`;
-        return { ...base, body, passive: false };
+        return message(
+          event.actorIsFrom
+            ? `${event.actor} hat dir ${amount} zurückgezahlt.`
+            : `${event.actor} hat verbucht: ${event.from} hat dir ${amount} zurückgezahlt.`,
+        );
       }
-      return {
-        ...base,
-        body: `${event.actor} hat verbucht: Du hast ${event.to} ${amount} zurückgezahlt.`,
-        passive: true,
-      };
+      return message(`${event.actor} hat verbucht: Du hast ${event.to} ${amount} zurückgezahlt.`, true);
     }
+    case "settlement_deleted": {
+      const amount = money(event.amountCents, event.currency);
+      const between = event.recipient === "to" ? `von ${event.from} an dich` : `von dir an ${event.to}`;
+      return message(`${event.actor} hat einen Ausgleich gelöscht: ${amount} ${between}.`);
+    }
+    case "expense_changed": {
+      const what = event.change.type === "amount"
+        ? `${money(event.change.from, event.currency)} → ${money(event.change.to, event.currency)}`
+        : event.change.type === "payer"
+        ? `bezahlt von ${event.change.to} statt ${event.change.from}`
+        : "neue Aufteilung";
+      return message(`${event.actor} hat „${event.title}“ geändert: ${what}`);
+    }
+    case "expense_deleted":
+      return message(`${event.actor} hat „${event.title}“ gelöscht (${money(event.amountCents, event.currency)}).`);
+    case "group_closed":
+      return message(`${event.actor} hat die Gruppe abgeschlossen.`, true);
   }
 }

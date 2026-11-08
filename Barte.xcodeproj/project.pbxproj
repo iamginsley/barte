@@ -16,6 +16,7 @@
 		13A24944D862B8AFD90BFB44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 396C129AE54D48D707EBC0F2 /* Assets.xcassets */; };
 		152762DCE255D7E4E6F3909F /* JoinSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DAA9B35F39B488FBAC32F8 /* JoinSheet.swift */; };
 		1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */; };
+		1DE1558A5A53002FADAD729D /* GroupEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477AC025359D480EB93BCB9C /* GroupEventTests.swift */; };
 		26420B5C34528CD6BAADA056 /* LocalDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E68124ABC0C1BF5115F5172 /* LocalDay.swift */; };
 		2C13836BE12234DF42062517 /* ExpenseIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */; };
 		2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8331077E0535884A22CB08F /* AppDelegate.swift */; };
@@ -32,9 +33,11 @@
 		5FD4C82CFDC87B09A4513956 /* NotificationSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFF40B9C82CC320B10483E1 /* NotificationSettingsRow.swift */; };
 		67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A41797BC57A6CE57A59669 /* RootView.swift */; };
 		6B11864462EBAAA726885C01 /* BarteLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2385E66B63964F36178DE7 /* BarteLink.swift */; };
+		6BEE411A0BCD3E748C7A908F /* HistorySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20901C1AE3DBAD3A7FBA1312 /* HistorySheet.swift */; };
 		7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC235A4715776991373586 /* PaymentDetailsTests.swift */; };
 		729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */; };
 		792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */; };
+		7B117857BC462DCF9EF543F7 /* GroupEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79F78531E31186550B9C4 /* GroupEvent.swift */; };
 		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
 		829FB3592466F0A0A2009BBA /* PaymentDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */; };
 		887D863CA9F95222FCD123EC /* NhostAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9604C1F1E391D5C7F48952 /* NhostAPI.swift */; };
@@ -107,6 +110,7 @@
 		0E68124ABC0C1BF5115F5172 /* LocalDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDay.swift; sourceTree = "<group>"; };
 		0E717002048274CB18A03413 /* MemberAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAvatar.swift; sourceTree = "<group>"; };
 		12A8AEC534DABD9DE65E7FF0 /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
+		20901C1AE3DBAD3A7FBA1312 /* HistorySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySheet.swift; sourceTree = "<group>"; };
 		24C250BC52F146572F356D78 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
@@ -119,6 +123,7 @@
 		3EF4BE01897FD753519138AF /* WhoAmISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhoAmISheet.swift; sourceTree = "<group>"; };
 		41EC235A4715776991373586 /* PaymentDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsTests.swift; sourceTree = "<group>"; };
 		4258DD07CEED97267C50436A /* BalanceWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceWidget.swift; sourceTree = "<group>"; };
+		477AC025359D480EB93BCB9C /* GroupEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEventTests.swift; sourceTree = "<group>"; };
 		488AE27DE478B2716163DE9B /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		4B552247D5A7B5436A9B5E35 /* ExpenseEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEditorModel.swift; sourceTree = "<group>"; };
 		4F2385E66B63964F36178DE7 /* BarteLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteLink.swift; sourceTree = "<group>"; };
@@ -155,6 +160,7 @@
 		DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorSheet.swift; sourceTree = "<group>"; };
 		DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetails.swift; sourceTree = "<group>"; };
 		DEED078948C81E4D89678841 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
+		E0E79F78531E31186550B9C4 /* GroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEvent.swift; sourceTree = "<group>"; };
 		E4E183DF598AC540D90608CC /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
 		F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsModel.swift; sourceTree = "<group>"; };
 		F3FC4EAACB84203E839CD5B3 /* NhostWireTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NhostWireTests.swift; sourceTree = "<group>"; };
@@ -204,6 +210,7 @@
 				47C0A9E6A150F260BEED9C18 /* Expense */,
 				0899F401404ABB88525102B1 /* GroupDetail */,
 				6580437194E7EBDE85DF391A /* Groups */,
+				FAA6F3D8A830CEF5E44A53EB /* History */,
 				D83338721686899A3C497AAA /* Join */,
 				F9DC4AF2083654BC32E3E585 /* Payment */,
 				3866369FD54EB6E16F50C0E5 /* SettleUp */,
@@ -306,6 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */,
+				E0E79F78531E31186550B9C4 /* GroupEvent.swift */,
 				12A8AEC534DABD9DE65E7FF0 /* Invite.swift */,
 				DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */,
 				0E68124ABC0C1BF5115F5172 /* LocalDay.swift */,
@@ -378,6 +386,7 @@
 		E807992DF7C4784E726B71AD /* BarteTests */ = {
 			isa = PBXGroup;
 			children = (
+				477AC025359D480EB93BCB9C /* GroupEventTests.swift */,
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
 				F3FC4EAACB84203E839CD5B3 /* NhostWireTests.swift */,
@@ -404,6 +413,14 @@
 				FBD1324457B00639704B2BD4 /* PaymentDetailsView.swift */,
 			);
 			path = Payment;
+			sourceTree = "<group>";
+		};
+		FAA6F3D8A830CEF5E44A53EB /* History */ = {
+			isa = PBXGroup;
+			children = (
+				20901C1AE3DBAD3A7FBA1312 /* HistorySheet.swift */,
+			);
+			path = History;
 			sourceTree = "<group>";
 		};
 		FF659511F769A4B7FDC5ED52 /* BarteWidgets */ = {
@@ -574,8 +591,10 @@
 				5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */,
 				037EC181910688197DAF8A3B /* GroupEditorModel.swift in Sources */,
 				8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */,
+				7B117857BC462DCF9EF543F7 /* GroupEvent.swift in Sources */,
 				1A6C101455DF2BE564C5D937 /* GroupRepository.swift in Sources */,
 				5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */,
+				6BEE411A0BCD3E748C7A908F /* HistorySheet.swift in Sources */,
 				4BF8AB095C87DBB08EB9F0E1 /* Invite.swift in Sources */,
 				0FE9B6F665DECFD7EA1DCA18 /* InviteSheet.swift in Sources */,
 				0878937D7F433422CD660252 /* JoinModel.swift in Sources */,
@@ -608,6 +627,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DE1558A5A53002FADAD729D /* GroupEventTests.swift in Sources */,
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
 				FC5D9F463699911106D47B43 /* NhostWireTests.swift in Sources */,

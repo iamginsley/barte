@@ -1,12 +1,31 @@
-// Tells the others in a group about a new expense or payback. Reads the expense with the caller's
-// own permissions (so only their groups), builds the message from the database rather than from
-// client text, and pushes it to the people in the group who use the app and are part of it.
+// Turns one row of the group history (public.group_events) into push notifications. Hasura calls
+// this for every new row, so a change can't avoid notifying the others: the message comes from the
+// database's before/after snapshot, never from text a client sent.
 import { type ApnsConfig, type Device, send } from "./apns";
-import { compose, type Event } from "./messages";
+import { compose, type Event, type Payer } from "./messages";
 import type { GraphQL } from "./server";
 
-export const KINDS = ["expense_added", "settlement_added"] as const;
-export type Kind = (typeof KINDS)[number];
+/** An expense as the history stores it (expense_snapshot in the migration). */
+export interface Snapshot {
+  title: string;
+  amount_cents: number;
+  payer_id: string;
+  participant_ids: string[];
+  is_settlement: boolean;
+  split_kind: string;
+  split_values: number[] | null;
+}
+
+export interface GroupEventRow {
+  id: string;
+  group_id: string;
+  kind: string;
+  actor_id: string | null;
+  actor_name: string | null;
+  subject_id: string | null;
+  old: Snapshot | null;
+  new: Snapshot | null;
+}
 
 interface MemberRow {
   id: string;
@@ -14,23 +33,7 @@ interface MemberRow {
   user_id: string | null;
 }
 
-interface ExpenseRow {
-  group_id: string;
-  title: string;
-  amount_cents: number;
-  payer_id: string;
-  participant_ids: string[] | string;
-  is_settlement: boolean;
-  group: { name: string; currency: string; members: MemberRow[] };
-}
-
 export type Result = { status: number; body: Record<string, unknown> };
-
-/** Hasura returns Postgres arrays as JSON arrays; accept the literal form too. */
-export function uuidArray(value: string[] | string): string[] {
-  if (Array.isArray(value)) return value;
-  return value.replace(/^\{|\}$/g, "").split(",").filter(Boolean);
-}
 
 export function apnsConfig(env: NodeJS.ProcessEnv = process.env): ApnsConfig | undefined {
   // One .p8 key can carry both Sign in with Apple and APNs, so the Apple key is the fallback.
@@ -43,65 +46,109 @@ export function apnsConfig(env: NodeJS.ProcessEnv = process.env): ApnsConfig | u
   return Object.values(config).every((value) => value && value !== "FIXME") ? config : undefined;
 }
 
-export async function notifyGroup(
+const involved = (s: Snapshot | null) => (s ? [s.payer_id, ...s.participant_ids] : []);
+
+/** Whether an edit changed what anyone owes; title and date changes stay in the history only. */
+export function changesMoney(old: Snapshot, next: Snapshot): boolean {
+  const key = (s: Snapshot) =>
+    JSON.stringify([s.amount_cents, s.payer_id, [...s.participant_ids].sort(), s.split_kind, s.split_values, s.is_settlement]);
+  return key(old) !== key(next);
+}
+
+/** Who should hear about this event: member ids, before removing the actor and people without the app. */
+function audience(row: GroupEventRow, members: MemberRow[]): Set<string> | undefined {
+  switch (row.kind) {
+    case "expense_added":
+    case "settlement_added":
+      return new Set(involved(row.new));
+    case "expense_deleted":
+    case "settlement_deleted":
+      return new Set(involved(row.old));
+    case "expense_changed":
+      if (!row.old || !row.new || !changesMoney(row.old, row.new)) return undefined;
+      return new Set([...involved(row.old), ...involved(row.new)]);
+    case "group_closed":
+      return new Set(members.map((m) => m.id));
+    default:
+      // Renames, reopening, members: the history shows them, a push would only be noise.
+      return undefined;
+  }
+}
+
+export function eventFor(
+  row: GroupEventRow,
+  group: { name: string; currency: string },
+  members: MemberRow[],
+  recipient: MemberRow,
+): Event | undefined {
+  const nameOf = (id: string) => (id === recipient.id ? "dir" : members.find((m) => m.id === id)?.name ?? "?");
+  const actorMember = members.find((m) => m.user_id && m.user_id === row.actor_id);
+  const common = { group: group.name, groupId: row.group_id, actor: row.actor_name ?? "Jemand", currency: group.currency };
+  const snapshot = row.new ?? row.old;
+
+  switch (row.kind) {
+    case "expense_added": {
+      const s = row.new!;
+      const payer: Payer = s.payer_id === actorMember?.id
+        ? { type: "actor" }
+        : s.payer_id === recipient.id
+        ? { type: "recipient" }
+        : { type: "other", name: nameOf(s.payer_id) };
+      return { kind: "expense_added", ...common, title: s.title, amountCents: s.amount_cents, payer };
+    }
+    case "settlement_added":
+    case "settlement_deleted": {
+      const s = snapshot!;
+      const to = s.participant_ids[0];
+      const plain = (id: string) => members.find((m) => m.id === id)?.name ?? "?";
+      return {
+        kind: row.kind,
+        ...common,
+        amountCents: s.amount_cents,
+        from: plain(s.payer_id),
+        to: plain(to),
+        actorIsFrom: s.payer_id === actorMember?.id,
+        recipient: recipient.id === to ? "to" : "from",
+      };
+    }
+    case "expense_changed": {
+      const [old, next] = [row.old!, row.new!];
+      const change = old.amount_cents !== next.amount_cents
+        ? { type: "amount" as const, from: old.amount_cents, to: next.amount_cents }
+        : old.payer_id !== next.payer_id
+        ? { type: "payer" as const, from: nameOf(old.payer_id), to: nameOf(next.payer_id) }
+        : { type: "split" as const };
+      return { kind: "expense_changed", ...common, title: next.title, change };
+    }
+    case "expense_deleted":
+      return { kind: "expense_deleted", ...common, title: row.old!.title, amountCents: row.old!.amount_cents };
+    case "group_closed":
+      return { kind: "group_closed", ...common };
+    default:
+      return undefined;
+  }
+}
+
+export async function notifyEvent(
   gql: GraphQL,
-  userID: string,
-  kind: Kind,
-  expenseID: string,
+  row: GroupEventRow,
   config: ApnsConfig | undefined,
   sendImpl: typeof send = send,
 ): Promise<Result> {
-  const { expenses_by_pk: expense } = await gql<{ expenses_by_pk: ExpenseRow | null }>(
-    `query Expense($id: uuid!) {
-      expenses_by_pk(id: $id) {
-        group_id title amount_cents payer_id participant_ids is_settlement
-        group { name currency members { id name user_id } }
-      }
-    }`,
-    { id: expenseID },
-    userID,
+  const { groups_by_pk: group } = await gql<{
+    groups_by_pk: { name: string; currency: string; members: MemberRow[] } | null;
+  }>(
+    `query Group($id: uuid!) { groups_by_pk(id: $id) { name currency members { id name user_id } } }`,
+    { id: row.group_id },
   );
-  if (!expense) return { status: 404, body: { error: "not_found" } };
-  if (expense.is_settlement !== (kind === "settlement_added")) return { status: 400, body: { error: "wrong_kind" } };
+  if (!group) return { status: 200, body: { sent: 0, skipped: "group_gone" } };
 
-  const people = expense.group.members;
-  const participants = uuidArray(expense.participant_ids);
-  const actor = people.find((m) => m.user_id === userID);
-  if (!actor) return { status: 403, body: { error: "not_member" } };
-  const nameOf = (memberID: string) => people.find((m) => m.id === memberID)?.name ?? "?";
-  const involved = new Set<string>([expense.payer_id, ...participants]);
+  const wanted = audience(row, group.members);
+  if (!wanted) return { status: 200, body: { sent: 0, skipped: "quiet" } };
 
-  // One event per recipient: who paid reads differently for each of them.
-  const recipients = people.filter((m) => m.user_id && m.user_id !== userID && involved.has(m.id));
+  // The one who made the change already knows.
+  const recipients = group.members.filter((m) => m.user_id && m.user_id !== row.actor_id && wanted.has(m.id));
   if (recipients.length === 0) return { status: 200, body: { sent: 0, skipped: "no_recipients" } };
-
-  const eventFor = (recipient: MemberRow): Event => {
-    const common = {
-      group: expense.group.name,
-      groupId: expense.group_id,
-      actor: actor.name,
-      amountCents: expense.amount_cents,
-      currency: expense.group.currency,
-    };
-    if (kind === "expense_added") {
-      const payer = expense.payer_id === actor.id
-        ? { type: "actor" as const }
-        : expense.payer_id === recipient.id
-        ? { type: "recipient" as const }
-        : { type: "other" as const, name: nameOf(expense.payer_id) };
-      return { kind, ...common, title: expense.title, payer };
-    }
-    const to = participants[0];
-    return {
-      kind,
-      ...common,
-      from: nameOf(expense.payer_id),
-      to: nameOf(to),
-      actorIsFrom: expense.payer_id === actor.id,
-      recipient: recipient.id === to ? "to" : "from",
-    };
-  };
-
   if (!config) return { status: 200, body: { sent: 0, skipped: "not_configured" } };
 
   const byUser = new Map(recipients.map((m) => [m.user_id!, m]));
@@ -113,9 +160,10 @@ export async function notifyGroup(
   let sent = 0;
   const gone: string[] = [];
   await Promise.all(devices.map(async (device) => {
-    const message = compose(eventFor(byUser.get(device.user_id)!));
-    const outcome = await sendImpl(device, message, config).catch((error) => {
-      console.error("notify-group: send failed", error);
+    const event = eventFor(row, group, group.members, byUser.get(device.user_id)!);
+    if (!event) return;
+    const outcome = await sendImpl(device, compose(event), config).catch((error) => {
+      console.error("group-event: send failed", error);
       return "failed" as const;
     });
     if (outcome === "sent") sent++;

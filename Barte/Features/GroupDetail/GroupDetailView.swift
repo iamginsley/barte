@@ -15,6 +15,7 @@ struct GroupDetailView: View {
     @State private var confirmsClose = false
     @State private var settlementToDelete: Expense?
     @State private var showsInvite = false
+    @State private var showsHistory = false
     @State private var alertMessage: String?
     @State private var didAppear = false
 
@@ -93,6 +94,7 @@ struct GroupDetailView: View {
         .sheet(isPresented: $showsEdit) { GroupEditorSheet(group: group) { _ in } }
         .sheet(isPresented: $showsWhoAmI) { WhoAmISheet(group: group) }
         .sheet(isPresented: $showsInvite) { InviteSheet(groupID: group.id) }
+        .sheet(isPresented: $showsHistory) { HistorySheet(group: group) }
         .confirmationDialog(
             canDelete(group) ? "Gruppe löschen?" : "Gruppe verlassen?",
             isPresented: $confirmsDelete,
@@ -193,6 +195,7 @@ struct GroupDetailView: View {
         ToolbarItem(placement: .topBarTrailing) {
             Menu("Mehr", systemImage: "ellipsis") {
                 Button("Gruppe bearbeiten", systemImage: "pencil") { showsEdit = true }
+                Button("Verlauf", systemImage: "clock.arrow.circlepath") { showsHistory = true }
                 Button("Das bin nicht ich", systemImage: "person.fill.questionmark") { showsWhoAmI = true }
                 if group.isClosed {
                     Button("Wieder öffnen", systemImage: "arrow.uturn.backward") { Task { await setClosed(false, group) } }
@@ -217,6 +220,7 @@ struct GroupDetailView: View {
         case "settle": showsSettle = true
         case "expense": showsNewExpense = true
         case "invite": showsInvite = true
+        case "history": showsHistory = true
         default: break
         }
     }
@@ -325,7 +329,9 @@ struct ExpenseRow: View {
             return "\(group.name(of: expense.payerID, me: me)) → \(to) · \(day)"
         }
         let payer = expense.payerID == me ? "dir" : group.member(expense.payerID)?.name ?? "?"
-        return "von \(payer) · \(day)"
+        // Edits are part of the history; the row says so, the details are one tap away.
+        let edited = group.editedExpenseIDs.contains(expense.id) ? " · bearbeitet" : ""
+        return "von \(payer) · \(day)\(edited)"
     }
 
     private var impact: (text: String, color: Color)? {

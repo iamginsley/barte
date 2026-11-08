@@ -36,6 +36,8 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     var createdBy: UUID? = nil
     /// Set when someone put the group away; any change to its expenses opens it again.
     var closedAt: Date? = nil
+    /// Expenses someone changed after entering them (from the history), shown as "bearbeitet".
+    var editedExpenseIDs: Set<UUID> = []
 
     var isClosed: Bool { closedAt != nil }
 

@@ -122,6 +122,17 @@ try {
   });
   check((await closedAt(b)) === null, "a new expense reopens it");
 
+  // History: written by the database, visible to members only, not writable by anyone.
+  const history = async (user) => (await gql(user, `{ group_events(order_by: { created_at: asc }) { kind actor_name old new } }`)).data.group_events;
+  const events = await history(a);
+  check(events.some((e) => e.kind === "expense_added" && e.actor_name === "Ben"), "history shows who entered what");
+  check(events.some((e) => e.kind === "group_closed") && events.some((e) => e.kind === "group_reopened"), "closing and reopening are in the history");
+  check((await history(c)).length === 0, "outsiders see no history");
+  const forged = await gql(a, `mutation { insert_group_events_one(object: { group_id: "${group}", kind: "expense_added" }) { id } }`);
+  check(Boolean(forged.errors), "nobody can write history entries");
+  const erased = await gql(a, `mutation { delete_group_events(where: {}) { affected_rows } }`);
+  check(Boolean(erased.errors), "nobody can erase history");
+
   // Payment details: visible within shared groups only.
   await call(a, "set_payment_details", { p_paypal: "annah", p_iban: null, p_account_holder: null });
   const paymentsQuery = `{ payment_details { user_id paypal } }`;
