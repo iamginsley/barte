@@ -68,6 +68,7 @@ enum DemoData {
                 .add("Ausgleich", 2483, by: "Mia", for: ["Jonas"], daysAgo: 29, settlement: true)
                 .add("Ausgleich", 2483, by: "Dominik", for: ["Jonas"], daysAgo: 29, settlement: true)
                 .add("Pizzeria Da Mario", 7450, by: "Jonas", daysAgo: 30)
+                .closed(daysAgo: 28)
                 .group,
         ]
     }
@@ -116,6 +117,12 @@ enum DemoData {
                 isSettlement: settlement,
                 split: split.map(mode) ?? .equal
             ))
+            return copy
+        }
+
+        func closed(daysAgo: Int) -> Builder {
+            var copy = self
+            copy.group.closedAt = Calendar.current.date(byAdding: .day, value: -daysAgo, to: .now)
             return copy
         }
 
@@ -198,6 +205,12 @@ actor DemoGroupRepository: GroupRepository {
         try await deleteGroup(id)
     }
 
+    func setClosed(_ closed: Bool, group id: UUID) async throws {
+        try update(id) { group in
+            group.closedAt = closed ? group.closedAt ?? .now : nil
+        }
+    }
+
     func addMember(named name: String, to groupID: UUID) async throws -> UUID {
         let member = Member(id: UUID(), name: name)
         try update(groupID) { $0.members.append(member) }
@@ -234,12 +247,16 @@ actor DemoGroupRepository: GroupRepository {
             group.expenses.removeAll { $0.id == expense.id }
             group.expenses.append(expense)
             group.expenses.sort { $0.date > $1.date }
+            group.closedAt = nil
         }
     }
 
     func deleteExpense(_ id: UUID) async throws {
         guard let index = groups.firstIndex(where: { $0.expenses.contains { $0.id == id } }) else { return }
-        try update(groups[index].id) { $0.expenses.removeAll { $0.id == id } }
+        try update(groups[index].id) { group in
+            group.expenses.removeAll { $0.id == id }
+            group.closedAt = nil
+        }
     }
 
     func previewInvite(code: String) async throws -> InvitePreview {

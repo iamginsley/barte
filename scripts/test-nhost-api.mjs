@@ -111,6 +111,17 @@ try {
   console.log(`  timestamps look like ${saved.created_at}`);
   check((await gql(c, `{ expenses { id } }`)).data.expenses.length === 0, "outsider C sees no expenses");
 
+  // Closing: visible to everyone in the group, and a new expense opens it again.
+  await call(b, "set_group_closed", { p_group_id: group, p_closed: true });
+  const closedAt = async (user) => (await gql(user, `{ groups { closed_at } }`)).data.groups[0]?.closed_at;
+  check(Boolean(await closedAt(a)), "B closes the group, A sees it closed");
+  await fails(call(c, "set_group_closed", { p_group_id: group, p_closed: true }), "not_member", "outsider cannot close");
+  await call(a, "save_expense", {
+    p_id: randomUUID(), p_group_id: group, p_title: "Nachzügler", p_amount_cents: 500, p_spent_on: "2026-11-08",
+    p_payer_id: anna.id, p_participant_ids: `{${anna.id}}`, p_is_settlement: false, p_split_kind: "equal", p_split_values: null,
+  });
+  check((await closedAt(b)) === null, "a new expense reopens it");
+
   // Payment details: visible within shared groups only.
   await call(a, "set_payment_details", { p_paypal: "annah", p_iban: null, p_account_holder: null });
   const paymentsQuery = `{ payment_details { user_id paypal } }`;

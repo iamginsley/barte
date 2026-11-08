@@ -17,7 +17,9 @@ enum WidgetSync {
     }
 
     static func makeSnapshot(groups: [SplitGroup], userID: UUID?, now: Date = .now) -> WidgetSnapshot {
+        // Closed groups are put away; the widget shows only what is still going on.
         let open = groups.compactMap { group -> WidgetSnapshot.Group? in
+            guard !group.isClosed else { return nil }
             let balance = group.balance(of: group.me(userID: userID))
             guard balance != 0 else { return nil }
             return .init(id: group.id, name: group.name, color: group.color.rawValue, currency: group.currency, balance: balance)

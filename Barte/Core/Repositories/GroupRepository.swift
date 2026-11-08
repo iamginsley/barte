@@ -8,6 +8,8 @@ protocol GroupRepository: Sendable {
     func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws
     func deleteGroup(_ id: UUID) async throws
     func leaveGroup(_ id: UUID) async throws
+    /// Puts a group away for everyone in it, or brings it back.
+    func setClosed(_ closed: Bool, group id: UUID) async throws
 
     func addMember(named name: String, to groupID: UUID) async throws -> UUID
     func renameMember(_ id: UUID, to name: String) async throws
@@ -46,6 +48,7 @@ struct NhostGroupRepository: GroupRepository {
         let inviteCode: String
         let createdBy: UUID?
         let createdAt: Date
+        let closedAt: Date?
         let members: [MemberRow]
         let expenses: [ExpenseRow]
 
@@ -54,6 +57,7 @@ struct NhostGroupRepository: GroupRepository {
             case inviteCode = "invite_code"
             case createdBy = "created_by"
             case createdAt = "created_at"
+            case closedAt = "closed_at"
         }
     }
 
@@ -96,7 +100,7 @@ struct NhostGroupRepository: GroupRepository {
     }
 
     private static let groupFields = """
-        id name currency color invite_code created_by created_at
+        id name currency color invite_code created_by created_at closed_at
         members { id name user_id created_at }
         expenses { id title amount_cents spent_on payer_id participant_ids is_settlement split_kind split_values created_at }
         """
@@ -135,7 +139,8 @@ struct NhostGroupRepository: GroupRepository {
             members: members,
             expenses: expenses,
             inviteCode: row.inviteCode,
-            createdBy: row.createdBy
+            createdBy: row.createdBy,
+            closedAt: row.closedAt
         )
     }
 
@@ -169,6 +174,10 @@ struct NhostGroupRepository: GroupRepository {
 
     func leaveGroup(_ id: UUID) async throws {
         try await api.call("leave_group", ["p_group_id": .uuid(id)])
+    }
+
+    func setClosed(_ closed: Bool, group id: UUID) async throws {
+        try await api.call("set_group_closed", ["p_group_id": .uuid(id), "p_closed": .bool(closed)])
     }
 
     // MARK: Members
@@ -268,7 +277,7 @@ struct NhostGroupRepository: GroupRepository {
     /// Hasura's permissions decide which rows these see, so they cover exactly this person's groups.
     func changes() -> AsyncStream<Void> {
         api.changes(of: [
-            "subscription Groups { groups { id name currency color invite_code members { id name user_id } expenses { id updated_at } } }",
+            "subscription Groups { groups { id name currency color invite_code closed_at members { id name user_id } expenses { id updated_at } } }",
             "subscription Payments { payment_details { user_id updated_at } }",
         ])
     }

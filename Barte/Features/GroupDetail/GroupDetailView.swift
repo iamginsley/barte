@@ -12,6 +12,7 @@ struct GroupDetailView: View {
     @State private var showsEdit = false
     @State private var showsWhoAmI = false
     @State private var confirmsDelete = false
+    @State private var confirmsClose = false
     @State private var settlementToDelete: Expense?
     @State private var showsInvite = false
     @State private var alertMessage: String?
@@ -71,17 +72,20 @@ struct GroupDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar(group) }
         .safeAreaInset(edge: .bottom) {
-            Button {
-                showsNewExpense = true
-            } label: {
-                Label("Ausgabe", systemImage: "plus")
-                    .font(.headline)
-                    .padding(.horizontal, 8)
+            // A closed group is done; reopening it is one tap in the row above.
+            if !group.isClosed {
+                Button {
+                    showsNewExpense = true
+                } label: {
+                    Label("Ausgabe", systemImage: "plus")
+                        .font(.headline)
+                        .padding(.horizontal, 8)
+                }
+                .buttonStyle(.glassProminent)
+                .controlSize(.large)
+                .disabled(group.members.isEmpty)
+                .padding(.bottom, 8)
             }
-            .buttonStyle(.glassProminent)
-            .controlSize(.large)
-            .disabled(group.members.isEmpty)
-            .padding(.bottom, 8)
         }
         .sheet(isPresented: $showsNewExpense) { ExpenseEditorSheet(group: group, expense: nil, me: me) }
         .sheet(item: $editingExpense) { ExpenseEditorSheet(group: group, expense: $0, me: me) }
@@ -99,6 +103,11 @@ struct GroupDetailView: View {
             }
         } message: {
             Text(deleteMessage(group))
+        }
+        .confirmationDialog("Gruppe abschließen?", isPresented: $confirmsClose, titleVisibility: .visible) {
+            Button("Abschließen") { Task { await setClosed(true, group) } }
+        } message: {
+            Text("Noch sind nicht alle quitt. Die offenen Beträge zählen dann für niemanden mehr in der Übersicht. Du kannst die Gruppe jederzeit wieder öffnen.")
         }
         .confirmationDialog("Ausgleich löschen?", isPresented: .init(
             get: { settlementToDelete != nil }, set: { if !$0 { settlementToDelete = nil } }
@@ -119,10 +128,42 @@ struct GroupDetailView: View {
 
     @ViewBuilder
     private func settleRow(_ group: SplitGroup) -> some View {
-        if group.isSettled {
-            Label(group.expenses.isEmpty ? "Noch nichts auszugleichen" : "Alle sind quitt", systemImage: "checkmark.seal.fill")
+        if let date = group.closedDateText {
+            HStack {
+                Label {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Abgeschlossen")
+                            .font(.body.weight(.medium))
+                        Text("am \(date)")
+                            .font(.subheadline)
+                    }
+                } icon: {
+                    Image(systemName: "archivebox.fill")
+                }
+                .foregroundStyle(Color.inkSecondary)
+                .accessibilityElement(children: .combine)
+                Spacer(minLength: 8)
+                Button("Wieder öffnen") { Task { await setClosed(false, group) } }
+                    .buttonStyle(.bordered)
+                    .fixedSize()
+            }
+            .frame(minHeight: Theme.minTapSize)
+        } else if group.isSettled && !group.expenses.isEmpty {
+            HStack {
+                Label("Alle sind quitt", systemImage: "checkmark.seal.fill")
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(Color.positive)
+                Spacer(minLength: 8)
+                Button("Abschließen") { requestClose(group) }
+                    .buttonStyle(.bordered)
+                    .fixedSize()
+                    .accessibilityHint("Legt die Gruppe für alle unter „Abgeschlossen“ ab")
+            }
+            .frame(minHeight: Theme.minTapSize)
+        } else if group.isSettled {
+            Label("Noch nichts auszugleichen", systemImage: "checkmark.seal.fill")
                 .font(.body.weight(.medium))
-                .foregroundStyle(group.expenses.isEmpty ? Color.inkSecondary : Color.positive)
+                .foregroundStyle(Color.inkSecondary)
                 .frame(minHeight: Theme.minTapSize)
         } else {
             let count = group.transfers.count
@@ -153,6 +194,11 @@ struct GroupDetailView: View {
             Menu("Mehr", systemImage: "ellipsis") {
                 Button("Gruppe bearbeiten", systemImage: "pencil") { showsEdit = true }
                 Button("Das bin nicht ich", systemImage: "person.fill.questionmark") { showsWhoAmI = true }
+                if group.isClosed {
+                    Button("Wieder öffnen", systemImage: "arrow.uturn.backward") { Task { await setClosed(false, group) } }
+                } else if !group.expenses.isEmpty {
+                    Button("Gruppe abschließen", systemImage: "archivebox") { requestClose(group) }
+                }
                 Divider()
                 Button(canDelete(group) ? "Gruppe löschen" : "Gruppe verlassen",
                        systemImage: canDelete(group) ? "trash" : "rectangle.portrait.and.arrow.right",
@@ -180,6 +226,22 @@ struct GroupDetailView: View {
     }
 
     private func canDelete(_ group: SplitGroup) -> Bool { group.canDelete(userID: model.userID) }
+
+    /// Closing a settled group needs no question; with open amounts it asks first.
+    private func requestClose(_ group: SplitGroup) {
+        if group.isSettled {
+            Task { await setClosed(true, group) }
+        } else {
+            confirmsClose = true
+        }
+    }
+
+    /// Closing goes back to the overview, where the group now sits under "Abgeschlossen".
+    private func setClosed(_ closed: Bool, _ group: SplitGroup) async {
+        let id = group.id
+        if closed { dismiss() }
+        await perform { try await $0.setClosed(closed, group: id) }
+    }
 
     private func removeGroup(_ group: SplitGroup) async {
         let id = group.id

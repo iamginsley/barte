@@ -9,6 +9,7 @@ struct GroupsView: View {
     @State private var showsJoin = false
     @State private var cardWidth: CGFloat = 360
     @State private var appliedLaunchFlags = false
+    @AppStorage("showsClosedGroups") private var showsClosed = false
     @Namespace private var zoom
     /// How much of each stacked card peeks out: enough for the name and my balance.
     @ScaledMetric(relativeTo: .title2) private var peek: CGFloat = 84
@@ -31,6 +32,7 @@ struct GroupsView: View {
                     VStack(alignment: .leading, spacing: 20) {
                         summary
                         stack
+                        closedSection
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 32)
@@ -82,7 +84,7 @@ struct GroupsView: View {
         let cardHeight = cardWidth / Theme.cardAspectRatio
         // Later cards draw on top, so each card covers all but the top strip of the one before.
         return VStack(spacing: min(0, peek - cardHeight)) {
-            ForEach(model.groups) { group in
+            ForEach(openGroups) { group in
                 NavigationLink(value: group.id) {
                     GroupCard(group: group, me: model.me(in: group.id))
                         .matchedTransitionSource(id: group.id, in: zoom) { source in
@@ -95,10 +97,65 @@ struct GroupsView: View {
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { cardWidth = $0 }
     }
 
-    /// One line per currency: what I get or owe across all groups.
+    private var openGroups: [SplitGroup] { model.groups.filter { !$0.isClosed } }
+
+    /// Most recently closed first.
+    private var closedGroups: [SplitGroup] {
+        model.groups.filter(\.isClosed).sorted { ($0.closedAt ?? .distantPast) > ($1.closedAt ?? .distantPast) }
+    }
+
+    /// Put-away groups, folded under the stack so the cards stay about what is going on now.
+    @ViewBuilder
+    private var closedSection: some View {
+        let closed = closedGroups
+        if !closed.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Button {
+                    withAnimation(.snappy) { showsClosed.toggle() }
+                } label: {
+                    HStack {
+                        Text("Abgeschlossen")
+                            .font(.headline)
+                        Text("\(closed.count)")
+                            .font(.subheadline.monospacedDigit())
+                            .foregroundStyle(Color.inkSecondary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Color.inkSecondary)
+                            .rotationEffect(.degrees(showsClosed ? 90 : 0))
+                    }
+                    .frame(minHeight: Theme.minTapSize)
+                    .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .accessibilityValue(showsClosed ? "Aufgeklappt" : "Zugeklappt")
+                .accessibilityHint("Zeigt Gruppen, die erledigt sind")
+
+                if showsClosed {
+                    VStack(spacing: 0) {
+                        ForEach(closed) { group in
+                            NavigationLink(value: group.id) {
+                                ClosedGroupRow(group: group)
+                            }
+                            .buttonStyle(.plain)
+                            if group.id != closed.last?.id {
+                                Divider().padding(.leading, 60)
+                            }
+                        }
+                    }
+                    .background(Color.card, in: .rect(cornerRadius: 20, style: .continuous))
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+            }
+            .padding(.top, openGroups.isEmpty ? 0 : 8)
+        }
+    }
+
+    /// One line per currency: what I get or owe across all groups that are still open.
     @ViewBuilder
     private var summary: some View {
-        let totals = Dictionary(grouping: model.groups, by: \.currency)
+        let totals = Dictionary(grouping: openGroups, by: \.currency)
             .mapValues { groups in groups.reduce(0) { $0 + $1.balance(of: model.me(in: $1.id)) } }
             .filter { $0.value != 0 }
             .sorted { $0.key < $1.key }
@@ -196,6 +253,42 @@ struct GroupsView: View {
         case "join" where path.isEmpty: model.pendingInviteCode = "KROATIEN"
         default: break
         }
+    }
+}
+
+/// A put-away group: a small chip in its card color, the name and when it was closed.
+private struct ClosedGroupRow: View {
+    let group: SplitGroup
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "checkmark")
+                .font(.footnote.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(width: 32, height: 32)
+                .background(group.color.gradient, in: .rect(cornerRadius: 8, style: .continuous))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(group.name)
+                    .font(.body)
+                    .foregroundStyle(Color.ink)
+                    .lineLimit(1)
+                if let date = group.closedDateText {
+                    Text("Abgeschlossen am \(date)")
+                        .font(.subheadline)
+                        .foregroundStyle(Color.inkSecondary)
+                }
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .frame(minHeight: Theme.minTapSize)
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
     }
 }
 
