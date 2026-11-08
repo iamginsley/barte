@@ -34,6 +34,19 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     var expenses: [Expense]
     var inviteCode: String = ""
     var createdBy: UUID? = nil
+    /// Set when someone put the group away; any change to its expenses opens it again.
+    var closedAt: Date? = nil
+
+    var isClosed: Bool { closedAt != nil }
+
+    /// "11. Okt.", with the year only when it isn't this one.
+    var closedDateText: String? {
+        closedAt.map { date in
+            Calendar.current.isDate(date, equalTo: .now, toGranularity: .year)
+                ? date.formatted(.dateTime.day().month(.abbreviated))
+                : date.formatted(.dateTime.day().month(.abbreviated).year())
+        }
+    }
 
     var balances: [UUID: Int] { Balances.compute(members: members.map(\.id), expenses: expenses) }
 

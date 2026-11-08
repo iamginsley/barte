@@ -34,6 +34,24 @@ struct WidgetAndLinkTests {
         #expect(snapshot.groups.isEmpty)
     }
 
+    @Test func closedGroupsAreLeftOut() {
+        var closed = group("Pizza", myShare: 1200)
+        closed.closedAt = .now
+        let snapshot = WidgetSync.makeSnapshot(groups: [closed, group("Ski", myShare: 500)], userID: me)
+        #expect(snapshot.totals == [.init(currency: "EUR", cents: 500)])
+        #expect(snapshot.groups.map(\.name) == ["Ski"])
+    }
+
+    @Test func demoExpensesReopenAClosedGroup() async throws {
+        var closed = group("Pizza", myShare: 1200)
+        closed.closedAt = .now
+        let repository = DemoGroupRepository(groups: [closed])
+        try await repository.setClosed(true, group: closed.id)
+        #expect(try await repository.fetchGroups()[0].closedAt == closed.closedAt, "closing again keeps the date")
+        try await repository.deleteExpense(closed.expenses[0].id)
+        #expect(try await repository.fetchGroups()[0].isClosed == false)
+    }
+
     @Test func groupLinksRoundTrip() {
         let id = UUID()
         #expect(BarteLink.groupID(from: BarteLink.group(id)) == id)

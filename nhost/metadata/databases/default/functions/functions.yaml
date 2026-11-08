@@ -12,6 +12,7 @@
 - "!include public_remove_member.yaml"
 - "!include public_rename_member.yaml"
 - "!include public_save_expense.yaml"
+- "!include public_set_group_closed.yaml"
 - "!include public_set_payment_details.yaml"
 - "!include public_unregister_device.yaml"
 - "!include public_update_group.yaml"
