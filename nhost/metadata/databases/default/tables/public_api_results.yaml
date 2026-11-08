@@ -10,5 +10,5 @@ select_permissions:
         - code
         - preview
       filter: {}
-    query_root_fields: []
-    subscription_root_fields: []
+      query_root_fields: []
+      subscription_root_fields: []
