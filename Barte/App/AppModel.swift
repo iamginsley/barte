@@ -38,7 +38,6 @@ final class AppModel {
     /// Nil in the demo.
     let api: NhostAPI?
     let repository: GroupRepository?
-    private let notifier: GroupNotifier?
 
     private var authTask: Task<Void, Never>?
     private var changesTask: Task<Void, Never>?
@@ -50,13 +49,11 @@ final class AppModel {
             Preferences.myName = "Dominik"
             self.api = nil
             self.repository = DemoGroupRepository()
-            self.notifier = nil
             self.isDemo = true
             return
         }
         self.api = api
         self.repository = NhostGroupRepository(api: api)
-        self.notifier = GroupNotifier(api: api)
         self.isDemo = false
     }
 
@@ -192,14 +189,6 @@ final class AppModel {
         } else if let id = BarteLink.groupID(from: url) {
             pendingGroupID = id
         }
-    }
-
-    // MARK: Notifications
-
-    /// Pushes a new expense or payback to the others in the group, if anyone else there uses the app.
-    func notify(_ kind: GroupNotifier.Kind, expenseID: UUID, in groupID: UUID) {
-        guard let notifier, group(groupID)?.isShared == true else { return }
-        notifier.send(kind, expenseID: expenseID)
     }
 
     // MARK: Account

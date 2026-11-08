@@ -102,7 +102,18 @@ struct ExpenseEditorSheet: View {
                     }
                 }
 
-                if model.existing != nil {
+                if let existing = model.existing {
+                    Section {
+                        NavigationLink {
+                            HistoryList(group: group, subjectID: existing.id)
+                                .navigationTitle("Verlauf")
+                                .navigationBarTitleDisplayMode(.inline)
+                        } label: {
+                            Label(group.editedExpenseIDs.contains(existing.id) ? "Verlauf · bearbeitet" : "Verlauf", systemImage: "clock.arrow.circlepath")
+                        }
+                    } footer: {
+                        Text("Jede Änderung bleibt für alle in der Gruppe sichtbar.")
+                    }
                     Section {
                         Button("Ausgabe löschen", role: .destructive) { confirmsDelete = true }
                             .frame(maxWidth: .infinity)
@@ -258,7 +269,6 @@ struct ExpenseEditorSheet: View {
         if let message = await app.run({ try await $0.save(expense, in: groupID) }) {
             errorMessage = message
         } else {
-            if model.existing == nil { app.notify(.expenseAdded, expenseID: expense.id, in: groupID) }
             dismiss()
         }
     }

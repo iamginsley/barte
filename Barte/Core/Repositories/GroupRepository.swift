@@ -31,6 +31,9 @@ protocol GroupRepository: Sendable {
 
     func deleteAccount(appleAuthorizationCode: String) async throws
 
+    /// The group's history, newest first; only what concerns one expense or member with `subjectID`.
+    func fetchHistory(groupID: UUID, subjectID: UUID?) async throws -> [GroupEvent]
+
     /// Signals whenever something in this person's groups changes, also from other people.
     func changes() -> AsyncStream<Void>
 }
@@ -51,9 +54,15 @@ struct NhostGroupRepository: GroupRepository {
         let closedAt: Date?
         let members: [MemberRow]
         let expenses: [ExpenseRow]
+        let events: [EditedRow]
+
+        struct EditedRow: Decodable, Sendable {
+            let subjectID: UUID?
+            enum CodingKeys: String, CodingKey { case subjectID = "subject_id" }
+        }
 
         enum CodingKeys: String, CodingKey {
-            case id, name, currency, color, members, expenses
+            case id, name, currency, color, members, expenses, events
             case inviteCode = "invite_code"
             case createdBy = "created_by"
             case createdAt = "created_at"
@@ -103,6 +112,7 @@ struct NhostGroupRepository: GroupRepository {
         id name currency color invite_code created_by created_at closed_at
         members { id name user_id created_at }
         expenses { id title amount_cents spent_on payer_id participant_ids is_settlement split_kind split_values created_at }
+        events(where: { kind: { _eq: "expense_changed" } }) { subject_id }
         """
 
     func fetchGroups() async throws -> [SplitGroup] {
@@ -140,7 +150,8 @@ struct NhostGroupRepository: GroupRepository {
             expenses: expenses,
             inviteCode: row.inviteCode,
             createdBy: row.createdBy,
-            closedAt: row.closedAt
+            closedAt: row.closedAt,
+            editedExpenseIDs: Set(row.events.compactMap(\.subjectID))
         )
     }
 
@@ -270,6 +281,49 @@ struct NhostGroupRepository: GroupRepository {
         }
         try await api.call("delete_my_account")
         await api.session.signOutLocally()
+    }
+
+    // MARK: History
+
+    private struct EventRow: Decodable, Sendable {
+        let id: UUID
+        let kind: String
+        let actorID: UUID?
+        let actorName: String?
+        let subjectID: UUID?
+        let old: GroupEvent.Snapshot?
+        let new: GroupEvent.Snapshot?
+        let createdAt: Date
+
+        enum CodingKeys: String, CodingKey {
+            case id, kind, old, new
+            case actorID = "actor_id"
+            case actorName = "actor_name"
+            case subjectID = "subject_id"
+            case createdAt = "created_at"
+        }
+    }
+
+    func fetchHistory(groupID: UUID, subjectID: UUID?) async throws -> [GroupEvent] {
+        struct Data: Decodable, Sendable { let group_events: [EventRow] }
+        let subjectFilter = subjectID == nil ? "" : ", subject_id: { _eq: $subject }"
+        let subjectVariable = subjectID == nil ? "" : ", $subject: uuid!"
+        var variables: [String: JSON] = ["group": .uuid(groupID)]
+        if let subjectID { variables["subject"] = .uuid(subjectID) }
+        let data: Data = try await api.query(
+            """
+            query History($group: uuid!\(subjectVariable)) {
+              group_events(where: { group_id: { _eq: $group }\(subjectFilter) }, order_by: { created_at: desc }, limit: 300) {
+                id kind actor_id actor_name subject_id old new created_at
+              }
+            }
+            """,
+            variables: variables
+        )
+        return data.group_events.map {
+            GroupEvent(id: $0.id, kind: GroupEvent.Kind(rawValue: $0.kind) ?? .unknown, actorID: $0.actorID, actorName: $0.actorName,
+                       subjectID: $0.subjectID, old: $0.old, new: $0.new, createdAt: $0.createdAt)
+        }
     }
 
     // MARK: Live updates

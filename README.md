@@ -16,6 +16,7 @@ Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **
 | **Ausgaben** | Betrag, Titel mit automatischem Symbol („Pizza“ → Besteck), wer bezahlt hat, gleichmäßig auf alle oder ausgewählte Personen, Datum, Vorschau des Anteils pro Person |
 | **Ausgleichen** | Salden pro Person und die **wenigsten Überweisungen**, mit denen alle quitt sind; „Bezahlt“ verbucht einen Ausgleich |
 | **Abschließen** | Wenn alle quitt sind, die Gruppe für alle unter „Abgeschlossen“ ablegen statt löschen; sie bleibt lesbar, zählt nicht mehr in der Übersicht und im Widget und öffnet sich von selbst wieder, sobald jemand eine Ausgabe ändert |
+| **Verlauf** | Wer was eingetragen, geändert oder gelöscht hat, mit Vorher/Nachher; nicht änderbar, auch nicht vom Ersteller. Bearbeitete Ausgaben zeigen „bearbeitet“. Mitteilungen bei neuen, geänderten (Betrag, Zahler, Aufteilung) und gelöschten Ausgaben und Ausgleichen, leise beim Abschließen |
 | **Einladen** | Link oder Code teilen; wer beitritt, wählt seinen Namen aus der Gruppe (dann gehören die bisherigen Ausgaben zu ihm) oder trägt sich neu ein |
 | **Konto** | Mit Apple anmelden, abmelden, Konto löschen inkl. Widerruf bei Apple; Gruppe verlassen oder (als Ersteller:in) für alle löschen |
 
@@ -44,7 +45,7 @@ Projekt `Barte` (Subdomain `uenqaayyhyrekjhojdwn`, Region **Frankfurt, eu-centra
 
 - `nhost/nhost.toml`: Konfiguration (Apple-Anmeldung, Umgebungsvariablen der Functions)
 - `nhost/migrations/`: Tabellen und SQL-Funktionen, `nhost/metadata/`: Hasura-Rechte (Rolle `user`) und die Funktionen als Mutations
-- `functions/`: `apple-revoke` (Konto löschen) und `notify-group` (Mitteilungen)
+- `functions/`: `apple-revoke` (Konto löschen) und `events/group-event` (Mitteilungen, wird nur von Hasura aufgerufen)
 
 1. **Secrets** im Nhost-Dashboard unter *Settings → Secrets* anlegen (nie ins Repo). Im Developer Portal einen Key mit „Sign in with Apple“ **und** „Apple Push Notifications service“ erstellen (`AuthKey_XXXX.p8`):
    - `APPLE_KEY_ID`: die Key ID
@@ -64,7 +65,7 @@ Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code
 ```sh
 xcodebuild test -project Barte.xcodeproj -scheme Barte -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ./scripts/test-migrations.sh                         # SQL: Migrationen + Funktions-Tests auf lokalem Postgres (brew install postgresql@17)
-(cd functions && npm install && npm test)            # Nhost Functions apple-revoke und notify-group (vitest)
+(cd functions && npm install && npm test)            # Nhost Functions apple-revoke und events/group-event (vitest)
 NHOST_ADMIN_SECRET=… node scripts/test-nhost-api.mjs # Hasura-Rechte gegen das echte Projekt
 ```
 
@@ -97,7 +98,7 @@ BarteWidgets/     Widget „Saldo“ (klein, mittel, Sperrbildschirm), liest den
 Shared/           Widget-Snapshot und barte://-Links, in App und Widget
 BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen, Einladungen, Tage
 nhost/            Konfiguration, Migrationen, Hasura-Metadaten, SQL-Tests
-functions/        Nhost Functions apple-revoke und notify-group mit Tests
+functions/        Nhost Functions apple-revoke und events/group-event mit Tests
 scripts/          SQL-Tests auf lokalem Postgres, API-Prüfung gegen das echte Projekt
 docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
@@ -113,7 +114,8 @@ docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Text
 ## Datenmodell
 
 - `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
-- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` liest nur die Function `notify-group`
+- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` liest nur die Function `events/group-event`
+- `group_events`: der Verlauf. Trigger auf `expenses`, `groups` und `members` schreiben jede Änderung mit Vorher/Nachher, Person und Zeit in dieselbe Transaktion; ein weiterer Trigger verbietet Ändern und Löschen (außer zusammen mit der Gruppe). Jeder neue Eintrag löst über einen Hasura-Event-Trigger (`NHOST_WEBHOOK_SECRET`) `events/group-event` aus, das die Mitteilungen verschickt. So kann keine App eine Änderung durchführen, ohne dass die anderen davon erfahren
 - Lesen nur über die Hasura-Rechte der Rolle `user` (eigene Gruppen, deren Personen und Ausgaben), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`. Hasura reicht die Sitzung als `hasura_session` an die Funktionen weiter; Fehler kommen als SQLSTATE 22000 mit dem Hinweis (z. B. `not_member`) als Meldung in der App an
 - Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` und `Split.weighted` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert (bei Anteilen zuerst nach dem größten Rest).
 

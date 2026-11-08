@@ -53,21 +53,3 @@ enum PushToken {
         _ = try? await api.call("unregister_device", ["p_token": .string(current)])
     }
 }
-
-/// Tells the others in a group about a new expense or payback through the notify-group function.
-/// Fire and forget: a missing push never blocks or fails the change itself.
-struct GroupNotifier: Sendable {
-    enum Kind: String, Sendable {
-        case expenseAdded = "expense_added"
-        case settlementAdded = "settlement_added"
-    }
-
-    let api: NhostAPI
-
-    func send(_ kind: Kind, expenseID: UUID) {
-        let api = api
-        Task.detached {
-            try? await api.invokeFunction("notify-group", body: ["kind": .string(kind.rawValue), "id": .uuid(expenseID)])
-        }
-    }
-}

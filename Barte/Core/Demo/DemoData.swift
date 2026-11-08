@@ -73,6 +73,50 @@ enum DemoData {
         ]
     }
 
+    static func snapshot(_ expense: Expense) -> GroupEvent.Snapshot {
+        GroupEvent.Snapshot(
+            title: expense.title, amountCents: expense.amountCents, spentOn: LocalDay.string(from: expense.date),
+            payerID: expense.payerID, participantIDs: expense.participantIDs, isSettlement: expense.isSettlement,
+            splitKind: expense.split.kind, splitValues: expense.splitValues
+        )
+    }
+
+    /// Who entered what, plus one edit worth a second look: Ben changed the Spar receipt.
+    static func history(for groups: [SplitGroup]) -> [(groupID: UUID, event: GroupEvent)] {
+        var all: [(groupID: UUID, event: GroupEvent)] = []
+        for group in groups {
+            var events: [GroupEvent] = []
+            for expense in group.expenses.reversed() {
+                let payer = group.member(expense.payerID)
+                // Plain names can't enter anything; the creator did it for them.
+                let actor = payer?.usesApp == true ? payer! : group.members.first { $0.userID == userID }!
+                events.append(GroupEvent(
+                    id: UUID(), kind: expense.isSettlement ? .settlementAdded : .expenseAdded,
+                    actorID: actor.userID, actorName: actor.name, subjectID: expense.id,
+                    old: nil, new: snapshot(expense), createdAt: expense.date.addingTimeInterval(19 * 3600)
+                ))
+                if expense.title == "Einkauf Spar", let ben = group.members.first(where: { $0.name == "Ben" }) {
+                    var before = snapshot(expense)
+                    before.amountCents = 19640
+                    events[events.count - 1] = GroupEvent(
+                        id: UUID(), kind: .expenseAdded, actorID: ben.userID, actorName: ben.name, subjectID: expense.id,
+                        old: nil, new: before, createdAt: expense.date.addingTimeInterval(18 * 3600)
+                    )
+                    events.append(GroupEvent(
+                        id: UUID(), kind: .expenseChanged, actorID: ben.userID, actorName: ben.name, subjectID: expense.id,
+                        old: before, new: snapshot(expense), createdAt: expense.date.addingTimeInterval(44 * 3600)
+                    ))
+                }
+            }
+            if let closedAt = group.closedAt {
+                events.append(GroupEvent(id: UUID(), kind: .groupClosed, actorID: userID, actorName: "Dominik", subjectID: group.id,
+                                         old: nil, new: nil, createdAt: closedAt))
+            }
+            all += events.map { (group.id, $0) }
+        }
+        return all.sorted { $0.event.createdAt < $1.event.createdAt }
+    }
+
     /// An invite for a group the demo person is not in yet.
     static let invitePreview = InvitePreview(
         groupID: UUID(), name: "Roadtrip Kroatien", currency: "EUR", color: CardColor.teal.rawValue, isMember: false,
@@ -142,10 +186,13 @@ enum DemoData {
 actor DemoGroupRepository: GroupRepository {
     private var groups: [SplitGroup]
     private var payments: [UUID: PaymentDetails]
+    /// Newest last, like they happened, each with its group.
+    private var events: [(groupID: UUID, event: GroupEvent)] = []
     private let stream = AsyncStream<Void>.makeStream()
 
     init(groups: [SplitGroup] = DemoData.groups()) {
         self.groups = groups
+        events = DemoData.history(for: groups)
         // Everyone else with the app has PayPal and a bank account; Dominik has nothing yet.
         var payments: [UUID: PaymentDetails] = [:]
         for member in groups.flatMap(\.members) {
@@ -178,7 +225,27 @@ actor DemoGroupRepository: GroupRepository {
         groups.firstIndex { $0.members.contains { $0.id == id } }
     }
 
-    func fetchGroups() async throws -> [SplitGroup] { groups }
+    func fetchGroups() async throws -> [SplitGroup] {
+        groups.map { group in
+            var group = group
+            let current = Set(group.expenses.map(\.id))
+            group.editedExpenseIDs = Set(events.filter { $0.groupID == group.id && $0.event.kind == .expenseChanged }
+                .compactMap(\.event.subjectID)).intersection(current)
+            return group
+        }
+    }
+
+    func fetchHistory(groupID: UUID, subjectID: UUID?) async throws -> [GroupEvent] {
+        events
+            .filter { $0.groupID == groupID && (subjectID == nil || $0.event.subjectID == subjectID) }
+            .map(\.event)
+            .reversed()
+    }
+
+    private func log(_ kind: GroupEvent.Kind, in groupID: UUID, subject: UUID, old: GroupEvent.Snapshot?, new: GroupEvent.Snapshot?) {
+        let event = GroupEvent(id: UUID(), kind: kind, actorID: DemoData.userID, actorName: "Dominik", subjectID: subject, old: old, new: new, createdAt: .now)
+        events.append((groupID, event))
+    }
 
     func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID {
         let members = [Member(id: UUID(), name: myName, userID: DemoData.userID)] + otherNames.map { Member(id: UUID(), name: $0) }
@@ -209,6 +276,7 @@ actor DemoGroupRepository: GroupRepository {
         try update(id) { group in
             group.closedAt = closed ? group.closedAt ?? .now : nil
         }
+        log(closed ? .groupClosed : .groupReopened, in: id, subject: id, old: nil, new: nil)
     }
 
     func addMember(named name: String, to groupID: UUID) async throws -> UUID {
@@ -243,6 +311,11 @@ actor DemoGroupRepository: GroupRepository {
     }
 
     func save(_ expense: Expense, in groupID: UUID) async throws {
+        let previous = groups.first { $0.id == groupID }?.expenses.first { $0.id == expense.id }
+        let kind: GroupEvent.Kind = previous != nil ? .expenseChanged : expense.isSettlement ? .settlementAdded : .expenseAdded
+        if previous.map(DemoData.snapshot) != DemoData.snapshot(expense) {
+            log(kind, in: groupID, subject: expense.id, old: previous.map(DemoData.snapshot), new: DemoData.snapshot(expense))
+        }
         try update(groupID) { group in
             group.expenses.removeAll { $0.id == expense.id }
             group.expenses.append(expense)
@@ -253,6 +326,9 @@ actor DemoGroupRepository: GroupRepository {
 
     func deleteExpense(_ id: UUID) async throws {
         guard let index = groups.firstIndex(where: { $0.expenses.contains { $0.id == id } }) else { return }
+        if let expense = groups[index].expenses.first(where: { $0.id == id }) {
+            log(expense.isSettlement ? .settlementDeleted : .expenseDeleted, in: groups[index].id, subject: id, old: DemoData.snapshot(expense), new: nil)
+        }
         try update(groups[index].id) { group in
             group.expenses.removeAll { $0.id == id }
             group.closedAt = nil
