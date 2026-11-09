@@ -44,10 +44,18 @@ struct GroupEditorSheet: View {
                     .submitLabel(.next)
                     .onSubmit { focusedRow = model.rows.first { $0.name.isEmpty }?.id }
                 colorPicker(selection: $model.color)
-                Picker("Währung", selection: $model.currency) {
-                    ForEach(Money.currencies, id: \.self) { code in
-                        Text("\(Money.name(for: code)) (\(Money.symbol(for: code)))").tag(code)
+                if model.isCurrencyLocked {
+                    LabeledContent("Währung", value: "\(Money.name(for: model.currency)) (\(Money.symbol(for: model.currency)))")
+                } else {
+                    Picker("Währung", selection: $model.currency) {
+                        ForEach(Money.currencies, id: \.self) { code in
+                            Text("\(Money.name(for: code)) (\(Money.symbol(for: code)))").tag(code)
+                        }
                     }
+                }
+            } footer: {
+                if model.isCurrencyLocked {
+                    Text("Die Währung bleibt, sobald es Ausgaben gibt. Beträge würden sonst nicht umgerechnet.")
                 }
             }
 

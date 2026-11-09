@@ -353,6 +353,8 @@ actor DemoGroupRepository: GroupRepository {
 
     func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws {
         try update(id) { group in
+            // Like the server: amounts aren't converted, so the currency stays once there are expenses.
+            guard group.currency == currency || group.expenses.isEmpty else { throw BarteError.server(hint: "currency_locked") }
             group.name = name
             group.currency = currency
             group.color = color

@@ -45,6 +45,10 @@ final class GroupEditorModel {
 
     var isNew: Bool { existing == nil }
 
+    /// Amounts are stored without a currency, so changing it would only relabel them.
+    /// Once a group has an expense or settlement, its currency stays (the server enforces this too).
+    var isCurrencyLocked: Bool { !(existing?.expenses.isEmpty ?? true) }
+
     private var namedRows: [Row] { rows.filter { !$0.name.trimmingCharacters(in: .whitespaces).isEmpty } }
 
     var canSave: Bool {
@@ -82,7 +86,7 @@ final class GroupEditorModel {
     /// Writes the changes. Returns the group's id, or a message when something failed.
     func save(with app: AppModel) async -> Result<UUID, SaveError> {
         let name = name.trimmingCharacters(in: .whitespaces)
-        let currency = currency
+        let currency = isCurrencyLocked ? existing?.currency ?? currency : currency
         let color = color
         if let existing {
             let removed = removed
