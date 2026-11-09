@@ -37,6 +37,18 @@ enum PushToken {
         #endif
     }
 
+    /// The language the app shows (de or en) and the phone's region as a BCP 47 tag, e.g. "en-GB".
+    /// The server writes pushes in that language and formats amounts like the phone does.
+    static var language: String {
+        tag(language: Bundle.main.preferredLocalizations.first, region: Locale.current.region?.identifier)
+    }
+
+    static func tag(language: String?, region: String?) -> String {
+        let language = language?.split(separator: "-").first.map(String.init) ?? "de"
+        guard let region, !region.isEmpty else { return language }
+        return "\(language)-\(region)"
+    }
+
     static func update(_ data: Data, api: NhostAPI?) async {
         current = data.map { String(format: "%02x", $0) }.joined()
         await register(api: api)
@@ -44,7 +56,9 @@ enum PushToken {
 
     static func register(api: NhostAPI?) async {
         guard let api, let current, await api.session.userID != nil else { return }
-        _ = try? await api.call("register_device", ["p_token": .string(current), "p_environment": .string(environment)])
+        _ = try? await api.call("register_device", [
+            "p_token": .string(current), "p_environment": .string(environment), "p_language": .string(language),
+        ])
     }
 
     /// Before signing out, so the next person on this phone doesn't get the previous one's notifications.

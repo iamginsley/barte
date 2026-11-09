@@ -1,0 +1,3525 @@
+{
+  "sourceLanguage" : "de",
+  "strings" : {
+    "%@\n%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@\n%2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@\n%2$@"
+          }
+        }
+      }
+    },
+    "%@ (%@)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "%@ (ich)" : {
+      "comment" : "My own name in a list of people",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (me)"
+          }
+        }
+      }
+    },
+    "%@ an %@ als bezahlt markieren" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ an %2$@ als bezahlt markieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark %1$@ to %2$@ as paid"
+          }
+        }
+      }
+    },
+    "%@ hat %@ eingetragen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ hat %2$@ eingetragen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ added %2$@"
+          }
+        }
+      }
+    },
+    "%@ hat %@ entfernt" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ hat %2$@ entfernt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ removed %2$@"
+          }
+        }
+      }
+    },
+    "%@ hat %@ gelöscht" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ hat %2$@ gelöscht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ deleted %2$@"
+          }
+        }
+      }
+    },
+    "%@ hat %@ geändert" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ hat %2$@ geändert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ changed %2$@"
+          }
+        }
+      }
+    },
+    "%@ hat %@ hinzugefügt" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ hat %2$@ hinzugefügt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ added %2$@"
+          }
+        }
+      }
+    },
+    "%@ hat %@ in %@ umbenannt" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ hat %2$@ in %3$@ umbenannt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ renamed %2$@ to %3$@"
+          }
+        }
+      }
+    },
+    "%@ hat die Gruppe abgeschlossen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ closed the group"
+          }
+        }
+      }
+    },
+    "%@ hat die Gruppe bearbeitet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ edited the group"
+          }
+        }
+      }
+    },
+    "%@ hat die Gruppe wieder geöffnet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ reopened the group"
+          }
+        }
+      }
+    },
+    "%@ hat eine Ausgabe geändert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ changed an expense"
+          }
+        }
+      }
+    },
+    "%@ hat eine Nachricht gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ deleted a message"
+          }
+        }
+      }
+    },
+    "%@ hat einen Ausgleich gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ deleted a settlement"
+          }
+        }
+      }
+    },
+    "%@ hat einen Ausgleich verbucht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ recorded a settlement"
+          }
+        }
+      }
+    },
+    "%@ hat etwas geändert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ changed something"
+          }
+        }
+      }
+    },
+    "%@ mit PayPal %@ zahlen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ mit PayPal %2$@ zahlen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay %1$@ %2$@ with PayPal"
+          }
+        }
+      }
+    },
+    "%@ zahlt %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ zahlt %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ pays %2$@"
+          }
+        }
+      }
+    },
+    "%@ zahlt dir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ pays you"
+          }
+        }
+      }
+    },
+    "%@ zu viel verteilt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ too much split."
+          }
+        }
+      }
+    },
+    "%@ · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@ · bezahlt von %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · bezahlt von %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · paid by %2$@"
+          }
+        }
+      }
+    },
+    "%@ → %@, %@. Die Salden werden neu berechnet." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ → %2$@, %3$@. Die Salden werden neu berechnet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ → %2$@, %3$@. Balances will be recalculated."
+          }
+        }
+      }
+    },
+    "%@ → %@: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ → %2$@: %3$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ → %2$@: %3$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld Anteile, %@" : {
+      "comment" : "VoiceOver: number of shares and the resulting amount",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@shares@, %2$@"
+          },
+          "substitutions" : {
+            "shares" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Anteil"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Anteile"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@shares@, %2$@"
+          },
+          "substitutions" : {
+            "shares" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg share"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg shares"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld Anteile, etwa %@ pro Anteil. Ein Paar zählt zum Beispiel doppelt." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@shares@, etwa %2$@ pro Anteil. Ein Paar zählt zum Beispiel doppelt."
+          },
+          "substitutions" : {
+            "shares" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Anteil"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg Anteile"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@shares@, about %2$@ per share. A couple counts double, for example."
+          },
+          "substitutions" : {
+            "shares" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg share"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg shares"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld Personen" : {
+      "comment" : "Number of people in a group",
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Person"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Personen"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld person"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld people"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld neue Nachrichten" : {
+      "comment" : "Unread chat messages, with plural variants",
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld neue Nachricht"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld neue Nachrichten"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld new message"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld new messages"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld Überweisungen" : {
+      "comment" : "Number of transfers, with plural variants",
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Überweisung"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Überweisungen"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld transfer"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld transfers"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld×" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld×"
+          }
+        }
+      }
+    },
+    "+%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
+          }
+        }
+      }
+    },
+    "99+" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "99+"
+          }
+        }
+      }
+    },
+    "Ab jetzt steht hier, wer was eingetragen, geändert oder gelöscht hat." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From now on, this shows who added, changed or deleted what."
+          }
+        }
+      }
+    },
+    "Abbrechen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Abgeschlossen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closed"
+          }
+        }
+      }
+    },
+    "Abgeschlossen am %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closed on %@"
+          }
+        }
+      }
+    },
+    "Abmelden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign Out"
+          }
+        }
+      }
+    },
+    "Abmelden?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign Out?"
+          }
+        }
+      }
+    },
+    "Abschließen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "Alle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        }
+      }
+    },
+    "Alle Ausgaben dieser Gruppe werden gelöscht." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All expenses in this group will be deleted."
+          }
+        }
+      }
+    },
+    "Alle quitt!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All square!"
+          }
+        }
+      }
+    },
+    "Alle sind quitt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everyone's square"
+          }
+        }
+      }
+    },
+    "Als bezahlt markieren?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as Paid?"
+          }
+        }
+      }
+    },
+    "Angemeldet mit deiner Apple-ID." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in with your Apple Account."
+          }
+        }
+      }
+    },
+    "Anpassen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust"
+          }
+        }
+      }
+    },
+    "Anteile" : {
+      "comment" : "Split mode picker",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shares"
+          }
+        }
+      }
+    },
+    "Antworten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reply"
+          }
+        }
+      }
+    },
+    "Apple hat die Bestätigung nicht geliefert. Versuch es noch einmal." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple didn't send the confirmation. Please try again."
+          }
+        }
+      }
+    },
+    "Aufgeklappt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expanded"
+          }
+        }
+      }
+    },
+    "Aufgeteilt auf" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split between"
+          }
+        }
+      }
+    },
+    "Aufteilung" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split"
+          }
+        }
+      }
+    },
+    "Aufteilung: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Aufteilung: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Ausgabe" : {
+      "comment" : "Title of an expense saved without one",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expense"
+          }
+        }
+      }
+    },
+    "Ausgabe löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Expense"
+          }
+        }
+      }
+    },
+    "Ausgabe löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Expense?"
+          }
+        }
+      }
+    },
+    "Ausgaben teilen, ohne Rechnerei." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share expenses, skip the math."
+          }
+        }
+      }
+    },
+    "Ausgleich" : {
+      "comment" : "A payment that settles a debt",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settlement"
+          }
+        }
+      }
+    },
+    "Ausgleich löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Settlement?"
+          }
+        }
+      }
+    },
+    "Ausgleichen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settle Up"
+          }
+        }
+      }
+    },
+    "Bankdaten von %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bank details of %@"
+          }
+        }
+      }
+    },
+    "Bar + Karte = Barte. Jetzt aber zurück zum Ausgleichen!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cash or card, Barte does the math. Now back to settling up!"
+          }
+        }
+      }
+    },
+    "Bar oder mit Karte? Egal, Barte rechnet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cash or card? Barte does the math."
+          }
+        }
+      }
+    },
+    "Barte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte"
+          }
+        }
+      }
+    },
+    "Barte findet die wenigsten Überweisungen, mit denen ihr quitt seid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte finds the fewest transfers to get you all square."
+          }
+        }
+      }
+    },
+    "Barte hat die Schulden verrechnet: %lld statt %lld einzelner Rückzahlungen." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Barte hat die Schulden verrechnet: %1$lld statt %2$lld einzelner Rückzahlungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte netted out the debts: %1$lld instead of %2$lld separate paybacks."
+          }
+        }
+      }
+    },
+    "Barte ist kostenlos und ohne Werbung. Deine Gruppen sehen nur die Personen, die du einlädst.\n\nVersion %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte is free and without ads. Only the people you invite can see your groups.\n\nVersion %@"
+          }
+        }
+      }
+    },
+    "Barte sucht dann die wenigsten Überweisungen, mit denen alle quitt sind. Statt dass jede:r jeder:m etwas zahlt, reichen oft ein, zwei Überweisungen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte then finds the fewest transfers that get everyone square. Instead of everyone paying everyone, one or two transfers are often enough."
+          }
+        }
+      }
+    },
+    "Beitreten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join"
+          }
+        }
+      }
+    },
+    "Betrag" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount"
+          }
+        }
+      }
+    },
+    "Betrag für %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount for %@"
+          }
+        }
+      }
+    },
+    "Betrag kopieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Amount"
+          }
+        }
+      }
+    },
+    "Betrag: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Betrag: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Beträge" : {
+      "comment" : "Split mode picker",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amounts"
+          }
+        }
+      }
+    },
+    "Bezahlt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paid"
+          }
+        }
+      }
+    },
+    "Bezahlt von" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paid by"
+          }
+        }
+      }
+    },
+    "Bezahlt von: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Bezahlt von: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paid by: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Bitte gib einen Namen ein." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enter a name."
+          }
+        }
+      }
+    },
+    "Bitte prüfe die IBAN." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please check the IBAN."
+          }
+        }
+      }
+    },
+    "Blau" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blue"
+          }
+        }
+      }
+    },
+    "Chat" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat"
+          }
+        }
+      }
+    },
+    "Code, z. B. SKI2FUN7" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code, e.g. SKI2FUN7"
+          }
+        }
+      }
+    },
+    "Daraus ergibt sich für alle ein Saldo: Wer mehr bezahlt hat, bekommt Geld, wer weniger bezahlt hat, schuldet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That gives everyone a balance: whoever paid more gets money back, whoever paid less owes."
+          }
+        }
+      }
+    },
+    "Das hat nicht geklappt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That Didn't Work"
+          }
+        }
+      }
+    },
+    "Das hat nicht geklappt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That didn't work."
+          }
+        }
+      }
+    },
+    "Das hat nicht geklappt. Versuch es noch einmal." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That didn't work. Please try again."
+          }
+        }
+      }
+    },
+    "Das sieht nicht nach einem Einladungscode aus." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That doesn't look like an invite code."
+          }
+        }
+      }
+    },
+    "Das sieht nicht nach einem PayPal.me-Namen aus." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That doesn't look like a PayPal.me name."
+          }
+        }
+      }
+    },
+    "Datenschutz" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy"
+          }
+        }
+      }
+    },
+    "Datum" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        }
+      }
+    },
+    "Datum: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Datum: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Dein Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Name"
+          }
+        }
+      }
+    },
+    "Deine Gruppen bleiben erhalten. Melde dich wieder mit deiner Apple-ID an, um sie zu sehen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your groups stay. Sign in again with your Apple Account to see them."
+          }
+        }
+      }
+    },
+    "Den Code findest du in der Einladung. Ein eingefügter Link geht auch." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You'll find the code in the invite. A pasted link works too."
+          }
+        }
+      }
+    },
+    "Der Name muss zum Konto passen, sonst warnt die Bank bei der Überweisung." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The name has to match the account, or the bank will warn about the transfer."
+          }
+        }
+      }
+    },
+    "Die Anmeldung mit Apple hat nicht geklappt. Versuch es noch einmal." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing in with Apple didn't work. Please try again."
+          }
+        }
+      }
+    },
+    "Die Beträge ergeben nicht die Summe der Ausgabe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The amounts don't add up to the expense."
+          }
+        }
+      }
+    },
+    "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The group disappears for you. The others keep it, and your name stays on the expenses."
+          }
+        }
+      }
+    },
+    "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The group will be deleted for everyone, including the people you invited."
+          }
+        }
+      }
+    },
+    "Die Verbindung zu deiner Apple-ID konnte nicht getrennt werden. Dein Konto ist noch da. Versuch es gleich noch einmal." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte couldn't be disconnected from your Apple Account. Your account is still there. Please try again in a moment."
+          }
+        }
+      }
+    },
+    "Diese Ausgabe wurde eingetragen, bevor es den Verlauf gab." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This expense was added before there was a history."
+          }
+        }
+      }
+    },
+    "Diese Gruppe ist bereits in deinem Stapel." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This group is already in your stack."
+          }
+        }
+      }
+    },
+    "Diese IBAN stimmt nicht. Prüf sie noch einmal." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This IBAN isn't right. Please check it again."
+          }
+        }
+      }
+    },
+    "Diese Person kommt in Ausgaben vor und kann nicht entfernt werden." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This person appears in expenses and can't be removed."
+          }
+        }
+      }
+    },
+    "Diese Person nutzt Barte selbst. Nur sie kann ihren Namen ändern oder die Gruppe verlassen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This person uses Barte themselves. Only they can change their name or leave the group."
+          }
+        }
+      }
+    },
+    "Diesen Einladungscode gibt es nicht. Vielleicht wurde ein neuer Link erstellt?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This invite code doesn't exist. Maybe a new link was created?"
+          }
+        }
+      }
+    },
+    "Diesen Namen hat schon jemand anderes gewählt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Someone else already picked this name."
+          }
+        }
+      }
+    },
+    "Du" : {
+      "comment" : "Me, as payer or recipient of a settlement\nVoiceOver: author of my own chat message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You"
+          }
+        }
+      }
+    },
+    "Du bekommst" : {
+      "comment" : "Card status, followed by an amount",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You get"
+          }
+        }
+      }
+    },
+    "Du bestätigst gleich mit deiner Apple-ID. Danach wird dein Konto sofort gelöscht und Barte von deiner Apple-ID getrennt. Gruppen, in denen sonst niemand Barte nutzt, werden mitgelöscht. In geteilten Gruppen bleibt dein Name bei den Ausgaben stehen. Das lässt sich nicht rückgängig machen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You'll confirm with your Apple Account next. Your account is then deleted right away and Barte is disconnected from your Apple Account. Groups where nobody else uses Barte are deleted too. In shared groups, your name stays on the expenses. This can't be undone."
+          }
+        }
+      }
+    },
+    "Du bist nicht mehr angemeldet. Bitte melde dich erneut an." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're no longer signed in. Please sign in again."
+          }
+        }
+      }
+    },
+    "Du bist nicht mehr in dieser Gruppe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're no longer in this group."
+          }
+        }
+      }
+    },
+    "Du bist quitt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're square"
+          }
+        }
+      }
+    },
+    "Du bist schon dabei" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're Already In"
+          }
+        }
+      }
+    },
+    "Du bist überall quitt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're square everywhere"
+          }
+        }
+      }
+    },
+    "Du hast %@ eingetragen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You added %@"
+          }
+        }
+      }
+    },
+    "Du hast %@ entfernt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You removed %@"
+          }
+        }
+      }
+    },
+    "Du hast %@ gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You deleted %@"
+          }
+        }
+      }
+    },
+    "Du hast %@ geändert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You changed %@"
+          }
+        }
+      }
+    },
+    "Du hast %@ hinzugefügt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You added %@"
+          }
+        }
+      }
+    },
+    "Du hast %@ in %@ umbenannt" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Du hast %1$@ in %2$@ umbenannt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You renamed %1$@ to %2$@"
+          }
+        }
+      }
+    },
+    "Du hast die Gruppe abgeschlossen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You closed the group"
+          }
+        }
+      }
+    },
+    "Du hast die Gruppe bearbeitet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You edited the group"
+          }
+        }
+      }
+    },
+    "Du hast die Gruppe wieder geöffnet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You reopened the group"
+          }
+        }
+      }
+    },
+    "Du hast eine Ausgabe geändert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You changed an expense"
+          }
+        }
+      }
+    },
+    "Du hast eine Nachricht gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You deleted a message"
+          }
+        }
+      }
+    },
+    "Du hast einen Ausgleich gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You deleted a settlement"
+          }
+        }
+      }
+    },
+    "Du hast einen Ausgleich verbucht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You recorded a settlement"
+          }
+        }
+      }
+    },
+    "Du hast etwas geändert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You changed something"
+          }
+        }
+      }
+    },
+    "Du schuldest" : {
+      "comment" : "Card status, followed by an amount",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You owe"
+          }
+        }
+      }
+    },
+    "Du zahlst %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You pay %@"
+          }
+        }
+      }
+    },
+    "Eine Karte pro Urlaub, WG oder Pizza-Abend." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One card per trip, flat share or pizza night."
+          }
+        }
+      }
+    },
+    "Einladen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite"
+          }
+        }
+      }
+    },
+    "Einladungscode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite Code"
+          }
+        }
+      }
+    },
+    "Entfernte Person" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed person"
+          }
+        }
+      }
+    },
+    "Erneut senden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Again"
+          }
+        }
+      }
+    },
+    "Erneut versuchen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        }
+      }
+    },
+    "Erstellen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        }
+      }
+    },
+    "Feedback senden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Feedback"
+          }
+        }
+      }
+    },
+    "Fertig" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "Freund:innen brauchen die App nicht. Lade sie später mit einem Link ein, dann tragen alle selbst Ausgaben ein." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Friends don't need the app. Invite them later with a link, and everyone adds their own expenses."
+          }
+        }
+      }
+    },
+    "Freund:innen einladen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite Friends"
+          }
+        }
+      }
+    },
+    "Für: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Für: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Gesamt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        }
+      }
+    },
+    "Gestern" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
+          }
+        }
+      }
+    },
+    "Gleich" : {
+      "comment" : "Split mode picker",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Equally"
+          }
+        }
+      }
+    },
+    "Graphit" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graphite"
+          }
+        }
+      }
+    },
+    "Gruppe abschließen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close Group"
+          }
+        }
+      }
+    },
+    "Gruppe abschließen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close Group?"
+          }
+        }
+      }
+    },
+    "Gruppe bearbeiten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Group"
+          }
+        }
+      }
+    },
+    "Gruppe erstellen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Group"
+          }
+        }
+      }
+    },
+    "Gruppe löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Group"
+          }
+        }
+      }
+    },
+    "Gruppe löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Group?"
+          }
+        }
+      }
+    },
+    "Gruppe nicht gefunden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Group not found"
+          }
+        }
+      }
+    },
+    "Gruppe suchen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Groups"
+          }
+        }
+      }
+    },
+    "Gruppe verlassen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave Group"
+          }
+        }
+      }
+    },
+    "Gruppe verlassen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave Group?"
+          }
+        }
+      }
+    },
+    "Gruppe öffnen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Group"
+          }
+        }
+      }
+    },
+    "Grün" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Green"
+          }
+        }
+      }
+    },
+    "Hat dich jemand schon eingetragen, wähle diesen Eintrag: Die Ausgaben gehören dann zu dir, und er heißt ab jetzt wie dein Konto." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If someone already added you, pick that entry: its expenses become yours, and it takes your account name from now on."
+          }
+        }
+      }
+    },
+    "Heute" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
+    },
+    "Hier klärt ihr, was in „%@“ offen ist. Neue, geänderte und gelöschte Ausgaben erscheinen automatisch dazwischen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort out what's open in “%@” here. New, changed and deleted expenses show up in between automatically."
+          }
+        }
+      }
+    },
+    "Hinzufügen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "IBAN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN"
+          }
+        }
+      }
+    },
+    "IBAN kopieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy IBAN"
+          }
+        }
+      }
+    },
+    "Ich" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me"
+          }
+        }
+      }
+    },
+    "Im Chat ansprechen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bring Up in Chat"
+          }
+        }
+      }
+    },
+    "Indigo" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indigo"
+          }
+        }
+      }
+    },
+    "Insgesamt bekommst du" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In total, you get"
+          }
+        }
+      }
+    },
+    "Insgesamt schuldest du" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In total, you owe"
+          }
+        }
+      }
+    },
+    "Ja, ist bezahlt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes, It's Paid"
+          }
+        }
+      }
+    },
+    "Je %@ pro Person" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ per person"
+          }
+        }
+      }
+    },
+    "Je etwa %@ pro Person, Cent-Reste trägt die zahlende Person" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About %@ per person, the person who paid takes the leftover cents"
+          }
+        }
+      }
+    },
+    "Jede Ausgabe wird auf die ausgewählten Personen verteilt: gleichmäßig, nach Anteilen oder mit festen Beträgen, immer auf den Cent genau." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every expense is split between the people you pick: equally, by shares or with fixed amounts, always down to the cent."
+          }
+        }
+      }
+    },
+    "Jede Änderung bleibt für alle in der Gruppe sichtbar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every change stays visible to everyone in the group."
+          }
+        }
+      }
+    },
+    "Jemand" : {
+      "comment" : "History: unknown person who made a change",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Someone"
+          }
+        }
+      }
+    },
+    "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Someone in this expense is no longer in the group."
+          }
+        }
+      }
+    },
+    "Keine" : {
+      "comment" : "No payment details saved",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        }
+      }
+    },
+    "Keine Verbindung" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Connection"
+          }
+        }
+      }
+    },
+    "Keine Verbindung. Prüf dein Internet und versuch es noch einmal." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No connection. Check your internet and try again."
+          }
+        }
+      }
+    },
+    "Komm in meine Gruppe „%@“ bei Barte, dann tragen wir alle Ausgaben gemeinsam ein. Code: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Komm in meine Gruppe „%1$@“ bei Barte, dann tragen wir alle Ausgaben gemeinsam ein. Code: %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join my group “%1$@” on Barte so we can all add our expenses together. Code: %2$@"
+          }
+        }
+      }
+    },
+    "Konto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
+    "Konto endgültig löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Account Permanently?"
+          }
+        }
+      }
+    },
+    "Konto löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Account"
+          }
+        }
+      }
+    },
+    "Konto nicht gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account Not Deleted"
+          }
+        }
+      }
+    },
+    "Kontoinhaber:in" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account Holder"
+          }
+        }
+      }
+    },
+    "Kopieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        }
+      }
+    },
+    "Kopiert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied"
+          }
+        }
+      }
+    },
+    "Kostenlos und ohne Werbung. [Datenschutz](%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free and without ads. [Privacy](%@)"
+          }
+        }
+      }
+    },
+    "Lade %@ ein, dann könnt ihr hier schreiben und bekommt Mitteilungen. Neue und geänderte Ausgaben erscheinen automatisch dazwischen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite %@, then you can chat here and get notifications. New and changed expenses show up in between automatically."
+          }
+        }
+      }
+    },
+    "Lade Freund:innen per Link ein, dann tragen alle selbst ein." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite friends with a link, and everyone adds their own expenses."
+          }
+        }
+      }
+    },
+    "Lade jemanden in „%@“ ein, dann könnt ihr hier schreiben. Neue und geänderte Ausgaben erscheinen automatisch dazwischen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite someone to “%@”, then you can chat here. New and changed expenses show up in between automatically."
+          }
+        }
+      }
+    },
+    "Leg eine Gruppe an – für den Urlaub, die WG oder den Pizza-Abend. Barte rechnet aus, wer wem wie viel zahlt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a group for a trip, your flat share or pizza night. Barte works out who owes whom how much."
+          }
+        }
+      }
+    },
+    "Legt die Gruppe für alle unter „Abgeschlossen“ ab" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moves the group to “Closed” for everyone"
+          }
+        }
+      }
+    },
+    "Lila" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purple"
+          }
+        }
+      }
+    },
+    "Link kopieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Link"
+          }
+        }
+      }
+    },
+    "Link prüfen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Link"
+          }
+        }
+      }
+    },
+    "Link senden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Link"
+          }
+        }
+      }
+    },
+    "Löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "Mehr" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
+          }
+        }
+      }
+    },
+    "Melden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report"
+          }
+        }
+      }
+    },
+    "Mit %lld Überweisungen seid ihr quitt" : {
+      "comment" : "With plural variants",
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Mit %lld Überweisung seid ihr quitt"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Mit %lld Überweisungen seid ihr quitt"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld transfer and you're all square"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld transfers and you're all square"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mit Apple anmelden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with Apple"
+          }
+        }
+      }
+    },
+    "Mit Code beitreten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join with Code"
+          }
+        }
+      }
+    },
+    "Mit PayPal.me oder IBAN können dir andere beim Ausgleichen direkt zahlen. Mitteilungen sagen dir, wenn jemand eine Ausgabe einträgt oder dir etwas zurückzahlt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With PayPal.me or an IBAN, others can pay you directly when settling up. Notifications tell you when someone adds an expense or pays you back."
+          }
+        }
+      }
+    },
+    "Mit PayPal.me oder IBAN können dir die anderen direkt aus Barte zahlen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With PayPal.me or an IBAN, the others can pay you right from Barte."
+          }
+        }
+      }
+    },
+    "Mitteilungen an" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications on"
+          }
+        }
+      }
+    },
+    "Mitteilungen einschalten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn On Notifications"
+          }
+        }
+      }
+    },
+    "Mitteilungen erlauben" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Notifications"
+          }
+        }
+      }
+    },
+    "Mitteilungen in Einstellungen erlauben" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Notifications in Settings"
+          }
+        }
+      }
+    },
+    "Mitteilungen sind an" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are on"
+          }
+        }
+      }
+    },
+    "Nachricht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message"
+          }
+        }
+      }
+    },
+    "Nachricht gelöscht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message deleted"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "Name kopieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Name"
+          }
+        }
+      }
+    },
+    "Name, z. B. Skiurlaub" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name, e.g. Ski Trip"
+          }
+        }
+      }
+    },
+    "Name: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Name: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Neue Ausgabe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Expense"
+          }
+        }
+      }
+    },
+    "Neue Gruppe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Group"
+          }
+        }
+      }
+    },
+    "Nicht dabei: neu als %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not listed: join as %@"
+          }
+        }
+      }
+    },
+    "Nicht dabei? Dein Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not listed? Your name"
+          }
+        }
+      }
+    },
+    "Nicht gesendet · Erneut senden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not sent · Send again"
+          }
+        }
+      }
+    },
+    "Nicht gesichert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Saved"
+          }
+        }
+      }
+    },
+    "Nicht verbucht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Recorded"
+          }
+        }
+      }
+    },
+    "Niemand schuldet hier jemandem etwas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody owes anybody anything here."
+          }
+        }
+      }
+    },
+    "Noch %@ zu verteilen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ left to split."
+          }
+        }
+      }
+    },
+    "Noch kein Verlauf" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No History Yet"
+          }
+        }
+      }
+    },
+    "Noch keine Ausgaben" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No expenses yet"
+          }
+        }
+      }
+    },
+    "Noch keine Gruppen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No groups yet"
+          }
+        }
+      }
+    },
+    "Noch nichts auszugleichen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing to settle yet"
+          }
+        }
+      }
+    },
+    "Noch schreibt niemand mit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody's chatting yet"
+          }
+        }
+      }
+    },
+    "Noch sind nicht alle quitt. Die offenen Beträge zählen dann für niemanden mehr in der Übersicht. Du kannst die Gruppe jederzeit wieder öffnen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not everyone is square yet. The open amounts will no longer count in anyone's overview. You can reopen the group at any time."
+          }
+        }
+      }
+    },
+    "Nur Buchstaben und Zahlen, so wie hinter paypal.me/." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only letters and numbers, as after paypal.me/."
+          }
+        }
+      }
+    },
+    "Nur wer die Gruppe erstellt hat, kann sie für alle löschen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the person who created the group can delete it for everyone."
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Ohne Bezug" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Reference"
+          }
+        }
+      }
+    },
+    "Orange" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange"
+          }
+        }
+      }
+    },
+    "Passt genau." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adds up exactly."
+          }
+        }
+      }
+    },
+    "PayPal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PayPal"
+          }
+        }
+      }
+    },
+    "PayPal.me-Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PayPal.me Name"
+          }
+        }
+      }
+    },
+    "Person hinzufügen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Person"
+          }
+        }
+      }
+    },
+    "Pink" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pink"
+          }
+        }
+      }
+    },
+    "Rest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rest"
+          }
+        }
+      }
+    },
+    "Rest auf %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rest to %@"
+          }
+        }
+      }
+    },
+    "Rot" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red"
+          }
+        }
+      }
+    },
+    "Salden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balances"
+          }
+        }
+      }
+    },
+    "Schon mit Barte dabei" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already using Barte"
+          }
+        }
+      }
+    },
+    "Sehen nur Personen, mit denen du in einer Gruppe bist. Barte zeigt die Daten beim Ausgleichen, wenn dir jemand Geld schuldet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only people you share a group with can see this. Barte shows it when someone who owes you money settles up."
+          }
+        }
+      }
+    },
+    "Senden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "Sichern" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
+    "So heißt du in allen Gruppen. Änderst du ihn, ändert er sich überall." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is your name in every group. Change it, and it changes everywhere."
+          }
+        }
+      }
+    },
+    "So rechnet Barte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How Barte Does the Math"
+          }
+        }
+      }
+    },
+    "Stumm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muted"
+          }
+        }
+      }
+    },
+    "Stummschalten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "Tippe auf „Ausgabe“, wenn jemand etwas für die Gruppe bezahlt hat." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap “Expense” when someone paid for something for the group."
+          }
+        }
+      }
+    },
+    "Titel: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Titel: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Türkis" : {
+      "comment" : "Card color",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teal"
+          }
+        }
+      }
+    },
+    "Unbekannt" : {
+      "comment" : "A person who is no longer in the group",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "Verlassen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave"
+          }
+        }
+      }
+    },
+    "Verlauf" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
+          }
+        }
+      }
+    },
+    "Verlauf · bearbeitet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History · edited"
+          }
+        }
+      }
+    },
+    "Verwerfen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        }
+      }
+    },
+    "Wer Barte nutzt, heißt überall wie im eigenen Konto. Personen, die in Ausgaben vorkommen oder Barte nutzen, lassen sich nicht entfernen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "People who use Barte have the name from their own account everywhere. People who appear in expenses or use Barte can't be removed."
+          }
+        }
+      }
+    },
+    "Wer bist du?" : {
+      "comment" : "Card status when I haven't picked my name in a group",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who are you?"
+          }
+        }
+      }
+    },
+    "Wer den Link öffnet, meldet sich an und ist dabei. Alle tragen dann selbst Ausgaben ein." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whoever opens the link signs in and is in. Then everyone adds their own expenses."
+          }
+        }
+      }
+    },
+    "Wer den Link öffnet, wählt einen Namen aus der Gruppe (%@) und trägt dann selbst Ausgaben ein." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whoever opens the link picks a name from the group (%@) and then adds their own expenses."
+          }
+        }
+      }
+    },
+    "Wer dir etwas schuldet, öffnet PayPal mit dem Betrag schon eingetragen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whoever owes you money opens PayPal with the amount already filled in."
+          }
+        }
+      }
+    },
+    "Wer ist dabei?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who's in?"
+          }
+        }
+      }
+    },
+    "Wieder öffnen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reopen"
+          }
+        }
+      }
+    },
+    "Wird gesendet …" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending …"
+          }
+        }
+      }
+    },
+    "Wofür?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What for?"
+          }
+        }
+      }
+    },
+    "Wähle mindestens eine Person aus." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick at least one person."
+          }
+        }
+      }
+    },
+    "Währung" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currency"
+          }
+        }
+      }
+    },
+    "Währung: %@ → %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Währung: %1$@ → %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currency: %1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Zahlungsdaten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payment Details"
+          }
+        }
+      }
+    },
+    "Zahlungsdaten hinterlegen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Payment Details"
+          }
+        }
+      }
+    },
+    "Zeigt Gruppen, die erledigt sind" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows groups that are done"
+          }
+        }
+      }
+    },
+    "Zu „%@“, %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Zu „%1$@“, %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About “%1$@”, %2$@"
+          }
+        }
+      }
+    },
+    "Zugeklappt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collapsed"
+          }
+        }
+      }
+    },
+    "alle" : {
+      "comment" : "History: an expense for everyone in the group",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "everyone"
+          }
+        }
+      }
+    },
+    "am %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on %@"
+          }
+        }
+      }
+    },
+    "bearbeitet" : {
+      "comment" : "Expense row: the expense was edited",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "edited"
+          }
+        }
+      }
+    },
+    "dein Anteil %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "your share %@"
+          }
+        }
+      }
+    },
+    "deinname" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yourname"
+          }
+        }
+      }
+    },
+    "die anderen" : {
+      "comment" : "Chat: invite the others (more than two people)",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the others"
+          }
+        }
+      }
+    },
+    "du bekommst %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "you get %@"
+          }
+        }
+      }
+    },
+    "feste Beträge" : {
+      "comment" : "History: split kind",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fixed amounts"
+          }
+        }
+      }
+    },
+    "für %@" : {
+      "comment" : "History: for whom an expense was",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "for %@"
+          }
+        }
+      }
+    },
+    "geteilt" : {
+      "comment" : "VoiceOver: the group is shared with other app users",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "shared"
+          }
+        }
+      }
+    },
+    "gleichmäßig" : {
+      "comment" : "History: split kind",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "equally"
+          }
+        }
+      }
+    },
+    "jemanden" : {
+      "comment" : "History: an unnamed person was added or removed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "someone"
+          }
+        }
+      }
+    },
+    "nach Anteilen" : {
+      "comment" : "History: split kind",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "by shares"
+          }
+        }
+      }
+    },
+    "nicht beteiligt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "not involved"
+          }
+        }
+      }
+    },
+    "nur für dich" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "just for you"
+          }
+        }
+      }
+    },
+    "nutzt Barte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "uses Barte"
+          }
+        }
+      }
+    },
+    "paypal.me/" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "paypal.me/"
+          }
+        }
+      }
+    },
+    "quitt" : {
+      "comment" : "Balance of zero",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "square"
+          }
+        }
+      }
+    },
+    "von %@ · %@" : {
+      "comment" : "Expense row: who paid, on this day",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "von %1$@ · %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "by %1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "von dir · %@" : {
+      "comment" : "Expense row: I paid, on this day",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "by you · %@"
+          }
+        }
+      }
+    },
+    "zu „%@“" : {
+      "comment" : "VoiceOver: a chat message about an expense",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "about “%@”"
+          }
+        }
+      }
+    },
+    "Öffnet die Ausgabe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the expense"
+          }
+        }
+      }
+    },
+    "Über Barte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Barte"
+          }
+        }
+      }
+    },
+    "Überweisen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bank Transfer"
+          }
+        }
+      }
+    },
+    "Überweisung" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bank Transfer"
+          }
+        }
+      }
+    },
+    "–" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "–"
+          }
+        }
+      }
+    },
+    "„%@“" : {
+      "comment" : "A quoted expense title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@”"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -33,3 +33,15 @@ select pg_temp.check((select count(*) = 1 from public.device_tokens), 'only own 
 select public.unregister_device(pg_temp.s(:b), repeat('ab', 32));
 select pg_temp.check((select count(*) = 0 from public.device_tokens), 'unregister removes it');
 select pg_temp.fails(format('select public.register_device(pg_temp.s(%L), %L, %L)', :a, 'not-a-token', 'sandbox'), null, 'tokens are hex');
+
+-- Device language ---------------------------------------------------------------
+select public.register_device(pg_temp.s(:a), repeat('ef', 32), 'sandbox');
+select pg_temp.check((select language = 'de' from public.device_tokens where token = repeat('ef', 32)), 'older apps without a language are German');
+select public.register_device(pg_temp.s(:a), repeat('ef', 32), 'sandbox', 'EN_GB');
+select pg_temp.check((select language = 'en-GB' from public.device_tokens where token = repeat('ef', 32)), 'language stored as a BCP 47 tag');
+select public.register_device(pg_temp.s(:a), repeat('ef', 32), 'sandbox', 'de-AT');
+select pg_temp.check((select language = 'de-AT' from public.device_tokens where token = repeat('ef', 32)), 'switching the phone language updates it');
+select public.register_device(pg_temp.s(:a), repeat('ef', 32), 'sandbox', 'en; drop table x');
+select pg_temp.check((select language = 'de' from public.device_tokens where token = repeat('ef', 32)), 'malformed languages fall back to German');
+select pg_temp.fails(format('update public.device_tokens set language = %L', 'not a tag'), null, 'the column only takes tags');
+select public.unregister_device(pg_temp.s(:a), repeat('ef', 32));

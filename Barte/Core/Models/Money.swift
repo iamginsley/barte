@@ -3,7 +3,8 @@ import Foundation
 /// Amounts are integer minor units (cents) everywhere; only the UI converts to text.
 /// All supported currencies have two decimal places, so 1 unit = 100 cents.
 enum Money {
-    static let locale = Locale(identifier: "de_DE")
+    /// The device's language and region: "12,50 €" in Germany, "€12.50" in the US. Parsing accepts both.
+    static var locale: Locale { .autoupdatingCurrent }
 
     /// Currencies a group can use. Kept short on purpose; all have two decimals.
     static let currencies = ["EUR", "CHF", "USD", "GBP", "DKK", "SEK", "NOK", "PLN", "CZK"]

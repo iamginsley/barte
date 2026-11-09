@@ -67,7 +67,7 @@ struct SettleUpSheet: View {
                         ) { pending = transfer }
                     }
                 } header: {
-                    Text(transfers.count == 1 ? "Mit 1 Überweisung seid ihr quitt" : "Mit \(transfers.count) Überweisungen seid ihr quitt")
+                    Text("Mit \(transfers.count) Überweisungen seid ihr quitt", comment: "With plural variants")
                         .textCase(nil)
                         .font(.subheadline.weight(.semibold))
                 } footer: {
@@ -102,9 +102,9 @@ struct SettleUpSheet: View {
                     let balance = balances[member.id] ?? 0
                     HStack(spacing: 12) {
                         MemberAvatar(name: member.name, isMe: member.id == me, size: 30)
-                        Text(member.id == me ? "\(member.name) (ich)" : member.name)
+                        Text(member.id == me ? String(localized: "\(member.name) (ich)", comment: "My own name in a list of people") : member.name)
                         Spacer()
-                        Text(balance == 0 ? "quitt" : Money.format(balance, currency: group.currency, showsSign: true))
+                        Text(balance == 0 ? String(localized: "quitt", comment: "Balance of zero") : Money.format(balance, currency: group.currency, showsSign: true))
                             .font(.amount)
                             .foregroundStyle(balance.balanceColor)
                     }
@@ -127,6 +127,7 @@ struct SettleUpSheet: View {
 
     private func record(_ transfer: Transfer, in group: SplitGroup) async {
         let settlement = Expense(
+            // Stored as data; every device shows its own word for settlements.
             id: UUID(), title: "Ausgleich", amountCents: transfer.amountCents, date: .now,
             payerID: transfer.from, participantIDs: [transfer.to], isSettlement: true
         )
@@ -229,8 +230,8 @@ private struct TransferRow: View {
     private var sentence: String {
         let from = group.member(transfer.from)?.name ?? "?"
         let to = group.member(transfer.to)?.name ?? "?"
-        if transfer.from == me { return "Du zahlst \(to)" }
-        if transfer.to == me { return "\(from) zahlt dir" }
-        return "\(from) zahlt \(to)"
+        if transfer.from == me { return String(localized: "Du zahlst \(to)") }
+        if transfer.to == me { return String(localized: "\(from) zahlt dir") }
+        return String(localized: "\(from) zahlt \(to)")
     }
 }

@@ -22,13 +22,13 @@ final class PaymentDetailsModel {
     var iban: String? { IBAN.compact(ibanText) }
 
     var paypalError: String? {
-        if case .failure = paypal { return "Nur Buchstaben und Zahlen, so wie hinter paypal.me/." }
+        if case .failure = paypal { return String(localized: "Nur Buchstaben und Zahlen, so wie hinter paypal.me/.") }
         return nil
     }
 
     var ibanError: String? {
         guard let iban, iban.count >= 15 else { return nil }
-        return IBAN.isValid(iban) ? nil : "Diese IBAN stimmt nicht. Prüf sie noch einmal."
+        return IBAN.isValid(iban) ? nil : String(localized: "Diese IBAN stimmt nicht. Prüf sie noch einmal.")
     }
 
     /// While someone is still typing a short IBAN, don't shout; only block saving.

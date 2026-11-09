@@ -16,8 +16,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     static let chatCategory = UNNotificationCategory(
         identifier: "CHAT_MESSAGE",
         actions: [UNTextInputNotificationAction(
-            identifier: replyAction, title: "Antworten", options: [.authenticationRequired],
-            textInputButtonTitle: "Senden", textInputPlaceholder: "Nachricht"
+            identifier: replyAction, title: String(localized: "Antworten"), options: [.authenticationRequired],
+            textInputButtonTitle: String(localized: "Senden"), textInputPlaceholder: String(localized: "Nachricht")
         )],
         intentIdentifiers: [],
         options: []

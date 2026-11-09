@@ -91,8 +91,8 @@ struct GroupEditorSheet: View {
                 Text("Wer ist dabei?")
             } footer: {
                 Text(model.isNew
-                     ? "Freund:innen brauchen die App nicht. Lade sie später mit einem Link ein, dann tragen alle selbst Ausgaben ein."
-                     : "Wer Barte nutzt, heißt überall wie im eigenen Konto. Personen, die in Ausgaben vorkommen oder Barte nutzen, lassen sich nicht entfernen.")
+                     ? String(localized: "Freund:innen brauchen die App nicht. Lade sie später mit einem Link ein, dann tragen alle selbst Ausgaben ein.")
+                     : String(localized: "Wer Barte nutzt, heißt überall wie im eigenen Konto. Personen, die in Ausgaben vorkommen oder Barte nutzen, lassen sich nicht entfernen."))
             }
         }
         .scrollDismissesKeyboard(.interactively)

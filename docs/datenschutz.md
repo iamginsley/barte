@@ -4,6 +4,8 @@ title: Datenschutzerklärung – Barte
 
 # Datenschutzerklärung für Barte
 
+[English version](privacy)
+
 Stand: 8. November 2026
 
 Barte ist eine kostenlose iOS-App, mit der du Ausgaben mit Freund:innen teilst. Diese Erklärung beschreibt, welche Daten dabei anfallen.
@@ -25,7 +27,7 @@ Barte ist eine kostenlose iOS-App, mit der du Ausgaben mit Freund:innen teilst. 
 - **Verlauf:** wer in einer Gruppe wann eine Ausgabe eingetragen, geändert oder gelöscht hat, mit den Werten vorher und nachher, außerdem Umbenennungen und das Abschließen einer Gruppe. Der Verlauf schützt alle in der Gruppe vor unbemerkten Änderungen; er lässt sich deshalb nicht bearbeiten und wird erst mit der Gruppe gelöscht
 - **Zahlungsdaten (freiwillig):** dein PayPal.me-Name sowie IBAN und Kontoinhaber:in, wenn du sie unter „Zahlungsdaten“ einträgst. Barte zeigt sie beim Ausgleichen, damit dir andere direkt zahlen können. Barte selbst wickelt keine Zahlungen ab; ein Tipp auf „PayPal“ öffnet paypal.me mit dem Betrag.
 - **Chat:** Nachrichten, die du in einer Gruppe schreibst, mit Zeitpunkt und gegebenenfalls der Ausgabe, auf die sie sich beziehen, sowie bis wann du den Chat gelesen hast und ob du ihn stumm geschaltet hast. Nachrichten sehen nur die Personen in der Gruppe. Du kannst eigene Nachrichten jederzeit löschen; dann bleibt nur der Hinweis „Nachricht gelöscht“ stehen
-- **Push-Token (nur mit deiner Erlaubnis):** eine Kennung von Apple für dein iPhone, damit Barte dir Mitteilungen schicken kann, wenn jemand in deiner Gruppe eine Ausgabe einträgt, ändert oder löscht, dir etwas zurückzahlt oder im Chat schreibt
+- **Push-Token (nur mit deiner Erlaubnis):** eine Kennung von Apple für dein iPhone, damit Barte dir Mitteilungen schicken kann, wenn jemand in deiner Gruppe eine Ausgabe einträgt, ändert oder löscht, dir etwas zurückzahlt oder im Chat schreibt. Dazu speichert Barte die Sprache der App und die Region deines iPhones (z. B. „de-AT“), damit Mitteilungen in deiner Sprache und mit deinem Zahlenformat ankommen
 - **Auf deinem iPhone:** dein Vorname als Vorschlag für neue Gruppen (lokal in den App-Einstellungen) und dein Saldo für das Widget (lokal im gemeinsamen Speicher von App und Widget)
 
 ## Wer die Daten sieht

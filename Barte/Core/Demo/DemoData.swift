@@ -38,36 +38,66 @@ enum DemoData {
         #endif
     }
 
+    /// Sample content in the device language (Demo.xcstrings), so English screenshots are English throughout.
+    enum Sample {
+        static let skiTrip = String(localized: "Skiurlaub Saalbach", table: "Demo")
+        static let fuel = String(localized: "Tanken", table: "Demo")
+        static let taxi = String(localized: "Taxi zum Lift", table: "Demo")
+        static let pizza = String(localized: "Pizza", table: "Demo")
+        static let hut = String(localized: "Hüttengaudi", table: "Demo")
+        static let dinner = String(localized: "Abendessen Alpenrose", table: "Demo")
+        static let groceries = String(localized: "Einkauf Spar", table: "Demo")
+        static let skiPasses = String(localized: "Skipässe", table: "Demo")
+        static let skiSchool = String(localized: "Skischule Kinder", table: "Demo")
+        static let chalet = String(localized: "Chalet", table: "Demo")
+        static let flat = String(localized: "WG Leopoldstraße", table: "Demo")
+        static let cleaning = String(localized: "Putzmittel dm", table: "Demo")
+        static let internet = String(localized: "Internet", table: "Demo")
+        static let power = String(localized: "Strom Oktober", table: "Demo")
+        static let fishAndChips = String(localized: "Fish & Chips", table: "Demo")
+        static let tube = String(localized: "Tube", table: "Demo")
+        static let hotel = String(localized: "Hotel Shoreditch", table: "Demo")
+        static let pizzaNights = String(localized: "Pizza-Abende", table: "Demo")
+        static let pizzeria = String(localized: "Pizzeria Da Mario", table: "Demo")
+        static let roadTrip = String(localized: "Roadtrip Kroatien", table: "Demo")
+        static let msgPasses = String(localized: "Skipässe sind gezahlt, hab sie für alle eingetragen 🎿", table: "Demo")
+        static let msgReceipt = String(localized: "Hab den Spar-Bon korrigiert, da waren 10 € Pfand dabei, die ich zurückbekommen hab.", table: "Demo")
+        static let msgThanks = String(localized: "Passt, danke!", table: "Demo")
+        static let msgCash = String(localized: "Wer hat noch Bargeld für die Hütte?", table: "Demo")
+        static let msgMe = String(localized: "Ich, so 50 €", table: "Demo")
+        static let msgPower = String(localized: "Die Stromrechnung ist da, ich trag sie gleich ein.", table: "Demo")
+    }
+
     static func groups() -> [SplitGroup] {
         guard !has("-BarteEmpty") else { return [] }
         // Newest first, like the server returns them.
         return [
-            Builder("Skiurlaub Saalbach", .blue, "EUR", ["Dominik", "Anna", "Ben", "Clara", "David"], appUsers: ["Anna", "Ben"], daysAgo: 10, code: inviteCode)
-                .add("Tanken", 8900, by: "Clara", daysAgo: 2)
-                .add("Taxi zum Lift", 4500, by: "David", for: ["Ben", "David"], daysAgo: 4)
-                .add("Pizza", 9850, by: "Clara", for: ["Dominik", "Anna", "Clara"], daysAgo: 5)
-                .add("Hüttengaudi", 6200, by: "Dominik", for: ["Dominik", "Ben", "David"], daysAgo: 6)
-                .add("Abendessen Alpenrose", 21000, by: "David", split: .shares(["Dominik": 1, "Anna": 1, "Ben": 2, "Clara": 1, "David": 2]), daysAgo: 7)
-                .add("Einkauf Spar", 18640, by: "Ben", daysAgo: 8)
-                .add("Skipässe", 114_000, by: "Anna", daysAgo: 8)
-                .add("Skischule Kinder", 36000, by: "Ben", for: ["Ben", "Clara"], split: .exact(["Ben": 24000, "Clara": 12000]), daysAgo: 8)
-                .add("Chalet", 120_000, by: "Dominik", daysAgo: 9)
+            Builder(Sample.skiTrip, .blue, "EUR", ["Dominik", "Anna", "Ben", "Clara", "David"], appUsers: ["Anna", "Ben"], daysAgo: 10, code: inviteCode)
+                .add(Sample.fuel, 8900, by: "Clara", daysAgo: 2)
+                .add(Sample.taxi, 4500, by: "David", for: ["Ben", "David"], daysAgo: 4)
+                .add(Sample.pizza, 9850, by: "Clara", for: ["Dominik", "Anna", "Clara"], daysAgo: 5)
+                .add(Sample.hut, 6200, by: "Dominik", for: ["Dominik", "Ben", "David"], daysAgo: 6)
+                .add(Sample.dinner, 21000, by: "David", split: .shares(["Dominik": 1, "Anna": 1, "Ben": 2, "Clara": 1, "David": 2]), daysAgo: 7)
+                .add(Sample.groceries, 18640, by: "Ben", daysAgo: 8)
+                .add(Sample.skiPasses, 114_000, by: "Anna", daysAgo: 8)
+                .add(Sample.skiSchool, 36000, by: "Ben", for: ["Ben", "Clara"], split: .exact(["Ben": 24000, "Clara": 12000]), daysAgo: 8)
+                .add(Sample.chalet, 120_000, by: "Dominik", daysAgo: 9)
                 .group,
-            Builder("WG Leopoldstraße", .indigo, "EUR", ["Dominik", "Lena", "Max"], appUsers: ["Lena", "Max"], daysAgo: 20)
+            Builder(Sample.flat, .indigo, "EUR", ["Dominik", "Lena", "Max"], appUsers: ["Lena", "Max"], daysAgo: 20)
                 .add("Ausgleich", 2000, by: "Max", for: ["Lena"], daysAgo: 3, settlement: true)
-                .add("Putzmittel dm", 2315, by: "Dominik", daysAgo: 6)
-                .add("Internet", 3999, by: "Max", daysAgo: 12)
-                .add("Strom Oktober", 8400, by: "Lena", daysAgo: 16)
+                .add(Sample.cleaning, 2315, by: "Dominik", daysAgo: 6)
+                .add(Sample.internet, 3999, by: "Max", daysAgo: 12)
+                .add(Sample.power, 8400, by: "Lena", daysAgo: 16)
                 .group,
             Builder("London", .pink, "GBP", ["Dominik", "Sophie"], appUsers: [], daysAgo: 25)
-                .add("Fish & Chips", 2850, by: "Dominik", daysAgo: 19)
-                .add("Tube", 3260, by: "Dominik", daysAgo: 20)
-                .add("Hotel Shoreditch", 42000, by: "Sophie", daysAgo: 21)
+                .add(Sample.fishAndChips, 2850, by: "Dominik", daysAgo: 19)
+                .add(Sample.tube, 3260, by: "Dominik", daysAgo: 20)
+                .add(Sample.hotel, 42000, by: "Sophie", daysAgo: 21)
                 .group,
-            Builder("Pizza-Abende", .orange, "EUR", ["Dominik", "Jonas", "Mia"], appUsers: ["Jonas"], daysAgo: 40)
+            Builder(Sample.pizzaNights, .orange, "EUR", ["Dominik", "Jonas", "Mia"], appUsers: ["Jonas"], daysAgo: 40)
                 .add("Ausgleich", 2483, by: "Mia", for: ["Jonas"], daysAgo: 29, settlement: true)
                 .add("Ausgleich", 2483, by: "Dominik", for: ["Jonas"], daysAgo: 29, settlement: true)
-                .add("Pizzeria Da Mario", 7450, by: "Jonas", daysAgo: 30)
+                .add(Sample.pizzeria, 7450, by: "Jonas", daysAgo: 30)
                 .closed(daysAgo: 28)
                 .group,
         ]
@@ -95,7 +125,7 @@ enum DemoData {
                     actorID: actor.userID, actorName: actor.name, subjectID: expense.id,
                     old: nil, new: snapshot(expense), createdAt: expense.date.addingTimeInterval(19 * 3600)
                 ))
-                if expense.title == "Einkauf Spar", let ben = group.members.first(where: { $0.name == "Ben" }) {
+                if expense.title == Sample.groceries, let ben = group.members.first(where: { $0.name == "Ben" }) {
                     var before = snapshot(expense)
                     before.amountCents = 19640
                     events[events.count - 1] = GroupEvent(
@@ -131,17 +161,17 @@ enum DemoData {
                 createdAt: date
             ))
         }
-        if let ski = groups.first(where: { $0.name == "Skiurlaub Saalbach" }) {
-            let spar = ski.expenses.first { $0.title == "Einkauf Spar" }?.date ?? today
-            say("Anna", in: ski, "Skipässe sind gezahlt, hab sie für alle eingetragen 🎿", at: spar.addingTimeInterval(19 * 3600 + 120))
-            say("Ben", in: ski, "Hab den Spar-Bon korrigiert, da waren 10 € Pfand dabei, die ich zurückbekommen hab.", at: spar.addingTimeInterval(44 * 3600 + 90), about: "Einkauf Spar")
-            say("Dominik", in: ski, "Passt, danke!", at: spar.addingTimeInterval(44 * 3600 + 600))
-            say("Ben", in: ski, "Wer hat noch Bargeld für die Hütte?", at: .now.addingTimeInterval(-52 * 60))
-            say("Anna", in: ski, "Ich, so 50 €", at: .now.addingTimeInterval(-49 * 60))
+        if let ski = groups.first(where: { $0.name == Sample.skiTrip }) {
+            let spar = ski.expenses.first { $0.title == Sample.groceries }?.date ?? today
+            say("Anna", in: ski, Sample.msgPasses, at: spar.addingTimeInterval(19 * 3600 + 120))
+            say("Ben", in: ski, Sample.msgReceipt, at: spar.addingTimeInterval(44 * 3600 + 90), about: Sample.groceries)
+            say("Dominik", in: ski, Sample.msgThanks, at: spar.addingTimeInterval(44 * 3600 + 600))
+            say("Ben", in: ski, Sample.msgCash, at: .now.addingTimeInterval(-52 * 60))
+            say("Anna", in: ski, Sample.msgMe, at: .now.addingTimeInterval(-49 * 60))
             readAt[ski.id] = spar.addingTimeInterval(44 * 3600 + 600)
         }
-        if let flat = groups.first(where: { $0.name == "WG Leopoldstraße" }) {
-            say("Lena", in: flat, "Die Stromrechnung ist da, ich trag sie gleich ein.", at: .now.addingTimeInterval(-3 * 3600))
+        if let flat = groups.first(where: { $0.name == Sample.flat }) {
+            say("Lena", in: flat, Sample.msgPower, at: .now.addingTimeInterval(-3 * 3600))
             readAt[flat.id] = .now.addingTimeInterval(-4 * 3600)
         }
         return (messages, readAt)
@@ -149,7 +179,7 @@ enum DemoData {
 
     /// An invite for a group the demo person is not in yet.
     static let invitePreview = InvitePreview(
-        groupID: UUID(), name: "Roadtrip Kroatien", currency: "EUR", color: CardColor.teal.rawValue, isMember: false,
+        groupID: UUID(), name: Sample.roadTrip, currency: "EUR", color: CardColor.teal.rawValue, isMember: false,
         members: [
             .init(id: UUID(), name: "Lukas", isClaimed: true),
             .init(id: UUID(), name: "Dominik", isClaimed: false),
@@ -236,7 +266,7 @@ actor DemoGroupRepository: GroupRepository {
             payments[userID] = PaymentDetails(
                 paypal: member.name.lowercased() + "demo",
                 iban: "DE89370400440532013000",
-                accountHolder: "\(member.name) Beispiel"
+                accountHolder: String(localized: "\(member.name) Beispiel", table: "Demo")
             )
         }
         self.payments = payments
@@ -450,7 +480,7 @@ actor DemoGroupRepository: GroupRepository {
         if let memberID, let index = members.firstIndex(where: { $0.id == memberID }) {
             members[index].userID = DemoData.userID
         } else {
-            members.append(Member(id: UUID(), name: name ?? "Ich", userID: DemoData.userID))
+            members.append(Member(id: UUID(), name: name ?? String(localized: "Ich", table: "Demo"), userID: DemoData.userID))
         }
         groups.insert(SplitGroup(id: preview.groupID, name: preview.name, currency: preview.currency, color: CardColor(rawValue: preview.color) ?? .teal, createdAt: .now, members: members, expenses: [], inviteCode: "KROATIEN"), at: 0)
         stream.continuation.yield()
