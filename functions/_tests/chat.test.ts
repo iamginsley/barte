@@ -16,7 +16,7 @@ const members = [
 const devices = [
   { token: "aa".repeat(32), environment: "sandbox", user_id: "u-anna" },
   { token: "bb".repeat(32), environment: "production", user_id: "u-ben" },
-  { token: "cc".repeat(32), environment: "sandbox", user_id: "u-clara" },
+  { token: "cc".repeat(32), environment: "sandbox", user_id: "u-clara", language: "en-US" },
 ];
 const config = { teamId: "T", keyId: "K", privateKey: "unused", topic: "com.iamginsley.barte" };
 
@@ -65,6 +65,12 @@ test("chat push: author and group as title, reply category, own thread", () => {
   expect(composeChat(message(), { name: "Skiurlaub" }, "Anna", "Pizza").body).toBe("Zu „Pizza“: Wer hat Bargeld?");
 });
 
+test("chat push in English", () => {
+  expect(composeChat(message(), { name: "Ski Trip" }, "Anna", "Pizza", "en-GB").body).toBe("About “Pizza”: Wer hat Bargeld?");
+  expect(composeChat(message(), { name: "Ski Trip" }, null, undefined, "en-GB").title).toBe("Someone · Ski Trip");
+  expect(composeChat(message(), { name: "Skiurlaub" }, null).title).toBe("Jemand · Skiurlaub");
+});
+
 test("long messages are cut at a word", () => {
   expect(preview("kurz")).toBe("kurz");
   expect(preview("eins\n\nzwei")).toBe("eins zwei");
@@ -92,7 +98,8 @@ test("muted chats stay quiet", async () => {
 test("a message about an expense names it", async () => {
   const { sent, sendImpl } = recorder();
   await notifyChat(fakeGraphQL([], [{ id: "e1", title: "Pizza" }]).gql, message({ expense_id: "e1", member_id: "m-ben", author_id: "u-ben" }), config, sendImpl);
-  expect([...new Set(sent.map((s) => s.message.body))]).toEqual(["Zu „Pizza“: Wer hat Bargeld?"]);
+  expect(sent.find((s) => s.device.token === "aa".repeat(32))!.message.body).toBe("Zu „Pizza“: Wer hat Bargeld?");
+  expect(sent.find((s) => s.device.token === "cc".repeat(32))!.message.body).toBe("About “Pizza”: Wer hat Bargeld?");
   expect([...new Set(sent.map((s) => s.message.title))]).toEqual(["Ben · Skiurlaub"]);
 });
 
