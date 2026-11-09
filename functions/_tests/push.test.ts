@@ -6,6 +6,7 @@ import { type ApnsConfig, type Device, payload, resetTokenCache, send, type Tran
 import { compose, languageOf, type Message, money } from "../_lib/messages";
 import { apnsConfig, changesMoney, type GroupEventRow, notifyEvent, type Snapshot } from "../_lib/notify";
 import { fromHasura } from "../events/group-event";
+import { notifyReminder } from "../_lib/remind";
 import { callerID, type GraphQL } from "../_lib/server";
 
 const group = { group: "WG Leopoldstraße", groupId: "11111111-2222-3333-4444-555555555555", currency: "EUR" };
@@ -316,4 +317,24 @@ test("deleted groups and missing APNs keys send nothing", async () => {
   expect((await notifyEvent(fakeGraphQL(false).gql, row("expense_added", null, snap()), config, sendImpl)).body).toEqual({ sent: 0, skipped: "group_gone" });
   expect((await notifyEvent(fakeGraphQL().gql, row("expense_added", null, snap()), undefined, sendImpl)).body).toEqual({ sent: 0, skipped: "not_configured" });
   expect(sent).toHaveLength(0);
+});
+
+test("a reminder reaches only the one who owes, in their language, and opens settle-up", async () => {
+  const reminder = { kind: "reminder" as const, ...group, actor: "Anna", amountCents: 3250 };
+  expect(compose(reminder).body).toBe("Kleine Erinnerung von Anna: 32,50 € sind von dir noch offen.");
+  expect(compose(reminder, "en-GB").body).toBe("A friendly reminder from Anna: you still owe €32.50.");
+  expect(compose(reminder).link).toBe(`barte://group/${group.groupId}/settle`);
+  expect(compose(reminder).passive).toBe(false);
+
+  const { sent, sendImpl } = recorder();
+  const row = { id: "r1", group_id: group.groupId, from_member: ids.anna, to_member: ids.ben, amount_cents: 3250 };
+  expect((await notifyReminder(fakeGraphQL().gql, row, config, sendImpl)).body).toEqual({ sent: 2, removed: 0 });
+  expect(sent.map((s) => s.device.token).sort()).toEqual(["bb".repeat(32), "bc".repeat(32)]);
+  expect(bodies(sent).sort()).toEqual(["A friendly reminder from Anna: you still owe €32.50.", "Kleine Erinnerung von Anna: 32,50 € sind von dir noch offen."]);
+
+  // Typed-in names have no phone; deleted groups and missing keys send nothing.
+  expect((await notifyReminder(fakeGraphQL().gql, { ...row, to_member: ids.clara }, config, sendImpl)).body).toEqual({ sent: 0, skipped: "no_recipients" });
+  expect((await notifyReminder(fakeGraphQL(false).gql, row, config, sendImpl)).body).toEqual({ sent: 0, skipped: "group_gone" });
+  expect((await notifyReminder(fakeGraphQL().gql, row, undefined, sendImpl)).body).toEqual({ sent: 0, skipped: "not_configured" });
+  expect(sent).toHaveLength(2);
 });

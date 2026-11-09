@@ -46,7 +46,9 @@ export type Event =
     name: string;
     /** The typed-in name they took over (with its expenses), if any. */
     claimed: string | null;
-  };
+  }
+  /** Sent to the one person who owes; `actor` is who reminds them, `amountCents` what's open between them. */
+  | Common & { kind: "reminder"; amountCents: number };
 
 export interface Message {
   title: string;
@@ -99,6 +101,7 @@ interface Wording {
   closed: (actor: string) => string;
   joined: (name: string) => string;
   joinedAs: (name: string, claimed: string) => string;
+  reminder: (actor: string, amount: string) => string;
   /** Chat: the line before a message about an expense. */
   about: (title: string) => string;
 }
@@ -124,6 +127,7 @@ const wording: Record<Language, Wording> = {
     closed: (actor) => `${actor} hat die Gruppe abgeschlossen.`,
     joined: (name) => `${name} ist der Gruppe beigetreten.`,
     joinedAs: (name, claimed) => `${name} ist beigetreten und übernimmt „${claimed}“ mit allen Ausgaben.`,
+    reminder: (actor, amount) => `Kleine Erinnerung von ${actor}: ${amount} sind von dir noch offen.`,
     about: (title) => `Zu „${title}“: `,
   },
   en: {
@@ -146,6 +150,7 @@ const wording: Record<Language, Wording> = {
     closed: (actor) => `${actor} closed the group.`,
     joined: (name) => `${name} joined the group.`,
     joinedAs: (name, claimed) => `${name} joined and takes over “${claimed}” with all its expenses.`,
+    reminder: (actor, amount) => `A friendly reminder from ${actor}: you still owe ${amount}.`,
     about: (title) => `About “${title}”: `,
   },
 };
@@ -200,5 +205,8 @@ export function compose(event: Event, tag = "de-DE"): Message {
     case "member_joined":
       // Taking over a name takes over its expenses: everyone should know who that is now.
       return message(event.claimed ? w.joinedAs(event.name, event.claimed) : w.joined(event.name));
+    case "reminder":
+      // Opens settle-up, where paying is one tap away.
+      return { ...message(w.reminder(actor, amountOf(event.amountCents))), link: `barte://group/${event.groupId}/settle` };
   }
 }
