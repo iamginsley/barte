@@ -22,6 +22,8 @@ final class JoinModel {
     var codeText: String
     var choice: Choice?
     var newName = Preferences.myName
+    /// The account already has a name, so joining as a new person needs no typing.
+    let hasAccountName = !Preferences.myName.isEmpty
     private(set) var isJoining = false
     var errorMessage: String?
 
@@ -56,8 +58,6 @@ final class JoinModel {
             // Suggest the unclaimed name that matches mine, else a new person.
             let mine = Preferences.myName.lowercased()
             choice = preview.members.first { !$0.isClaimed && !mine.isEmpty && $0.name.lowercased() == mine }.map { .member($0.id) }
-            // Don't show my name twice: once as the match, once in the "new person" field.
-            if choice != nil { newName = "" }
             step = .choose(preview)
         } catch {
             step = .enterCode
@@ -77,7 +77,7 @@ final class JoinModel {
         }
         switch result {
         case .success(let id):
-            if memberID == nil { Preferences.myName = name }
+            await app.syncMyName()
             return id
         case .failure(let failure):
             errorMessage = failure.message

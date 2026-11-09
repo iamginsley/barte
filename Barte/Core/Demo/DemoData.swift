@@ -396,15 +396,19 @@ actor DemoGroupRepository: GroupRepository {
         }
     }
 
-    func claimMember(_ id: UUID) async throws {
-        guard let index = groupIndex(ofMember: id) else { return }
-        try update(groups[index].id) { group in
-            for member in group.members.indices where group.members[member].userID == DemoData.userID {
-                group.members[member].userID = nil
+    func setMyName(_ name: String) async throws -> String {
+        let name = name.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { throw BarteError.server(hint: "empty_name") }
+        for index in groups.indices {
+            for member in groups[index].members.indices where groups[index].members[member].userID == DemoData.userID {
+                groups[index].members[member].name = name
             }
-            if let member = group.members.firstIndex(where: { $0.id == id }) { group.members[member].userID = DemoData.userID }
         }
+        stream.continuation.yield()
+        return name
     }
+
+    func syncMyName(fallback: String?) async throws -> String? { "Dominik" }
 
     func save(_ expense: Expense, in groupID: UUID) async throws {
         let previous = groups.first { $0.id == groupID }?.expenses.first { $0.id == expense.id }

@@ -35,7 +35,7 @@ enum BarteError: LocalizedError, Equatable {
             case "invalid_code": "Diesen Einladungscode gibt es nicht. Vielleicht wurde ein neuer Link erstellt?"
             case "member_taken": "Diesen Namen hat schon jemand anderes gewählt."
             case "member_involved": "Diese Person kommt in Ausgaben vor und kann nicht entfernt werden."
-            case "member_linked": "Diese Person nutzt Barte selbst und kann nur selbst austreten."
+            case "member_linked": "Diese Person nutzt Barte selbst. Nur sie kann ihren Namen ändern oder die Gruppe verlassen."
             case "not_creator": "Nur wer die Gruppe erstellt hat, kann sie für alle löschen."
             case "not_member": "Du bist nicht mehr in dieser Gruppe."
             case "unknown_member", "member_not_found": "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe."

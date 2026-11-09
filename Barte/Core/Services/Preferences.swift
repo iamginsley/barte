@@ -1,7 +1,7 @@
 import Foundation
 
-/// Small per-device settings. My name prefills new groups and joining; it never leaves the phone
-/// except as the member name I type into a group.
+/// Small per-device settings. `myName` caches the account name, which lives on the server
+/// (profiles) and is the same in every group.
 @MainActor
 enum Preferences {
     private static var defaults: UserDefaults = .standard

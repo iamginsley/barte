@@ -117,12 +117,16 @@ struct JoinSheet: View {
                     } else {
                         MemberAvatar(name: model.newName, isMe: model.choice == .new, size: 30)
                     }
-                    TextField(open.isEmpty ? "Dein Name" : "Nicht dabei? Dein Name", text: $model.newName)
-                        .textContentType(.givenName)
-                        .focused($focus, equals: .name)
-                        .submitLabel(.join)
-                        .onSubmit { if model.canJoin { Task { await join() } } }
-                        .onChange(of: focus) { if focus == .name { model.choice = .new } }
+                    if model.hasAccountName {
+                        Text(open.isEmpty ? model.newName : "Nicht dabei: neu als \(model.newName)")
+                    } else {
+                        TextField(open.isEmpty ? "Dein Name" : "Nicht dabei? Dein Name", text: $model.newName)
+                            .textContentType(.givenName)
+                            .focused($focus, equals: .name)
+                            .submitLabel(.join)
+                            .onSubmit { if model.canJoin { Task { await join() } } }
+                            .onChange(of: focus) { if focus == .name { model.choice = .new } }
+                    }
                 }
             } header: {
                 Text("Wer bist du?")
@@ -130,7 +134,7 @@ struct JoinSheet: View {
                 if let message = model.errorMessage {
                     Text(message).foregroundStyle(Color.negative)
                 } else if !open.isEmpty {
-                    Text("Wähle deinen Namen, dann gehören die Ausgaben, die schon eingetragen sind, zu dir.")
+                    Text("Hat dich jemand schon eingetragen, wähle diesen Eintrag: Die Ausgaben gehören dann zu dir, und er heißt ab jetzt wie dein Konto.")
                 }
             }
 
