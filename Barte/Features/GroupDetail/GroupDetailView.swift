@@ -190,13 +190,11 @@ struct GroupDetailView: View {
 
     @ToolbarContentBuilder
     private func toolbar(_ group: SplitGroup) -> some ToolbarContent {
-        // A chat needs someone to talk to: it shows up once a second person uses the app.
-        if group.isShared {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Chat", systemImage: "bubble.left.and.bubble.right") { showsChat = true }
-                    .badge(group.unreadMessages)
-                    .accessibilityValue(group.unreadMessages > 0 ? UnreadBadge.label(group.unreadMessages) : "")
-            }
+        // Always there; until someone else uses the app, the chat leads to the invite.
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Chat", systemImage: "bubble.left.and.bubble.right") { showsChat = true }
+                .badge(group.unreadMessages)
+                .accessibilityValue(group.unreadMessages > 0 ? UnreadBadge.label(group.unreadMessages) : "")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button("Einladen", systemImage: "person.crop.circle.badge.plus") { showsInvite = true }
