@@ -41,7 +41,8 @@ struct SignInView: View {
                 Text("Barte")
                     .font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .accessibilityAddTraits(.isHeader)
-                Text("Ausgaben teilen, ohne Rechnerei.")
+                // The name explained: Bar + Karte.
+                Text("Bar oder mit Karte? Egal, Barte rechnet.")
                     .font(.title3)
                     .foregroundStyle(Color.inkSecondary)
                     .multilineTextAlignment(.center)
