@@ -15,7 +15,7 @@ In App Store Connect angelegt am 5. November 2026.
 ## Texte
 
 **Name:** Barte
-**Untertitel (30):** Ausgaben teilen, ganz einfach
+**Untertitel (30):** Bar oder Karte? Einfach teilen
 **Kategorie:** Finanzen (sekundär: Reisen)
 **Preis:** kostenlos, keine In-App-Käufe
 
