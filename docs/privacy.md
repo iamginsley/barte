@@ -24,7 +24,7 @@ Barte is a free iOS app for sharing expenses with friends. This policy describes
 - **Your name:** your account name (your first name from Apple when you sign in, changeable under “About Barte”). It appears in every group you're in
 - **People:** the names you enter in a group for people who don't use Barte, and, for people who use Barte, the link to their user ID
 - **Expenses:** title, amount, day, who paid, for whom and how it is split
-- **History:** who added, changed or deleted an expense in a group and when, with the values before and after, plus renames and closing a group. The history protects everyone in the group from unnoticed changes, so it can't be edited and is only deleted together with the group
+- **History:** who added, changed or deleted an expense in a group and when, with the values before and after, plus renames, who joined or left, and closing a group. The history protects everyone in the group from unnoticed changes, so it can't be edited and is only deleted together with the group
 - **Payment details (optional):** your PayPal.me name, and your IBAN and account holder, if you enter them under “Payment Details”. Barte shows them when settling up so others can pay you directly. Barte itself doesn't process payments; tapping “PayPal” opens paypal.me with the amount.
 - **Chat:** messages you write in a group, with their time and, if any, the expense they refer to, plus how far you've read the chat and whether you muted it. Only the people in the group see messages. You can delete your own messages at any time; only the note “Message deleted” remains
 - **Push token (only with your permission):** an identifier from Apple for your iPhone, so Barte can notify you when someone in your group adds, changes or deletes an expense, pays you back or writes in the chat. With it, Barte stores the app's language and your iPhone's region (e.g. “en-GB”), so notifications arrive in your language and number format
@@ -47,9 +47,9 @@ The legal basis is the performance of the user agreement (Art. 6(1)(b) GDPR): wi
 
 ## Deleting
 
-- **Expenses and people** can be deleted in the app.
-- **Leave a group:** your account is disconnected from the group. Your name stays on the expenses so the others' accounts still add up.
-- **Delete a group:** whoever created a group can delete it for everyone.
+- **Expenses and people** can be deleted in the app. Deleted expenses stay visible in the history and can be restored from there.
+- **Leave a group:** your account is disconnected from the group. Your name stays on the expenses so the others' accounts still add up. While others in the group use Barte, you can only leave once you're square.
+- **Delete a group:** nobody can delete a group for the others. When the last person using Barte leaves, the group is deleted with all its expenses, history and chat.
 - **Delete your account** (About Barte → Delete Account): your account, payment details, chat messages and push tokens are deleted immediately, and Barte is disconnected from your Apple Account. Groups where nobody else uses Barte are deleted too. In shared groups, your name stays as a plain entry on the expenses and in the history.
 
 ## Your rights

@@ -52,6 +52,19 @@ struct WidgetAndLinkTests {
         #expect(try await repository.fetchGroups()[0].isClosed == false)
     }
 
+    @Test func demoClosesOnlyWhenSettledAndRestoresDeletions() async throws {
+        let open = group("Pizza", myShare: 1200)
+        let repository = DemoGroupRepository(groups: [open])
+        await #expect(throws: BarteError.self) { try await repository.setClosed(true, group: open.id) }
+        let expense = open.expenses[0]
+        try await repository.deleteExpense(expense.id)
+        let deleted = try #require(try await repository.fetchHistory(groupID: open.id, subjectID: expense.id).first)
+        let groupNow = try await repository.fetchGroups()[0]
+        let restored = try #require(deleted.restoredExpense(in: groupNow))
+        try await repository.save(restored, in: open.id)
+        #expect(try await repository.fetchGroups()[0].expenses.map(\.id) == [expense.id])
+    }
+
     @Test func groupLinksRoundTrip() {
         let id = UUID()
         #expect(BarteLink.groupID(from: BarteLink.group(id)) == id)

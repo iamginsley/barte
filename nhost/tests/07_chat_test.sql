@@ -76,6 +76,6 @@ select public.delete_my_account(pg_temp.s(:b));
 select pg_temp.check((select count(*) = 0 from public.chat_messages where author_id = :b), 'account deletion removes own messages');
 select pg_temp.check((select count(*) = 0 from public.chat_states where user_id = :b), 'and the read state');
 
--- Deleting the group takes the chat with it
-select public.delete_group(pg_temp.s(:a), :'gid');
+-- A group that goes (the last person left) takes the chat with it
+select public.leave_group(pg_temp.s(:a), :'gid');
 select pg_temp.check((select count(*) = 0 from public.chat_messages where group_id = :'gid'), 'chat goes with the group');

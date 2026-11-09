@@ -15,6 +15,8 @@ struct GroupEvent: Identifiable, Hashable, Sendable {
         case memberAdded = "member_added"
         case memberRenamed = "member_renamed"
         case memberRemoved = "member_removed"
+        case memberJoined = "member_joined"
+        case memberLeft = "member_left"
         case unknown
     }
 
@@ -145,6 +147,20 @@ extension GroupEvent {
             let person = old?.name ?? someone
             return Wording(headline: mine ? String(localized: "Du hast \(person) entfernt") : String(localized: "\(actor) hat \(person) entfernt"),
                            details: [])
+        case .memberJoined:
+            let person = new?.name ?? actor
+            // Taking over a typed-in name takes over its expenses too, so it says whose.
+            if let claimed = old?.name {
+                return Wording(headline: mine ? String(localized: "Du bist beigetreten und hast „\(claimed)“ übernommen")
+                                              : String(localized: "\(person) ist beigetreten und hat „\(claimed)“ übernommen"),
+                               details: [])
+            }
+            return Wording(headline: mine ? String(localized: "Du bist der Gruppe beigetreten") : String(localized: "\(person) ist der Gruppe beigetreten"),
+                           details: [])
+        case .memberLeft:
+            let person = old?.name ?? actor
+            return Wording(headline: mine ? String(localized: "Du hast die Gruppe verlassen") : String(localized: "\(person) hat die Gruppe verlassen"),
+                           details: [])
         case .unknown:
             return Wording(headline: mine ? String(localized: "Du hast etwas geändert") : String(localized: "\(actor) hat etwas geändert"),
                            details: [])
@@ -174,11 +190,27 @@ extension GroupEvent {
         case .groupUpdated, .memberRenamed: "character.cursor.ibeam"
         case .groupClosed: "archivebox"
         case .groupReopened: "arrow.uturn.backward"
-        case .memberAdded: "person.badge.plus"
+        case .memberAdded, .memberJoined: "person.badge.plus"
+        case .memberLeft: "rectangle.portrait.and.arrow.right"
         case .unknown: "clock"
         }
     }
 
     /// Deletions and edits are what someone else might want to double-check.
-    var isNotable: Bool { [.expenseChanged, .expenseDeleted, .settlementDeleted].contains(kind) }
+    var isNotable: Bool {
+        [.expenseChanged, .expenseDeleted, .settlementDeleted].contains(kind) || (kind == .memberJoined && old?.name != nil)
+    }
+
+    /// A deleted expense or settlement as it was, to save again under its old id. Nil for anything
+    /// else, when the snapshot is incomplete, or when it still exists (restored or never gone).
+    func restoredExpense(in group: SplitGroup) -> Expense? {
+        guard kind == .expenseDeleted || kind == .settlementDeleted, let subjectID, let old,
+              !group.expenses.contains(where: { $0.id == subjectID }),
+              let title = old.title, let amount = old.amountCents, let payer = old.payerID,
+              let participants = old.participantIDs, !participants.isEmpty,
+              let spentOn = old.spentOn, let date = LocalDay.date(from: spentOn) else { return nil }
+        return Expense(id: subjectID, title: title, amountCents: amount, date: date, payerID: payer,
+                       participantIDs: participants, isSettlement: old.isSettlement ?? (kind == .settlementDeleted),
+                       split: SplitMode(kind: old.splitKind ?? "equal", values: old.splitValues, participants: participants))
+    }
 }

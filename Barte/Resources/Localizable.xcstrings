@@ -176,6 +176,16 @@
         }
       }
     },
+    "%@ hat die Gruppe verlassen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ left the group"
+          }
+        }
+      }
+    },
     "%@ hat die Gruppe wieder geöffnet" : {
       "localizations" : {
         "en" : {
@@ -232,6 +242,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ changed something"
+          }
+        }
+      }
+    },
+    "%@ ist beigetreten und hat „%@“ übernommen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ ist beigetreten und hat „%2$@“ übernommen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ joined and took over “%@”"
+          }
+        }
+      }
+    },
+    "%@ ist der Gruppe beigetreten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ joined the group"
           }
         }
       }
@@ -706,22 +742,22 @@
         }
       }
     },
+    "Abschließen geht erst, wenn alle quitt sind." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can only close the group once everyone is square."
+          }
+        }
+      }
+    },
     "Alle" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "All"
-          }
-        }
-      }
-    },
-    "Alle Ausgaben dieser Gruppe werden gelöscht." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All expenses in this group will be deleted."
           }
         }
       }
@@ -1331,16 +1367,6 @@
         }
       }
     },
-    "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The group will be deleted for everyone, including the people you invited."
-          }
-        }
-      }
-    },
     "Die Verbindung zu deiner Apple-ID konnte nicht getrennt werden. Dein Konto ist noch da. Versuch es gleich noch einmal." : {
       "localizations" : {
         "en" : {
@@ -1449,6 +1475,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You'll confirm with your Apple Account next. Your account is then deleted right away and Barte is disconnected from your Apple Account. Groups where nobody else uses Barte are deleted too. In shared groups, your name stays on the expenses. This can't be undone."
+          }
+        }
+      }
+    },
+    "Du bist beigetreten und hast „%@“ übernommen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You joined and took over “%@”"
+          }
+        }
+      }
+    },
+    "Du bist der Gruppe beigetreten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You joined the group"
+          }
+        }
+      }
+    },
+    "Du bist die letzte Person mit Barte in dieser Gruppe. Wenn du gehst, wird sie mit allen Ausgaben gelöscht." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're the last person using Barte in this group. If you leave, it will be deleted with all its expenses."
           }
         }
       }
@@ -1589,6 +1645,16 @@
         }
       }
     },
+    "Du hast die Gruppe verlassen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You left the group"
+          }
+        }
+      }
+    },
     "Du hast die Gruppe wieder geöffnet" : {
       "localizations" : {
         "en" : {
@@ -1645,6 +1711,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You changed something"
+          }
+        }
+      }
+    },
+    "Du kannst die Gruppe erst verlassen, wenn du quitt bist. Sonst bliebe offen, wer wem etwas schuldet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can only leave the group once you're square. Otherwise nobody could tell who owes whom."
           }
         }
       }
@@ -1848,16 +1924,6 @@
         }
       }
     },
-    "Gruppe abschließen?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Close Group?"
-          }
-        }
-      }
-    },
     "Gruppe bearbeiten" : {
       "localizations" : {
         "en" : {
@@ -1874,26 +1940,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create Group"
-          }
-        }
-      }
-    },
-    "Gruppe löschen" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete Group"
-          }
-        }
-      }
-    },
-    "Gruppe löschen?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete Group?"
           }
         }
       }
@@ -2726,32 +2772,12 @@
         }
       }
     },
-    "Noch sind nicht alle quitt. Die offenen Beträge zählen dann für niemanden mehr in der Übersicht. Du kannst die Gruppe jederzeit wieder öffnen." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not everyone is square yet. The open amounts will no longer count in anyone's overview. You can reopen the group at any time."
-          }
-        }
-      }
-    },
     "Nur Buchstaben und Zahlen, so wie hinter paypal.me/." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Only letters and numbers, as after paypal.me/."
-          }
-        }
-      }
-    },
-    "Nur wer die Gruppe erstellt hat, kann sie für alle löschen." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only the person who created the group can delete it for everyone."
           }
         }
       }
@@ -3114,6 +3140,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reopen"
+          }
+        }
+      }
+    },
+    "Wiederherstellen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore"
+          }
+        }
+      }
+    },
+    "Wiederherstellen hat nicht geklappt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't Restore"
           }
         }
       }

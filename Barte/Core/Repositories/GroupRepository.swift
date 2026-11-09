@@ -6,7 +6,6 @@ protocol GroupRepository: Sendable {
 
     func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID
     func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws
-    func deleteGroup(_ id: UUID) async throws
     func leaveGroup(_ id: UUID) async throws
     /// Puts a group away for everyone in it, or brings it back.
     func setClosed(_ closed: Bool, group id: UUID) async throws
@@ -203,10 +202,6 @@ struct NhostGroupRepository: GroupRepository {
         try await api.call("update_group", [
             "p_group_id": .uuid(id), "p_name": .string(name), "p_currency": .string(currency), "p_color": .int(color.rawValue),
         ])
-    }
-
-    func deleteGroup(_ id: UUID) async throws {
-        try await api.call("delete_group", ["p_group_id": .uuid(id)])
     }
 
     func leaveGroup(_ id: UUID) async throws {

@@ -92,15 +92,21 @@ EN = {
     # Group detail
     "Neue Ausgabe": "New Expense", "Ausgabe": "Expense", "Ausgleichen": "Settle Up", "Ausgleich": "Settlement",
     "Verlauf": "History", "Einladen": "Invite", "Freund:innen einladen": "Invite Friends",
-    "Gruppe abschließen": "Close Group", "Gruppe abschließen?": "Close Group?", "Abschließen": "Close", "Wieder öffnen": "Reopen",
+    "Gruppe abschließen": "Close Group", "Abschließen": "Close", "Wieder öffnen": "Reopen",
     "Legt die Gruppe für alle unter „Abgeschlossen“ ab": "Moves the group to “Closed” for everyone",
-    "Noch sind nicht alle quitt. Die offenen Beträge zählen dann für niemanden mehr in der Übersicht. Du kannst die Gruppe jederzeit wieder öffnen.":
-        "Not everyone is square yet. The open amounts will no longer count in anyone's overview. You can reopen the group at any time.",
-    "Gruppe löschen": "Delete Group", "Gruppe löschen?": "Delete Group?", "Gruppe verlassen": "Leave Group", "Gruppe verlassen?": "Leave Group?",
+    "Abschließen geht erst, wenn alle quitt sind.": "You can only close the group once everyone is square.",
+    "Gruppe verlassen": "Leave Group", "Gruppe verlassen?": "Leave Group?",
     "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen.":
         "The group disappears for you. The others keep it, and your name stays on the expenses.",
-    "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast.": "The group will be deleted for everyone, including the people you invited.",
-    "Alle Ausgaben dieser Gruppe werden gelöscht.": "All expenses in this group will be deleted.",
+    "Du bist die letzte Person mit Barte in dieser Gruppe. Wenn du gehst, wird sie mit allen Ausgaben gelöscht.":
+        "You're the last person using Barte in this group. If you leave, it will be deleted with all its expenses.",
+    "Du kannst die Gruppe erst verlassen, wenn du quitt bist. Sonst bliebe offen, wer wem etwas schuldet.":
+        "You can only leave the group once you're square. Otherwise nobody could tell who owes whom.",
+    "%@ ist der Gruppe beigetreten": "%@ joined the group", "Du bist der Gruppe beigetreten": "You joined the group",
+    "%@ ist beigetreten und hat „%@“ übernommen": "%@ joined and took over “%@”",
+    "Du bist beigetreten und hast „%@“ übernommen": "You joined and took over “%@”",
+    "%@ hat die Gruppe verlassen": "%@ left the group", "Du hast die Gruppe verlassen": "You left the group",
+    "Wiederherstellen": "Restore", "Wiederherstellen hat nicht geklappt": "Couldn't Restore",
     "Tippe auf „Ausgabe“, wenn jemand etwas für die Gruppe bezahlt hat.": "Tap “Expense” when someone paid for something for the group.",
     "Alle sind quitt": "Everyone's square", "Noch nichts auszugleichen": "Nothing to settle yet",
     "von dir · %@": "by you · %@", "von %@ · %@": "by %1$@ · %2$@", "bearbeitet": "edited",
@@ -236,7 +242,6 @@ EN = {
     "Diese Person kommt in Ausgaben vor und kann nicht entfernt werden.": "This person appears in expenses and can't be removed.",
     "Diese Person nutzt Barte selbst. Nur sie kann ihren Namen ändern oder die Gruppe verlassen.":
         "This person uses Barte themselves. Only they can change their name or leave the group.",
-    "Nur wer die Gruppe erstellt hat, kann sie für alle löschen.": "Only the person who created the group can delete it for everyone.",
     "Du bist nicht mehr in dieser Gruppe.": "You're no longer in this group.",
     "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe.": "Someone in this expense is no longer in the group.",
     "Bitte gib einen Namen ein.": "Please enter a name.", "Die Beträge ergeben nicht die Summe der Ausgabe.": "The amounts don't add up to the expense.",
