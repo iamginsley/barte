@@ -37,6 +37,8 @@ final class AppModel {
     var pendingGroupID: UUID?
     /// Set when a chat notification was tapped; that group's detail then opens its chat.
     var pendingChatGroupID: UUID?
+    /// Set when a reminder was tapped; that group's detail then opens settle-up.
+    var pendingSettleGroupID: UUID?
     /// The chat on screen right now: its own pushes don't show as banners.
     var visibleChatGroupID: UUID?
 
@@ -196,6 +198,7 @@ final class AppModel {
             pendingInviteCode = code
         } else if let id = BarteLink.groupID(from: url) {
             if BarteLink.opensChat(url) { pendingChatGroupID = id }
+            if BarteLink.opensSettle(url) { pendingSettleGroupID = id }
             pendingGroupID = id
         }
     }

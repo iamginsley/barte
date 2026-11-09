@@ -60,6 +60,36 @@
         }
       }
     },
+    "%@ eine Erinnerung schicken" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send %@ a reminder"
+          }
+        }
+      }
+    },
+    "%@ erinnern" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind %@"
+          }
+        }
+      }
+    },
+    "%@ erinnert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ reminded"
+          }
+        }
+      }
+    },
     "%@ hat %@ eingetragen" : {
       "localizations" : {
         "de" : {
@@ -1417,6 +1447,16 @@
         }
       }
     },
+    "Diese Person nutzt Barte nicht. Schick ihr die Erinnerung lieber als Nachricht." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This person doesn't use Barte. Send them the reminder as a message instead."
+          }
+        }
+      }
+    },
     "Diese Person nutzt Barte selbst. Nur sie kann ihren Namen ändern oder die Gruppe verlassen." : {
       "localizations" : {
         "en" : {
@@ -1715,6 +1755,16 @@
         }
       }
     },
+    "Du hast heute schon erinnert. Morgen geht es wieder." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You already sent a reminder today. You can send another tomorrow."
+          }
+        }
+      }
+    },
     "Du kannst die Gruppe erst verlassen, wenn du quitt bist. Sonst bliebe offen, wer wem etwas schuldet." : {
       "localizations" : {
         "en" : {
@@ -1782,6 +1832,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Removed person"
+          }
+        }
+      }
+    },
+    "Erinnern" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind"
+          }
+        }
+      }
+    },
+    "Erinnert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminded"
           }
         }
       }
@@ -2005,6 +2075,23 @@
         }
       }
     },
+    "Hallo %@, kleine Erinnerung: Für „%@“ sind noch %@ an mich offen." : {
+      "comment" : "Reminder message for someone without the app",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hallo %1$@, kleine Erinnerung: Für „%2$@“ sind noch %3$@ an mich offen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hi %@, just a quick reminder: you still owe me %3$@ for “%2$@”."
+          }
+        }
+      }
+    },
     "Hat dich jemand schon eingetragen, wähle diesen Eintrag: Die Ausgaben gehören dann zu dir, und er heißt ab jetzt wie dein Konto." : {
       "localizations" : {
         "en" : {
@@ -2021,6 +2108,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
+          }
+        }
+      }
+    },
+    "Hier ist nichts mehr offen. Vielleicht hat schon jemand gezahlt?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing is open here anymore. Maybe someone already paid?"
           }
         }
       }
@@ -2672,6 +2769,16 @@
         }
       }
     },
+    "Nicht erinnert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't Remind"
+          }
+        }
+      }
+    },
     "Nicht gesendet · Erneut senden" : {
       "localizations" : {
         "en" : {
@@ -2843,6 +2950,17 @@
         }
       }
     },
+    "Per PayPal: %@" : {
+      "comment" : "Reminder message: PayPal link with the amount",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Via PayPal: %@"
+          }
+        }
+      }
+    },
     "Person hinzufügen" : {
       "localizations" : {
         "en" : {
@@ -2901,6 +3019,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Balances"
+          }
+        }
+      }
+    },
+    "Schickt %@ eine Mitteilung. Geht einmal am Tag." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends %@ a notification. Once a day."
           }
         }
       }
