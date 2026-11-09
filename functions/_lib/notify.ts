@@ -5,8 +5,9 @@ import { type ApnsConfig, type Device, send } from "./apns";
 import { compose, type Event, type Payer, type Person } from "./messages";
 import type { GraphQL } from "./server";
 
-/** An expense as the history stores it (expense_snapshot in the migration). */
+/** An expense as the history stores it (expense_snapshot in the migration). Member events store only `name`. */
 export interface Snapshot {
+  name?: string;
   title: string;
   amount_cents: number;
   payer_id: string;
@@ -68,9 +69,10 @@ function audience(row: GroupEventRow, members: MemberRow[]): Set<string> | undef
       if (!row.old || !row.new || !changesMoney(row.old, row.new)) return undefined;
       return new Set([...involved(row.old), ...involved(row.new)]);
     case "group_closed":
+    case "member_joined":
       return new Set(members.map((m) => m.id));
     default:
-      // Renames, reopening, members: the history shows them, a push would only be noise.
+      // Renames, reopening, leaving, typed-in names: the history shows them, a push would only be noise.
       return undefined;
   }
 }
@@ -124,6 +126,9 @@ export function eventFor(
       return { kind: "expense_deleted", ...common, title: row.old!.title, amountCents: row.old!.amount_cents };
     case "group_closed":
       return { kind: "group_closed", ...common };
+    case "member_joined": {
+      return { kind: "member_joined", ...common, name: row.new?.name ?? row.actor_name ?? "?", claimed: row.old?.name ?? null };
+    }
     default:
       return undefined;
   }

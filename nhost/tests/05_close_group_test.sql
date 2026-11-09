@@ -25,7 +25,7 @@ select pg_temp.check((select closed_at is null from public.groups where id = :'g
 
 -- A new expense reopens a closed group
 select public.set_group_closed(pg_temp.s(:a), :'gid', true);
-select id as eid from public.save_expense(pg_temp.s(:a), gen_random_uuid(), :'gid', 'Fähre', 4000, '2026-11-08', :'anna', array[:'anna', :'ben']::uuid[]) \gset
+select id as eid from public.save_expense(pg_temp.s(:a), gen_random_uuid(), :'gid', 'Fähre', 4000, '2026-11-08', :'anna', array[:'anna']::uuid[]) \gset
 select pg_temp.check((select closed_at is null from public.groups where id = :'gid'), 'new expense reopens');
 
 -- So does deleting one
