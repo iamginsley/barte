@@ -69,6 +69,9 @@ struct WidgetAndLinkTests {
         let id = UUID()
         #expect(BarteLink.groupID(from: BarteLink.group(id)) == id)
         #expect(BarteLink.groupID(from: URL(string: "barte://join/ABCD2345")!) == nil)
+        #expect(BarteLink.groupID(from: BarteLink.settle(id)) == id && BarteLink.opensSettle(BarteLink.settle(id)))
+        #expect(!BarteLink.opensSettle(BarteLink.chat(id)) && !BarteLink.opensChat(BarteLink.settle(id)))
+        #expect(BarteLink.settle(id).absoluteString == "barte://group/\(id.uuidString.lowercased())/settle", "matches functions/_lib/messages.ts")
         #expect(InviteLink.code(from: BarteLink.group(id)) == nil)
     }
 }

@@ -245,6 +245,8 @@ enum DemoData {
 /// In-memory repository for demo mode: no server, changes live until the app quits.
 actor DemoGroupRepository: GroupRepository {
     private var groups: [SplitGroup]
+    /// Members reminded in this demo session.
+    private var reminded: Set<UUID> = []
     private var payments: [UUID: PaymentDetails]
     /// Newest last, like they happened, each with its group.
     private var events: [(groupID: UUID, event: GroupEvent)] = []
@@ -396,6 +398,16 @@ actor DemoGroupRepository: GroupRepository {
         guard group.canLeave(userID: DemoData.userID) else { throw BarteError.server(hint: "open_balance") }
         groups.removeAll { $0.id == id }
         stream.continuation.yield()
+    }
+
+    /// Like the server: only someone who owes, only once a day; nothing is pushed in the demo.
+    func remind(_ memberID: UUID, amountCents: Int, in groupID: UUID) async throws {
+        guard let group = groups.first(where: { $0.id == groupID }), let member = group.member(memberID) else {
+            throw BarteError.server(hint: "not_member")
+        }
+        guard member.usesApp else { throw BarteError.server(hint: "no_app") }
+        guard group.balance(of: memberID) < 0, amountCents > 0 else { throw BarteError.server(hint: "nothing_owed") }
+        guard reminded.insert(memberID).inserted else { throw BarteError.server(hint: "reminded_recently") }
     }
 
     func setClosed(_ closed: Bool, group id: UUID) async throws {
