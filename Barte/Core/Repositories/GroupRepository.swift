@@ -34,6 +34,19 @@ protocol GroupRepository: Sendable {
     /// The group's history, newest first; only what concerns one expense or member with `subjectID`.
     func fetchHistory(groupID: UUID, subjectID: UUID?) async throws -> [GroupEvent]
 
+    // MARK: Chat
+
+    /// The newest messages, oldest first.
+    func fetchChat(groupID: UUID) async throws -> [ChatMessage]
+    /// `id` comes from the app, so sending again after a lost connection doesn't duplicate it.
+    func sendMessage(_ id: UUID, body: String, expenseID: UUID?, in groupID: UUID) async throws
+    /// Only own messages; a placeholder stays.
+    func deleteMessage(_ id: UUID) async throws
+    func markChatRead(groupID: UUID) async throws
+    func setChatMuted(_ muted: Bool, group id: UUID) async throws
+    /// Signals new and deleted messages and new history entries in one group.
+    func chatChanges(groupID: UUID) -> AsyncStream<Void>
+
     /// Signals whenever something in this person's groups changes, also from other people.
     func changes() -> AsyncStream<Void>
 }
@@ -55,14 +68,21 @@ struct NhostGroupRepository: GroupRepository {
         let members: [MemberRow]
         let expenses: [ExpenseRow]
         let events: [EditedRow]
+        let unreadMessages: Int?
+        /// Only this person's own row, if any.
+        let chatStates: [ChatStateRow]?
 
         struct EditedRow: Decodable, Sendable {
             let subjectID: UUID?
             enum CodingKeys: String, CodingKey { case subjectID = "subject_id" }
         }
 
+        struct ChatStateRow: Decodable, Sendable { let muted: Bool }
+
         enum CodingKeys: String, CodingKey {
             case id, name, currency, color, members, expenses, events
+            case unreadMessages = "unread_messages"
+            case chatStates = "chat_states"
             case inviteCode = "invite_code"
             case createdBy = "created_by"
             case createdAt = "created_at"
@@ -113,6 +133,8 @@ struct NhostGroupRepository: GroupRepository {
         members { id name user_id created_at }
         expenses { id title amount_cents spent_on payer_id participant_ids is_settlement split_kind split_values created_at }
         events(where: { kind: { _eq: "expense_changed" } }) { subject_id }
+        unread_messages
+        chat_states { muted }
         """
 
     func fetchGroups() async throws -> [SplitGroup] {
@@ -151,7 +173,9 @@ struct NhostGroupRepository: GroupRepository {
             inviteCode: row.inviteCode,
             createdBy: row.createdBy,
             closedAt: row.closedAt,
-            editedExpenseIDs: Set(row.events.compactMap(\.subjectID))
+            editedExpenseIDs: Set(row.events.compactMap(\.subjectID)),
+            unreadMessages: row.unreadMessages ?? 0,
+            chatMuted: row.chatStates?.first?.muted ?? false
         )
     }
 
@@ -326,12 +350,78 @@ struct NhostGroupRepository: GroupRepository {
         }
     }
 
+    // MARK: Chat
+
+    private struct MessageRow: Decodable, Sendable {
+        let id: UUID
+        let memberID: UUID?
+        let authorID: UUID
+        let body: String?
+        let expenseID: UUID?
+        let createdAt: Date
+        let deletedAt: Date?
+
+        enum CodingKeys: String, CodingKey {
+            case id, body
+            case memberID = "member_id"
+            case authorID = "author_id"
+            case expenseID = "expense_id"
+            case createdAt = "created_at"
+            case deletedAt = "deleted_at"
+        }
+    }
+
+    func fetchChat(groupID: UUID) async throws -> [ChatMessage] {
+        struct Data: Decodable, Sendable { let chat_messages: [MessageRow] }
+        let data: Data = try await api.query(
+            """
+            query Chat($group: uuid!) {
+              chat_messages(where: { group_id: { _eq: $group } }, order_by: { created_at: desc }, limit: 300) {
+                id member_id author_id body expense_id created_at deleted_at
+              }
+            }
+            """,
+            variables: ["group": .uuid(groupID)]
+        )
+        return data.chat_messages.reversed().map {
+            ChatMessage(id: $0.id, memberID: $0.memberID, authorID: $0.authorID, body: $0.body,
+                        expenseID: $0.expenseID, createdAt: $0.createdAt, deletedAt: $0.deletedAt)
+        }
+    }
+
+    func sendMessage(_ id: UUID, body: String, expenseID: UUID?, in groupID: UUID) async throws {
+        try await api.call("send_message", [
+            "p_id": .uuid(id), "p_group_id": .uuid(groupID), "p_body": .string(body), "p_expense_id": .uuid(expenseID),
+        ])
+    }
+
+    func deleteMessage(_ id: UUID) async throws {
+        try await api.call("delete_message", ["p_id": .uuid(id)])
+    }
+
+    func markChatRead(groupID: UUID) async throws {
+        try await api.call("mark_chat_read", ["p_group_id": .uuid(groupID)])
+    }
+
+    func setChatMuted(_ muted: Bool, group id: UUID) async throws {
+        try await api.call("set_chat_muted", ["p_group_id": .uuid(id), "p_muted": .bool(muted)])
+    }
+
+    func chatChanges(groupID: UUID) -> AsyncStream<Void> {
+        // A UUID can't break out of the string, so it goes straight into the query.
+        let group = groupID.uuidString.lowercased()
+        return api.changes(of: [
+            "subscription { chat_messages(where: { group_id: { _eq: \"\(group)\" } }, order_by: { created_at: desc }, limit: 100) { id deleted_at } }",
+            "subscription { group_events(where: { group_id: { _eq: \"\(group)\" } }, order_by: { created_at: desc }, limit: 1) { id } }",
+        ])
+    }
+
     // MARK: Live updates
 
     /// Hasura's permissions decide which rows these see, so they cover exactly this person's groups.
     func changes() -> AsyncStream<Void> {
         api.changes(of: [
-            "subscription Groups { groups { id name currency color invite_code closed_at members { id name user_id } expenses { id updated_at } } }",
+            "subscription Groups { groups { id name currency color invite_code closed_at unread_messages members { id name user_id } expenses { id updated_at } } }",
             "subscription Payments { payment_details { user_id updated_at } }",
         ])
     }

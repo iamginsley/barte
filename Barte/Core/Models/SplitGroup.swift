@@ -38,6 +38,10 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     var closedAt: Date? = nil
     /// Expenses someone changed after entering them (from the history), shown as "bearbeitet".
     var editedExpenseIDs: Set<UUID> = []
+    /// Chat messages from others this person hasn't seen yet.
+    var unreadMessages: Int = 0
+    /// No pushes for this group's chat.
+    var chatMuted: Bool = false
 
     var isClosed: Bool { closedAt != nil }
 

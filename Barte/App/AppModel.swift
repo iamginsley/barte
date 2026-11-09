@@ -33,6 +33,10 @@ final class AppModel {
     var pendingInviteCode: String?
     /// Set when a notification or widget opens a group; GroupsView navigates there.
     var pendingGroupID: UUID?
+    /// Set when a chat notification was tapped; that group's detail then opens its chat.
+    var pendingChatGroupID: UUID?
+    /// The chat on screen right now: its own pushes don't show as banners.
+    var visibleChatGroupID: UUID?
 
     let isDemo: Bool
     /// Nil in the demo.
@@ -187,8 +191,29 @@ final class AppModel {
         if let code = InviteLink.code(from: url) {
             pendingInviteCode = code
         } else if let id = BarteLink.groupID(from: url) {
+            if BarteLink.opensChat(url) { pendingChatGroupID = id }
             pendingGroupID = id
         }
+    }
+
+    // MARK: Chat
+
+    /// Clears the badge right away; the server agrees a moment later.
+    func markChatRead(_ groupID: UUID) async {
+        if let index = groups.firstIndex(where: { $0.id == groupID }) { groups[index].unreadMessages = 0 }
+        try? await repository?.markChatRead(groupID: groupID)
+    }
+
+    func setChatMuted(_ muted: Bool, groupID: UUID) async -> String? {
+        if let index = groups.firstIndex(where: { $0.id == groupID }) { groups[index].chatMuted = muted }
+        return await run { try await $0.setChatMuted(muted, group: groupID) }
+    }
+
+    /// "Antworten" in a chat notification; may run while the app is in the background.
+    func sendReply(_ text: String, to groupID: UUID) async {
+        guard let body = ChatMessage.cleaned(text), let repository else { return }
+        if let api, await api.session.userID == nil { await api.session.restore() }
+        try? await repository.sendMessage(UUID(), body: body, expenseID: nil, in: groupID)
     }
 
     // MARK: Account

@@ -133,6 +133,27 @@ try {
   const erased = await gql(a, `mutation { delete_group_events(where: {}) { affected_rows } }`);
   check(Boolean(erased.errors), "nobody can erase history");
 
+  // Chat: members write and read, unread counts per person, outsiders see nothing.
+  const messageID = randomUUID();
+  await call(a, "send_message", { p_id: messageID, p_group_id: group, p_body: "  Wer hat Bargeld?  ", p_expense_id: null });
+  await call(a, "send_message", { p_id: messageID, p_group_id: group, p_body: "Wer hat Bargeld?", p_expense_id: null });
+  const chat = async (user) => (await gql(user, `{ chat_messages { id body author_id deleted_at } }`)).data.chat_messages;
+  const seen = await chat(b);
+  check(seen.length === 1 && seen[0].body === "Wer hat Bargeld?", "B reads A's message once, trimmed");
+  check((await chat(c)).length === 0, "outsiders see no chat");
+  const unread = async (user) => (await gql(user, `{ groups { unread_messages chat_states { muted } } }`)).data.groups[0];
+  check((await unread(b))?.unread_messages === 1 && (await unread(a))?.unread_messages === 0, "unread_messages counts others' messages per person");
+  await call(b, "mark_chat_read", { p_group_id: group });
+  check((await unread(b))?.unread_messages === 0, "mark_chat_read clears it");
+  await call(b, "set_chat_muted", { p_group_id: group, p_muted: true });
+  check((await unread(b))?.chat_states[0]?.muted === true && (await unread(a))?.chat_states.length === 0, "muting is per person and private");
+  await fails(call(c, "send_message", { p_id: randomUUID(), p_group_id: group, p_body: "Hi", p_expense_id: null }), "not_member", "outsider cannot write");
+  await fails(call(b, "delete_message", { p_id: messageID }), "message_not_found", "B cannot delete A's message");
+  const forgedMessage = await gql(b, `mutation { insert_chat_messages_one(object: { id: "${randomUUID()}", group_id: "${group}", author_id: "${a}", body: "fake" }) { id } }`);
+  check(Boolean(forgedMessage.errors), "no direct inserts into the chat");
+  await call(a, "delete_message", { p_id: messageID });
+  check((await chat(b))[0]?.body === null && Boolean((await chat(b))[0]?.deleted_at), "deleting leaves a placeholder");
+
   // Payment details: visible within shared groups only.
   await call(a, "set_payment_details", { p_paypal: "annah", p_iban: null, p_account_holder: null });
   const paymentsQuery = `{ payment_details { user_id paypal } }`;

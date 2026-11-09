@@ -7,6 +7,8 @@ struct GroupCard: View {
     let me: UUID?
     /// Off for previews of groups I'm not in yet (joining).
     var showsStatus = true
+    /// The chat badge; off inside the group, where the toolbar shows it.
+    var showsUnread = true
 
     var body: some View {
         let balance = group.balance(of: me)
@@ -20,6 +22,9 @@ struct GroupCard: View {
                         Image(systemName: "person.2.fill")
                             .font(.caption)
                             .opacity(0.8)
+                    }
+                    if showsUnread && group.unreadMessages > 0 {
+                        UnreadBadge(count: group.unreadMessages, color: group.color.tint)
                     }
                 }
                 Spacer(minLength: 8)
@@ -72,7 +77,32 @@ struct GroupCard: View {
         }
         parts.append("\(group.members.count) Personen")
         if group.isShared { parts.append("geteilt") }
+        if group.unreadMessages > 0 { parts.append(UnreadBadge.label(group.unreadMessages)) }
         return parts.joined(separator: ", ")
+    }
+}
+
+/// New chat messages on a card: a white pill with a bubble and the count.
+struct UnreadBadge: View {
+    let count: Int
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Image(systemName: "bubble.left.fill")
+                .font(.caption2.weight(.bold))
+            Text(count > 99 ? "99+" : "\(count)")
+                .font(.caption.weight(.bold).monospacedDigit())
+        }
+        .foregroundStyle(color)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 2)
+        .background(.white, in: .capsule)
+        .accessibilityLabel(Self.label(count))
+    }
+
+    static func label(_ count: Int) -> String {
+        count == 1 ? "1 neue Nachricht" : "\(count) neue Nachrichten"
     }
 }
 
