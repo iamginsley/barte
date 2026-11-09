@@ -1,0 +1,41 @@
+# Group chat (see the group_chat migration). Readable by everyone in the group; written only
+# through send_message and delete_message.
+table:
+  name: chat_messages
+  schema: public
+object_relationships:
+  - name: group
+    using:
+      foreign_key_constraint_on: group_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - group_id
+        - member_id
+        - author_id
+        - body
+        - expense_id
+        - created_at
+        - deleted_at
+      filter:
+        group:
+          members:
+            user_id:
+              _eq: X-Hasura-User-Id
+event_triggers:
+  # Pushes for new messages; the function skips the author and everyone who muted the chat.
+  - name: chat_message_notify
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: "{{NHOST_FUNCTIONS_URL}}/events/chat-message"
+    headers:
+      - name: nhost-webhook-secret
+        value_from_env: NHOST_WEBHOOK_SECRET

@@ -54,6 +54,7 @@ export function payload(message: Message) {
       sound: message.passive ? undefined : "default",
       "thread-id": message.threadId,
       "interruption-level": message.passive ? "passive" : "active",
+      category: message.category,
     },
     link: message.link,
   };
@@ -114,7 +115,7 @@ export async function send(
   }
   // 410: the app was removed. BadDeviceToken: a sandbox token sent to production or vice versa, or garbage.
   if (response.status === 410 || reason === "BadDeviceToken" || reason === "Unregistered") return "gone";
-  console.error(`notify-group: APNs ${response.status} ${reason ?? ""}`);
+  console.error(`apns: APNs ${response.status} ${reason ?? ""}`);
   return "failed";
 }
 

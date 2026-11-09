@@ -111,6 +111,13 @@ struct ExpenseEditorSheet: View {
                         } label: {
                             Label(group.editedExpenseIDs.contains(existing.id) ? "Verlauf · bearbeitet" : "Verlauf", systemImage: "clock.arrow.circlepath")
                         }
+                        if group.isShared {
+                            NavigationLink {
+                                ChatView(groupID: group.id, reference: existing, opensExpenses: false)
+                            } label: {
+                                Label("Im Chat ansprechen", systemImage: "bubble.left")
+                            }
+                        }
                     } footer: {
                         Text("Jede Änderung bleibt für alle in der Gruppe sichtbar.")
                     }

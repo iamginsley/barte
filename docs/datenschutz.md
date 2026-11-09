@@ -23,7 +23,8 @@ Barte ist eine kostenlose iOS-App, mit der du Ausgaben mit Freund:innen teilst. 
 - **Ausgaben:** Titel, Betrag, Tag, wer bezahlt hat, für wen und wie aufgeteilt wird
 - **Verlauf:** wer in einer Gruppe wann eine Ausgabe eingetragen, geändert oder gelöscht hat, mit den Werten vorher und nachher, außerdem Umbenennungen und das Abschließen einer Gruppe. Der Verlauf schützt alle in der Gruppe vor unbemerkten Änderungen; er lässt sich deshalb nicht bearbeiten und wird erst mit der Gruppe gelöscht
 - **Zahlungsdaten (freiwillig):** dein PayPal.me-Name sowie IBAN und Kontoinhaber:in, wenn du sie unter „Zahlungsdaten“ einträgst. Barte zeigt sie beim Ausgleichen, damit dir andere direkt zahlen können. Barte selbst wickelt keine Zahlungen ab; ein Tipp auf „PayPal“ öffnet paypal.me mit dem Betrag.
-- **Push-Token (nur mit deiner Erlaubnis):** eine Kennung von Apple für dein iPhone, damit Barte dir Mitteilungen schicken kann, wenn jemand in deiner Gruppe eine Ausgabe einträgt, ändert oder löscht oder dir etwas zurückzahlt
+- **Chat:** Nachrichten, die du in einer Gruppe schreibst, mit Zeitpunkt und gegebenenfalls der Ausgabe, auf die sie sich beziehen, sowie bis wann du den Chat gelesen hast und ob du ihn stumm geschaltet hast. Nachrichten sehen nur die Personen in der Gruppe. Du kannst eigene Nachrichten jederzeit löschen; dann bleibt nur der Hinweis „Nachricht gelöscht“ stehen
+- **Push-Token (nur mit deiner Erlaubnis):** eine Kennung von Apple für dein iPhone, damit Barte dir Mitteilungen schicken kann, wenn jemand in deiner Gruppe eine Ausgabe einträgt, ändert oder löscht, dir etwas zurückzahlt oder im Chat schreibt
 - **Auf deinem iPhone:** dein Vorname als Vorschlag für neue Gruppen (lokal in den App-Einstellungen) und dein Saldo für das Widget (lokal im gemeinsamen Speicher von App und Widget)
 
 ## Wer die Daten sieht
@@ -46,7 +47,7 @@ Rechtsgrundlage ist die Erfüllung des Nutzungsvertrags (Art. 6 Abs. 1 lit. b DS
 - **Ausgaben und Personen** kannst du in der App löschen.
 - **Gruppe verlassen:** Dein Konto wird von der Gruppe getrennt. Dein Name bleibt bei den Ausgaben stehen, damit die Abrechnung der anderen stimmt.
 - **Gruppe löschen:** Wer eine Gruppe erstellt hat, kann sie für alle löschen.
-- **Konto löschen** (Über Barte → Konto löschen): Dein Konto, deine Zahlungsdaten und deine Push-Tokens werden sofort gelöscht und Barte von deiner Apple-ID getrennt. Gruppen, in denen sonst niemand Barte nutzt, werden mitgelöscht. In geteilten Gruppen bleibt dein Name als einfacher Eintrag bei den Ausgaben und im Verlauf stehen.
+- **Konto löschen** (Über Barte → Konto löschen): Dein Konto, deine Zahlungsdaten, deine Chat-Nachrichten und deine Push-Tokens werden sofort gelöscht und Barte von deiner Apple-ID getrennt. Gruppen, in denen sonst niemand Barte nutzt, werden mitgelöscht. In geteilten Gruppen bleibt dein Name als einfacher Eintrag bei den Ausgaben und im Verlauf stehen.
 
 ## Deine Rechte
 

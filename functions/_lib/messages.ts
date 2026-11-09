@@ -42,6 +42,8 @@ export interface Message {
   threadId: string;
   /** Passive: lands in Notification Center without sound or lighting the screen. */
   passive: boolean;
+  /** Notification category registered by the app (CHAT_MESSAGE has a reply field). */
+  category?: string;
 }
 
 export function money(cents: number, currency: string): string {

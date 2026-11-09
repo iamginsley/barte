@@ -27,8 +27,10 @@
 		4BF8AB095C87DBB08EB9F0E1 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A8AEC534DABD9DE65E7FF0 /* Invite.swift */; };
 		517328480C59FBFF8071972F /* AppleReauthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFC55C4B53520DB5AB5F349 /* AppleReauthentication.swift */; };
 		5C0258E000216E6FE6925E56 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC77A98173AD0934686C779 /* GroupsView.swift */; };
+		5C52A2BF6D9B3D3ABF73BD39 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4652A340F5C211AB346EA0 /* ChatMessage.swift */; };
 		5D798362D14E638C609F8FC0 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD35959716BA80250481075D /* Notifications.swift */; };
 		5E188D614CA05A69E6EB9254 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA27A8483504AC612812848 /* GroupCard.swift */; };
+		5F1EC3CAC82845C1468F7EF7 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288FCA82E772921CF8DFF32E /* ChatView.swift */; };
 		5F42E8D8D4BDE3976DC571D4 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED078948C81E4D89678841 /* GroupDetailView.swift */; };
 		5FD4C82CFDC87B09A4513956 /* NotificationSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFF40B9C82CC320B10483E1 /* NotificationSettingsRow.swift */; };
 		67B5EA10E2E2A8A8471229C2 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A41797BC57A6CE57A59669 /* RootView.swift */; };
@@ -36,6 +38,7 @@
 		6BEE411A0BCD3E748C7A908F /* HistorySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20901C1AE3DBAD3A7FBA1312 /* HistorySheet.swift */; };
 		7190A842E24B4E7B459BC0E4 /* PaymentDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EC235A4715776991373586 /* PaymentDetailsTests.swift */; };
 		729E8FD9D2610BD9F04056B8 /* PaymentDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26CC22EC97DCF16D7CE2CEB /* PaymentDetailsModel.swift */; };
+		78C39A00EF0C5CF1DE3EFA0A /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD9770D9018EC71B83E44CE /* ChatModel.swift */; };
 		792480A0C37CFB1EAA22F74F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6308E6E6D2BE5B3B2DB5C6E /* Preferences.swift */; };
 		7B117857BC462DCF9EF543F7 /* GroupEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79F78531E31186550B9C4 /* GroupEvent.swift */; };
 		7ED0A8A3D21BBF5EBD6E272D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */; };
@@ -69,6 +72,7 @@
 		FC5D9F463699911106D47B43 /* NhostWireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC4EAACB84203E839CD5B3 /* NhostWireTests.swift */; };
 		FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B2BBE6996A48CBCED9D623 /* BarteApp.swift */; };
 		FEAE79E886908E3FEACD3C74 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65D9A0E9A50EA8E9C8D31DA /* AboutView.swift */; };
+		FF251D0FE9A53DBDBF4D0F8F /* ChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D956425CB86E8BCE289BEE4C /* ChatTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +116,7 @@
 		12A8AEC534DABD9DE65E7FF0 /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		20901C1AE3DBAD3A7FBA1312 /* HistorySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySheet.swift; sourceTree = "<group>"; };
 		24C250BC52F146572F356D78 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
+		288FCA82E772921CF8DFF32E /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
 		2CEE077F805074D7BC5AC052 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -130,6 +135,7 @@
 		51EADB85144A27C17B3608AA /* SettleUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpSheet.swift; sourceTree = "<group>"; };
 		5E0211324505177E7B775948 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseIcon.swift; sourceTree = "<group>"; };
+		6C4652A340F5C211AB346EA0 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		72919225A511CF3BEABFF20E /* SplitGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitGroup.swift; sourceTree = "<group>"; };
 		7965253B6D373C9130DBFE6C /* WidgetAndLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAndLinkTests.swift; sourceTree = "<group>"; };
 		79B193C6E434151831365ED1 /* GroupEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorModel.swift; sourceTree = "<group>"; };
@@ -156,6 +162,8 @@
 		C9BBB3D0D6AF2AB0E23A21B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3C61639BB094CF97F5EE89D /* BarteWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteWidgets.swift; sourceTree = "<group>"; };
 		D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitModeTests.swift; sourceTree = "<group>"; };
+		D956425CB86E8BCE289BEE4C /* ChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTests.swift; sourceTree = "<group>"; };
+		DBD9770D9018EC71B83E44CE /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
 		DBE932A1CAA506CF1A9EA5DA /* Ledger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ledger.swift; sourceTree = "<group>"; };
 		DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorSheet.swift; sourceTree = "<group>"; };
 		DD796FD3BF0D203D06893B98 /* PaymentDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetails.swift; sourceTree = "<group>"; };
@@ -207,6 +215,7 @@
 			children = (
 				EB0687EFBA7AC7B0F657B4EC /* About */,
 				14CA6CBBF048893BEBB620FE /* Auth */,
+				CC772EFA14D7E8B40F0FA2FB /* Chat */,
 				47C0A9E6A150F260BEED9C18 /* Expense */,
 				0899F401404ABB88525102B1 /* GroupDetail */,
 				6580437194E7EBDE85DF391A /* Groups */,
@@ -312,6 +321,7 @@
 		AB1D5A3A5648F17C9E143F94 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6C4652A340F5C211AB346EA0 /* ChatMessage.swift */,
 				6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */,
 				E0E79F78531E31186550B9C4 /* GroupEvent.swift */,
 				12A8AEC534DABD9DE65E7FF0 /* Invite.swift */,
@@ -345,6 +355,15 @@
 				24C250BC52F146572F356D78 /* WidgetSnapshot.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		CC772EFA14D7E8B40F0FA2FB /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DBD9770D9018EC71B83E44CE /* ChatModel.swift */,
+				288FCA82E772921CF8DFF32E /* ChatView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		CC98FB0DFBE3975E9CC837F3 /* Core */ = {
@@ -386,6 +405,7 @@
 		E807992DF7C4784E726B71AD /* BarteTests */ = {
 			isa = PBXGroup;
 			children = (
+				D956425CB86E8BCE289BEE4C /* ChatTests.swift */,
 				477AC025359D480EB93BCB9C /* GroupEventTests.swift */,
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
@@ -583,6 +603,9 @@
 				FE84E4B4E317B82B7B15D9F2 /* BarteApp.swift in Sources */,
 				B592C90468C86179C73640AF /* BarteLink.swift in Sources */,
 				0C85188C027DCD82056A39B1 /* BarteLogo.swift in Sources */,
+				5C52A2BF6D9B3D3ABF73BD39 /* ChatMessage.swift in Sources */,
+				78C39A00EF0C5CF1DE3EFA0A /* ChatModel.swift in Sources */,
+				5F1EC3CAC82845C1468F7EF7 /* ChatView.swift in Sources */,
 				DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */,
 				E3BEE106CC3FC4F382473D7E /* ExpenseEditorModel.swift in Sources */,
 				0735CBAABE9F191B7D6A3981 /* ExpenseEditorSheet.swift in Sources */,
@@ -627,6 +650,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF251D0FE9A53DBDBF4D0F8F /* ChatTests.swift in Sources */,
 				1DE1558A5A53002FADAD729D /* GroupEventTests.swift in Sources */,
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,

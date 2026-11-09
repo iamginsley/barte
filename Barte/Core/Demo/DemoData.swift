@@ -7,7 +7,7 @@ import Foundation
 /// - `-BarteEmpty`: with `-BarteDemo`, start without groups
 /// - `-BarteSignedOut`: with `-BarteDemo`, show the sign-in screen
 /// - `-BarteGroup <n>`: open the n-th group (0 = top card)
-/// - `-BarteSheet settle|expense|group|about|join|invite`: also open a sheet
+/// - `-BarteSheet settle|expense|group|about|join|invite|history|chat`: also open a sheet (chat: the group's chat)
 enum DemoData {
     static let userID = UUID(uuidString: "D0D0D0D0-0000-4000-8000-000000000001")!
     static let inviteCode = "SKI2FUN7"
@@ -117,6 +117,36 @@ enum DemoData {
         return all.sorted { $0.event.createdAt < $1.event.createdAt }
     }
 
+    /// A short conversation on the ski trip around Ben's corrected receipt, with two new messages,
+    /// and one unread message in the flat share.
+    static func chat(for groups: [SplitGroup]) -> (messages: [UUID: [ChatMessage]], readAt: [UUID: Date]) {
+        var messages: [UUID: [ChatMessage]] = [:]
+        var readAt: [UUID: Date] = [:]
+        let today = Calendar.current.startOfDay(for: .now)
+        func say(_ name: String, in group: SplitGroup, _ text: String, at date: Date, about expense: String? = nil) {
+            guard let member = group.members.first(where: { $0.name == name }), let author = member.userID else { return }
+            messages[group.id, default: []].append(ChatMessage(
+                id: UUID(), memberID: member.id, authorID: author, body: text,
+                expenseID: expense.flatMap { title in group.expenses.first { $0.title == title }?.id },
+                createdAt: date
+            ))
+        }
+        if let ski = groups.first(where: { $0.name == "Skiurlaub Saalbach" }) {
+            let spar = ski.expenses.first { $0.title == "Einkauf Spar" }?.date ?? today
+            say("Anna", in: ski, "Skipässe sind gezahlt, hab sie für alle eingetragen 🎿", at: spar.addingTimeInterval(19 * 3600 + 120))
+            say("Ben", in: ski, "Hab den Spar-Bon korrigiert, da waren 10 € Pfand dabei, die ich zurückbekommen hab.", at: spar.addingTimeInterval(44 * 3600 + 90), about: "Einkauf Spar")
+            say("Dominik", in: ski, "Passt, danke!", at: spar.addingTimeInterval(44 * 3600 + 600))
+            say("Ben", in: ski, "Wer hat noch Bargeld für die Hütte?", at: .now.addingTimeInterval(-52 * 60))
+            say("Anna", in: ski, "Ich, so 50 €", at: .now.addingTimeInterval(-49 * 60))
+            readAt[ski.id] = spar.addingTimeInterval(44 * 3600 + 600)
+        }
+        if let flat = groups.first(where: { $0.name == "WG Leopoldstraße" }) {
+            say("Lena", in: flat, "Die Stromrechnung ist da, ich trag sie gleich ein.", at: .now.addingTimeInterval(-3 * 3600))
+            readAt[flat.id] = .now.addingTimeInterval(-4 * 3600)
+        }
+        return (messages, readAt)
+    }
+
     /// An invite for a group the demo person is not in yet.
     static let invitePreview = InvitePreview(
         groupID: UUID(), name: "Roadtrip Kroatien", currency: "EUR", color: CardColor.teal.rawValue, isMember: false,
@@ -188,11 +218,17 @@ actor DemoGroupRepository: GroupRepository {
     private var payments: [UUID: PaymentDetails]
     /// Newest last, like they happened, each with its group.
     private var events: [(groupID: UUID, event: GroupEvent)] = []
+    private var messages: [UUID: [ChatMessage]]
+    private var readAt: [UUID: Date]
+    private var muted: Set<UUID> = []
     private let stream = AsyncStream<Void>.makeStream()
+    /// One stream per open chat; finished ones just ignore further signals.
+    private var chatListeners: [AsyncStream<Void>.Continuation] = []
 
     init(groups: [SplitGroup] = DemoData.groups()) {
         self.groups = groups
         events = DemoData.history(for: groups)
+        (messages, readAt) = DemoData.chat(for: groups)
         // Everyone else with the app has PayPal and a bank account; Dominik has nothing yet.
         var payments: [UUID: PaymentDetails] = [:]
         for member in groups.flatMap(\.members) {
@@ -231,6 +267,9 @@ actor DemoGroupRepository: GroupRepository {
             let current = Set(group.expenses.map(\.id))
             group.editedExpenseIDs = Set(events.filter { $0.groupID == group.id && $0.event.kind == .expenseChanged }
                 .compactMap(\.event.subjectID)).intersection(current)
+            let read = readAt[group.id] ?? .distantPast
+            group.unreadMessages = (messages[group.id] ?? []).count { !$0.isDeleted && $0.authorID != DemoData.userID && $0.createdAt > read }
+            group.chatMuted = muted.contains(group.id)
             return group
         }
     }
@@ -245,6 +284,63 @@ actor DemoGroupRepository: GroupRepository {
     private func log(_ kind: GroupEvent.Kind, in groupID: UUID, subject: UUID, old: GroupEvent.Snapshot?, new: GroupEvent.Snapshot?) {
         let event = GroupEvent(id: UUID(), kind: kind, actorID: DemoData.userID, actorName: "Dominik", subjectID: subject, old: old, new: new, createdAt: .now)
         events.append((groupID, event))
+        chatChanged()
+    }
+
+    // MARK: Chat
+
+    func fetchChat(groupID: UUID) async throws -> [ChatMessage] {
+        messages[groupID] ?? []
+    }
+
+    func sendMessage(_ id: UUID, body: String, expenseID: UUID?, in groupID: UUID) async throws {
+        guard let group = groups.first(where: { $0.id == groupID }) else { throw BarteError.server(hint: "not_member") }
+        guard let body = ChatMessage.cleaned(body) else { throw BarteError.server(hint: "empty_message") }
+        guard !(messages[groupID] ?? []).contains(where: { $0.id == id }) else { return }
+        try await Task.sleep(for: .milliseconds(250))
+        messages[groupID, default: []].append(ChatMessage(
+            id: id, memberID: group.me(userID: DemoData.userID), authorID: DemoData.userID,
+            body: body, expenseID: expenseID, createdAt: .now
+        ))
+        readAt[groupID] = .now
+        chatChanged()
+        stream.continuation.yield()
+    }
+
+    func deleteMessage(_ id: UUID) async throws {
+        for (groupID, list) in messages {
+            guard let index = list.firstIndex(where: { $0.id == id && $0.authorID == DemoData.userID && !$0.isDeleted }) else { continue }
+            messages[groupID]![index].body = nil
+            messages[groupID]![index].expenseID = nil
+            messages[groupID]![index].deletedAt = .now
+            chatChanged()
+            return
+        }
+        throw BarteError.server(hint: "message_not_found")
+    }
+
+    func markChatRead(groupID: UUID) async throws {
+        readAt[groupID] = .now
+        stream.continuation.yield()
+    }
+
+    func setChatMuted(_ isMuted: Bool, group id: UUID) async throws {
+        if isMuted { muted.insert(id) } else { muted.remove(id) }
+        stream.continuation.yield()
+    }
+
+    nonisolated func chatChanges(groupID: UUID) -> AsyncStream<Void> {
+        let (stream, continuation) = AsyncStream<Void>.makeStream()
+        Task { await addChatListener(continuation) }
+        return stream
+    }
+
+    private func addChatListener(_ continuation: AsyncStream<Void>.Continuation) {
+        chatListeners.append(continuation)
+    }
+
+    private func chatChanged() {
+        for listener in chatListeners { listener.yield() }
     }
 
     func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID {

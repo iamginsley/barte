@@ -16,6 +16,7 @@ struct GroupDetailView: View {
     @State private var settlementToDelete: Expense?
     @State private var showsInvite = false
     @State private var showsHistory = false
+    @State private var showsChat = false
     @State private var alertMessage: String?
     @State private var didAppear = false
 
@@ -31,7 +32,7 @@ struct GroupDetailView: View {
         let me = model.me(in: group.id)
         return List {
             Section {
-                GroupCard(group: group, me: me)
+                GroupCard(group: group, me: me, showsUnread: false)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
             }
@@ -95,6 +96,8 @@ struct GroupDetailView: View {
         .sheet(isPresented: $showsWhoAmI) { WhoAmISheet(group: group) }
         .sheet(isPresented: $showsInvite) { InviteSheet(groupID: group.id) }
         .sheet(isPresented: $showsHistory) { HistorySheet(group: group) }
+        .navigationDestination(isPresented: $showsChat) { ChatView(groupID: group.id) }
+        .onChange(of: model.pendingChatGroupID) { openPendingChat() }
         .confirmationDialog(
             canDelete(group) ? "Gruppe löschen?" : "Gruppe verlassen?",
             isPresented: $confirmsDelete,
@@ -189,6 +192,14 @@ struct GroupDetailView: View {
 
     @ToolbarContentBuilder
     private func toolbar(_ group: SplitGroup) -> some ToolbarContent {
+        // A chat needs someone to talk to: it shows up once a second person uses the app.
+        if group.isShared {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Chat", systemImage: "bubble.left.and.bubble.right") { showsChat = true }
+                    .badge(group.unreadMessages)
+                    .accessibilityValue(group.unreadMessages > 0 ? UnreadBadge.label(group.unreadMessages) : "")
+            }
+        }
         ToolbarItem(placement: .topBarTrailing) {
             Button("Einladen", systemImage: "person.crop.circle.badge.plus") { showsInvite = true }
         }
@@ -215,14 +226,23 @@ struct GroupDetailView: View {
     private func appear(_ group: SplitGroup, me: UUID?) {
         guard !didAppear else { return }
         didAppear = true
+        openPendingChat()
         guard model.isDemo else { return }
         switch DemoData.argument(after: "-BarteSheet") {
         case "settle": showsSettle = true
         case "expense": showsNewExpense = true
         case "invite": showsInvite = true
         case "history": showsHistory = true
+        case "chat": showsChat = true
         default: break
         }
+    }
+
+    /// A chat notification was tapped.
+    private func openPendingChat() {
+        guard model.pendingChatGroupID == groupID else { return }
+        model.pendingChatGroupID = nil
+        showsChat = true
     }
 
     private func perform(_ work: @escaping @Sendable (GroupRepository) async throws -> Void) async {

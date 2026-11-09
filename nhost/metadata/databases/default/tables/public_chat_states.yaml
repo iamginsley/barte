@@ -1,0 +1,14 @@
+# How far someone has read a group's chat and whether they muted it. Everyone sees only their own.
+table:
+  name: chat_states
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - group_id
+        - read_at
+        - muted
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id

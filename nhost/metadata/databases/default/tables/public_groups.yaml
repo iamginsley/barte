@@ -23,6 +23,28 @@ array_relationships:
         table:
           name: group_events
           schema: public
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          name: chat_messages
+          schema: public
+  # Only the caller's own row (permission on chat_states).
+  - name: chat_states
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          name: chat_states
+          schema: public
+computed_fields:
+  - name: unread_messages
+    definition:
+      function:
+        name: group_unread_messages
+        schema: public
+      session_argument: hasura_session
 select_permissions:
   - role: user
     permission:
@@ -35,6 +57,8 @@ select_permissions:
         - created_by
         - created_at
         - closed_at
+      computed_fields:
+        - unread_messages
       filter:
         members:
           user_id:
