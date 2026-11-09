@@ -389,17 +389,18 @@ actor DemoGroupRepository: GroupRepository {
         }
     }
 
-    func deleteGroup(_ id: UUID) async throws {
+    /// Like the server: no leaving with open amounts while others with the app are in; for the demo
+    /// person the group then disappears either way.
+    func leaveGroup(_ id: UUID) async throws {
+        guard let group = groups.first(where: { $0.id == id }) else { throw BarteError.server(hint: "not_member") }
+        guard group.canLeave(userID: DemoData.userID) else { throw BarteError.server(hint: "open_balance") }
         groups.removeAll { $0.id == id }
         stream.continuation.yield()
     }
 
-    func leaveGroup(_ id: UUID) async throws {
-        try await deleteGroup(id)
-    }
-
     func setClosed(_ closed: Bool, group id: UUID) async throws {
         try update(id) { group in
+            if closed && !group.isClosed && !group.isSettled { throw BarteError.server(hint: "open_balances") }
             group.closedAt = closed ? group.closedAt ?? .now : nil
         }
         log(closed ? .groupClosed : .groupReopened, in: id, subject: id, old: nil, new: nil)

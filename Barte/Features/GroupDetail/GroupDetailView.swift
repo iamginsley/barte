@@ -10,8 +10,7 @@ struct GroupDetailView: View {
     @State private var showsNewExpense = false
     @State private var showsSettle = false
     @State private var showsEdit = false
-    @State private var confirmsDelete = false
-    @State private var confirmsClose = false
+    @State private var confirmsLeave = false
     @State private var settlementToDelete: Expense?
     @State private var showsInvite = false
     @State private var showsHistory = false
@@ -96,21 +95,10 @@ struct GroupDetailView: View {
         .sheet(isPresented: $showsHistory) { HistorySheet(group: group) }
         .navigationDestination(isPresented: $showsChat) { ChatView(groupID: group.id) }
         .onChange(of: model.pendingChatGroupID) { openPendingChat() }
-        .confirmationDialog(
-            canDelete(group) ? String(localized: "Gruppe löschen?") : String(localized: "Gruppe verlassen?"),
-            isPresented: $confirmsDelete,
-            titleVisibility: .visible
-        ) {
-            Button(canDelete(group) ? String(localized: "Löschen") : String(localized: "Verlassen"), role: .destructive) {
-                Task { await removeGroup(group) }
-            }
+        .confirmationDialog("Gruppe verlassen?", isPresented: $confirmsLeave, titleVisibility: .visible) {
+            Button("Verlassen", role: .destructive) { Task { await leave(group) } }
         } message: {
-            Text(deleteMessage(group))
-        }
-        .confirmationDialog("Gruppe abschließen?", isPresented: $confirmsClose, titleVisibility: .visible) {
-            Button("Abschließen") { Task { await setClosed(true, group) } }
-        } message: {
-            Text("Noch sind nicht alle quitt. Die offenen Beträge zählen dann für niemanden mehr in der Übersicht. Du kannst die Gruppe jederzeit wieder öffnen.")
+            Text(leaveMessage(group))
         }
         .confirmationDialog("Ausgleich löschen?", isPresented: .init(
             get: { settlementToDelete != nil }, set: { if !$0 { settlementToDelete = nil } }
@@ -157,7 +145,7 @@ struct GroupDetailView: View {
                     .font(.body.weight(.medium))
                     .foregroundStyle(Color.positive)
                 Spacer(minLength: 8)
-                Button("Abschließen") { requestClose(group) }
+                Button("Abschließen") { Task { await setClosed(true, group) } }
                     .buttonStyle(.bordered)
                     .fixedSize()
                     .accessibilityHint("Legt die Gruppe für alle unter „Abgeschlossen“ ab")
@@ -205,13 +193,14 @@ struct GroupDetailView: View {
                 Button("Verlauf", systemImage: "clock.arrow.circlepath") { showsHistory = true }
                 if group.isClosed {
                     Button("Wieder öffnen", systemImage: "arrow.uturn.backward") { Task { await setClosed(false, group) } }
-                } else if !group.expenses.isEmpty {
-                    Button("Gruppe abschließen", systemImage: "archivebox") { requestClose(group) }
+                } else if !group.expenses.isEmpty && group.isSettled {
+                    // Only once everyone is square: open amounts must not vanish from the overview.
+                    Button("Gruppe abschließen", systemImage: "archivebox") { Task { await setClosed(true, group) } }
                 }
                 Divider()
-                Button(canDelete(group) ? "Gruppe löschen" : "Gruppe verlassen",
-                       systemImage: canDelete(group) ? "trash" : "rectangle.portrait.and.arrow.right",
-                       role: .destructive) { confirmsDelete = true }
+                Button("Gruppe verlassen", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
+                    requestLeave(group)
+                }
             }
         }
     }
@@ -244,14 +233,12 @@ struct GroupDetailView: View {
         if let message = await model.run(work) { alertMessage = message }
     }
 
-    private func canDelete(_ group: SplitGroup) -> Bool { group.canDelete(userID: model.userID) }
-
-    /// Closing a settled group needs no question; with open amounts it asks first.
-    private func requestClose(_ group: SplitGroup) {
-        if group.isSettled {
-            Task { await setClosed(true, group) }
+    /// With open amounts and others still in, leaving is explained instead of offered.
+    private func requestLeave(_ group: SplitGroup) {
+        if group.canLeave(userID: model.userID) {
+            confirmsLeave = true
         } else {
-            confirmsClose = true
+            alertMessage = BarteError.server(hint: "open_balance").errorDescription
         }
     }
 
@@ -262,23 +249,16 @@ struct GroupDetailView: View {
         await perform { try await $0.setClosed(closed, group: id) }
     }
 
-    private func removeGroup(_ group: SplitGroup) async {
+    private func leave(_ group: SplitGroup) async {
         let id = group.id
-        let deletes = canDelete(group)
         dismiss()
-        await perform { repository in
-            if deletes { try await repository.deleteGroup(id) } else { try await repository.leaveGroup(id) }
-        }
+        await perform { try await $0.leaveGroup(id) }
     }
 
-    private func deleteMessage(_ group: SplitGroup) -> String {
-        let others = group.members.contains { $0.usesApp && $0.userID != model.userID }
-        if !canDelete(group) {
-            return String(localized: "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen.")
-        }
-        return others
-            ? String(localized: "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast.")
-            : String(localized: "Alle Ausgaben dieser Gruppe werden gelöscht.")
+    private func leaveMessage(_ group: SplitGroup) -> String {
+        group.leavingDeletes(userID: model.userID)
+            ? String(localized: "Du bist die letzte Person mit Barte in dieser Gruppe. Wenn du gehst, wird sie mit allen Ausgaben gelöscht.")
+            : String(localized: "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen.")
     }
 
     struct Month { let title: String; let expenses: [Expense] }
