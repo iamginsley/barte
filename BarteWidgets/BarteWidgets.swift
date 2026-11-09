@@ -33,9 +33,9 @@ extension WidgetSnapshot {
         updatedAt: .now,
         totals: [.init(currency: "EUR", cents: 4200)],
         groups: [
-            .init(id: UUID(), name: "Skiurlaub", color: 0, currency: "EUR", balance: 6550),
-            .init(id: UUID(), name: "WG", color: 1, currency: "EUR", balance: -2590),
-            .init(id: UUID(), name: "Pizza-Abende", color: 5, currency: "EUR", balance: 240),
+            .init(id: UUID(), name: String(localized: "Skiurlaub", comment: "Widget gallery sample group"), color: 0, currency: "EUR", balance: 6550),
+            .init(id: UUID(), name: String(localized: "WG", comment: "Widget gallery sample group: a flat share"), color: 1, currency: "EUR", balance: -2590),
+            .init(id: UUID(), name: String(localized: "Pizza-Abende", comment: "Widget gallery sample group"), color: 5, currency: "EUR", balance: 240),
         ]
     )
 }

@@ -129,7 +129,7 @@ struct GroupsView: View {
                     .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
-                .accessibilityValue(showsClosed ? "Aufgeklappt" : "Zugeklappt")
+                .accessibilityValue(showsClosed ? String(localized: "Aufgeklappt") : String(localized: "Zugeklappt"))
                 .accessibilityHint("Zeigt Gruppen, die erledigt sind")
 
                 if showsClosed {

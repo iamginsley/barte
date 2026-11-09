@@ -16,7 +16,7 @@ struct AccountNameTests {
 
     @MainActor
     @Test func onlyTypedInNamesCanBeEditedInAGroup() async throws {
-        let group = try #require(DemoData.groups().first { $0.name == "Skiurlaub Saalbach" })
+        let group = try #require(DemoData.groups().first { $0.name == DemoData.Sample.skiTrip })
         let model = GroupEditorModel(group: group, me: group.me(userID: DemoData.userID))
         let fixed = model.rows.filter(\.isFixed).map(\.name)
         #expect(Set(fixed) == ["Dominik", "Anna", "Ben"])

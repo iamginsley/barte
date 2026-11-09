@@ -6,7 +6,7 @@ struct UserFacingError: Error {
     let message: String
 
     init(_ error: Error) {
-        message = BarteError.from(error).errorDescription ?? "Das hat nicht geklappt."
+        message = BarteError.from(error).errorDescription ?? String(localized: "Das hat nicht geklappt.")
     }
 }
 

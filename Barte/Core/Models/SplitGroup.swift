@@ -8,15 +8,15 @@ enum CardColor: Int, CaseIterable, Identifiable, Sendable {
 
     var name: String {
         switch self {
-        case .blue: "Blau"
-        case .indigo: "Indigo"
-        case .purple: "Lila"
-        case .pink: "Pink"
-        case .red: "Rot"
-        case .orange: "Orange"
-        case .green: "Grün"
-        case .teal: "Türkis"
-        case .graphite: "Graphit"
+        case .blue: String(localized: "Blau", comment: "Card color")
+        case .indigo: String(localized: "Indigo", comment: "Card color")
+        case .purple: String(localized: "Lila", comment: "Card color")
+        case .pink: String(localized: "Pink", comment: "Card color")
+        case .red: String(localized: "Rot", comment: "Card color")
+        case .orange: String(localized: "Orange", comment: "Card color")
+        case .green: String(localized: "Grün", comment: "Card color")
+        case .teal: String(localized: "Türkis", comment: "Card color")
+        case .graphite: String(localized: "Graphit", comment: "Card color")
         }
     }
 }
@@ -85,7 +85,7 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     }
 
     func name(of id: UUID, me: UUID?) -> String {
-        id == me ? "Du" : member(id)?.name ?? "Unbekannt"
+        id == me ? String(localized: "Du", comment: "Me, as payer or recipient of a settlement") : member(id)?.name ?? String(localized: "Unbekannt", comment: "A person who is no longer in the group")
     }
 
     /// Whether a member appears in any expense (then they cannot be removed).

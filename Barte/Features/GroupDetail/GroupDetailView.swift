@@ -97,11 +97,11 @@ struct GroupDetailView: View {
         .navigationDestination(isPresented: $showsChat) { ChatView(groupID: group.id) }
         .onChange(of: model.pendingChatGroupID) { openPendingChat() }
         .confirmationDialog(
-            canDelete(group) ? "Gruppe löschen?" : "Gruppe verlassen?",
+            canDelete(group) ? String(localized: "Gruppe löschen?") : String(localized: "Gruppe verlassen?"),
             isPresented: $confirmsDelete,
             titleVisibility: .visible
         ) {
-            Button(canDelete(group) ? "Löschen" : "Verlassen", role: .destructive) {
+            Button(canDelete(group) ? String(localized: "Löschen") : String(localized: "Verlassen"), role: .destructive) {
                 Task { await removeGroup(group) }
             }
         } message: {
@@ -177,7 +177,7 @@ struct GroupDetailView: View {
                     Label("Ausgleichen", systemImage: "arrow.left.arrow.right")
                         .font(.body.weight(.semibold))
                     Spacer()
-                    Text(count == 1 ? "1 Überweisung" : "\(count) Überweisungen")
+                    Text("\(count) Überweisungen", comment: "Number of transfers, with plural variants")
                         .foregroundStyle(Color.inkSecondary)
                     Image(systemName: "chevron.right")
                         .font(.footnote.weight(.semibold))
@@ -274,11 +274,11 @@ struct GroupDetailView: View {
     private func deleteMessage(_ group: SplitGroup) -> String {
         let others = group.members.contains { $0.usesApp && $0.userID != model.userID }
         if !canDelete(group) {
-            return "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen."
+            return String(localized: "Die Gruppe verschwindet bei dir. Die anderen behalten sie, dein Name bleibt in den Ausgaben stehen.")
         }
         return others
-            ? "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast."
-            : "Alle Ausgaben dieser Gruppe werden gelöscht."
+            ? String(localized: "Die Gruppe wird für alle gelöscht, auch für die, die du eingeladen hast.")
+            : String(localized: "Alle Ausgaben dieser Gruppe werden gelöscht.")
     }
 
     struct Month { let title: String; let expenses: [Expense] }
@@ -315,7 +315,7 @@ struct ExpenseRow: View {
                 .background(expense.isSettlement ? Color.positive : group.color.tint, in: .rect(cornerRadius: 11, style: .continuous))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(expense.isSettlement ? "Ausgleich" : expense.title)
+                Text(expense.isSettlement ? String(localized: "Ausgleich", comment: "A payment that settles a debt") : expense.title)
                     .font(.body)
                     .lineLimit(2)
                 Text(subtitle)
@@ -343,10 +343,12 @@ struct ExpenseRow: View {
             let to = expense.participantIDs.first.map { group.name(of: $0, me: me) } ?? "?"
             return "\(group.name(of: expense.payerID, me: me)) → \(to) · \(day)"
         }
-        let payer = expense.payerID == me ? "dir" : group.member(expense.payerID)?.name ?? "?"
+        let paid = expense.payerID == me
+            ? String(localized: "von dir · \(day)", comment: "Expense row: I paid, on this day")
+            : String(localized: "von \(group.member(expense.payerID)?.name ?? "?") · \(day)", comment: "Expense row: who paid, on this day")
         // Edits are part of the history; the row says so, the details are one tap away.
-        let edited = group.editedExpenseIDs.contains(expense.id) ? " · bearbeitet" : ""
-        return "von \(payer) · \(day)\(edited)"
+        guard group.editedExpenseIDs.contains(expense.id) else { return paid }
+        return "\(paid) · \(String(localized: "bearbeitet", comment: "Expense row: the expense was edited"))"
     }
 
     private var impact: (text: String, color: Color)? {
@@ -354,9 +356,11 @@ struct ExpenseRow: View {
         let share = expense.shares[me] ?? 0
         if expense.payerID == me {
             let lent = expense.amountCents - share
-            return lent > 0 ? ("du bekommst \(Money.format(lent, currency: group.currency))", .positive) : ("nur für dich", .inkSecondary)
+            return lent > 0
+                ? (String(localized: "du bekommst \(Money.format(lent, currency: group.currency))"), .positive)
+                : (String(localized: "nur für dich"), .inkSecondary)
         }
-        if share > 0 { return ("dein Anteil \(Money.format(share, currency: group.currency))", .negative) }
-        return ("nicht beteiligt", .inkSecondary)
+        if share > 0 { return (String(localized: "dein Anteil \(Money.format(share, currency: group.currency))"), .negative) }
+        return (String(localized: "nicht beteiligt"), .inkSecondary)
     }
 }

@@ -66,11 +66,11 @@ struct ChatView: View {
         .toolbar {
             if group.isShared {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(group.chatMuted ? "Mitteilungen einschalten" : "Stummschalten",
+                Button(group.chatMuted ? String(localized: "Mitteilungen einschalten") : String(localized: "Stummschalten"),
                        systemImage: group.chatMuted ? "bell.slash" : "bell") {
                     Task { await toggleMute(group) }
                 }
-                .accessibilityValue(group.chatMuted ? "Stumm" : "Mitteilungen an")
+                .accessibilityValue(group.chatMuted ? String(localized: "Stumm") : String(localized: "Mitteilungen an"))
             }
             }
         }
@@ -121,7 +121,7 @@ struct ChatView: View {
     /// Nobody else in the group uses the app yet: nothing to write to, so the way there instead.
     private func lonely(_ group: SplitGroup) -> some View {
         let others = group.members.filter { $0.userID != app.userID }.map(\.name)
-        let names = others.count <= 2 ? others.formatted(.list(type: .and)) : "die anderen"
+        let names = others.count <= 2 ? others.formatted(.list(type: .and)) : String(localized: "die anderen", comment: "Chat: invite the others (more than two people)")
         return VStack(spacing: 12) {
             Image(systemName: "bubble.left.and.bubble.right.fill")
                 .font(.largeTitle)
@@ -130,8 +130,8 @@ struct ChatView: View {
             Text("Noch schreibt niemand mit")
                 .font(.title3.weight(.semibold))
             Text(others.isEmpty
-                 ? "Lade jemanden in „\(group.name)“ ein, dann könnt ihr hier schreiben. Neue und geänderte Ausgaben erscheinen automatisch dazwischen."
-                 : "Lade \(names) ein, dann könnt ihr hier schreiben und bekommt Mitteilungen. Neue und geänderte Ausgaben erscheinen automatisch dazwischen.")
+                 ? String(localized: "Lade jemanden in „\(group.name)“ ein, dann könnt ihr hier schreiben. Neue und geänderte Ausgaben erscheinen automatisch dazwischen.")
+                 : String(localized: "Lade \(names) ein, dann könnt ihr hier schreiben und bekommt Mitteilungen. Neue und geänderte Ausgaben erscheinen automatisch dazwischen."))
                 .font(.subheadline)
                 .foregroundStyle(Color.inkSecondary)
                 .multilineTextAlignment(.center)
@@ -286,7 +286,7 @@ private struct MessageRow: View {
 
     private var message: ChatMessage { bubble.message }
     private var authorName: String {
-        message.memberID.flatMap { group.member($0)?.name } ?? "Entfernte Person"
+        message.memberID.flatMap { group.member($0)?.name } ?? String(localized: "Entfernte Person")
     }
 
     var body: some View {
@@ -392,8 +392,8 @@ private struct MessageRow: View {
     }
 
     private var accessibilityText: String {
-        var parts = [bubble.isMine ? "Du" : authorName]
-        if let expense { parts.append("zu „\(expense.title)“") }
+        var parts = [bubble.isMine ? String(localized: "Du", comment: "VoiceOver: author of my own chat message") : authorName]
+        if let expense { parts.append(String(localized: "zu „\(expense.title)“", comment: "VoiceOver: a chat message about an expense")) }
         parts.append(message.body ?? "")
         parts.append(message.createdAt.formatted(.dateTime.hour().minute()))
         return parts.joined(separator: ", ")

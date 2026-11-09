@@ -118,7 +118,7 @@ struct JoinSheet: View {
                         MemberAvatar(name: model.newName, isMe: model.choice == .new, size: 30)
                     }
                     if model.hasAccountName {
-                        Text(open.isEmpty ? model.newName : "Nicht dabei: neu als \(model.newName)")
+                        Text(open.isEmpty ? model.newName : String(localized: "Nicht dabei: neu als \(model.newName)"))
                     } else {
                         TextField(open.isEmpty ? "Dein Name" : "Nicht dabei? Dein Name", text: $model.newName)
                             .textContentType(.givenName)

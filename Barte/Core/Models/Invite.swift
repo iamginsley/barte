@@ -12,7 +12,7 @@ enum InviteLink {
     }
 
     static func message(groupName: String, code: String) -> String {
-        "Komm in meine Gruppe „\(groupName)“ bei Barte, dann tragen wir alle Ausgaben gemeinsam ein. Code: \(code)"
+        String(localized: "Komm in meine Gruppe „\(groupName)“ bei Barte, dann tragen wir alle Ausgaben gemeinsam ein. Code: \(code)")
     }
 
     /// The code from `barte://join/ABCD2345`, the web link, or a code typed in by hand.

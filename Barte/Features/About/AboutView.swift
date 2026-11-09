@@ -15,7 +15,7 @@ struct AboutView: View {
     @State private var errorMessage: String?
     @Environment(AppModel.self) private var app
 
-    private static let privacyURL = URL(string: "https://iamginsley.github.io/barte/datenschutz")!
+    private static var privacyURL: URL { Legal.privacyPolicy }
     private static let contactURL = URL(string: "mailto:dominik.gintsberger@outlook.de?subject=Barte")!
 
     var body: some View {
@@ -28,7 +28,7 @@ struct AboutView: View {
                             .accessibilityAddTraits(.isButton)
                         Text("Barte")
                             .font(.system(.title, design: .rounded, weight: .bold))
-                        Text(taps >= 7 ? "Bar + Karte = Barte. Jetzt aber zurück zum Ausgleichen!" : "Ausgaben teilen, ohne Rechnerei.")
+                        Text(taps >= 7 ? String(localized: "Bar + Karte = Barte. Jetzt aber zurück zum Ausgleichen!") : String(localized: "Ausgaben teilen, ohne Rechnerei."))
                             .font(.subheadline)
                             .foregroundStyle(Color.inkSecondary)
                             .multilineTextAlignment(.center)
@@ -146,7 +146,7 @@ struct AboutView: View {
         case (_?, _?): "PayPal, IBAN"
         case (_?, nil): "PayPal"
         case (nil, _?): "IBAN"
-        default: "Keine"
+        default: String(localized: "Keine", comment: "No payment details saved")
         }
     }
 
@@ -175,7 +175,7 @@ struct AboutView: View {
         }
     }
 
-    private func explanation(_ number: String, _ text: String) -> some View {
+    private func explanation(_ number: String, _ text: LocalizedStringKey) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text(number)
                 .font(.system(.subheadline, design: .rounded, weight: .bold))

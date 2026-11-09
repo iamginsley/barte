@@ -56,21 +56,25 @@ struct GroupEvent: Identifiable, Hashable, Sendable {
 // MARK: - Wording
 
 extension GroupEvent {
-    /// "Anna hat „Pizza“ geändert", plus one line per detail ("Betrag: 42,00 € → 24,00 €").
+    /// "Anna hat „Pizza“ geändert", plus one line per detail ("Betrag: 42,00 € → 24,00 €"), in the device language.
     struct Wording: Equatable {
         let headline: String
         let details: [String]
     }
 
     func text(in group: SplitGroup, userID: UUID?) -> Wording {
-        let who = actorID != nil && actorID == userID ? "Du hast" : "\(actorName ?? "Jemand") hat"
+        let mine = actorID != nil && actorID == userID
+        let actor = actorName ?? String(localized: "Jemand", comment: "History: unknown person who made a change")
         let money = { (cents: Int?) in cents.map { Money.format($0, currency: group.currency) } ?? "?" }
-        let name = { (id: UUID?) in id.flatMap { group.member($0)?.name } ?? "Entfernte Person" }
+        let name = { (id: UUID?) in id.flatMap { group.member($0)?.name } ?? String(localized: "Entfernte Person") }
         let names = { (ids: [UUID]?) in
             let ids = ids ?? []
-            return group.members.count > 2 && Set(ids) == Set(group.members.map(\.id)) ? "alle" : ids.map(name).joined(separator: ", ")
+            return group.members.count > 2 && Set(ids) == Set(group.members.map(\.id))
+                ? String(localized: "alle", comment: "History: an expense for everyone in the group")
+                : ids.map(name).joined(separator: ", ")
         }
-        let quoted = { (title: String?) in "„\(title ?? "?")“" }
+        let quoted = { (title: String?) in String(localized: "„\(title ?? "?")“", comment: "A quoted expense title") }
+        let someone = String(localized: "jemanden", comment: "History: an unnamed person was added or removed")
 
         /// Amount, who paid and for whom: what an expense was.
         func summary(_ s: Snapshot?) -> [String] {
@@ -78,56 +82,80 @@ extension GroupEvent {
             if s.isSettlement == true {
                 return ["\(name(s.payerID)) → \(name(s.participantIDs?.first)) · \(money(s.amountCents))"]
             }
-            return ["\(money(s.amountCents)) · bezahlt von \(name(s.payerID))", "für \(names(s.participantIDs))"]
+            return [
+                String(localized: "\(money(s.amountCents)) · bezahlt von \(name(s.payerID))"),
+                String(localized: "für \(names(s.participantIDs))", comment: "History: for whom an expense was"),
+            ]
         }
 
         switch kind {
         case .expenseAdded:
-            return Wording(headline: "\(who) \(quoted(new?.title)) eingetragen", details: summary(new))
+            let title = quoted(new?.title)
+            return Wording(headline: mine ? String(localized: "Du hast \(title) eingetragen") : String(localized: "\(actor) hat \(title) eingetragen"),
+                           details: summary(new))
         case .expenseDeleted:
-            return Wording(headline: "\(who) \(quoted(old?.title)) gelöscht", details: summary(old))
+            let title = quoted(old?.title)
+            return Wording(headline: mine ? String(localized: "Du hast \(title) gelöscht") : String(localized: "\(actor) hat \(title) gelöscht"),
+                           details: summary(old))
         case .settlementAdded:
-            return Wording(headline: "\(who) einen Ausgleich verbucht", details: summary(new))
+            return Wording(headline: mine ? String(localized: "Du hast einen Ausgleich verbucht") : String(localized: "\(actor) hat einen Ausgleich verbucht"),
+                           details: summary(new))
         case .settlementDeleted:
-            return Wording(headline: "\(who) einen Ausgleich gelöscht", details: summary(old))
+            return Wording(headline: mine ? String(localized: "Du hast einen Ausgleich gelöscht") : String(localized: "\(actor) hat einen Ausgleich gelöscht"),
+                           details: summary(old))
         case .expenseChanged:
-            guard let old, let new else { return Wording(headline: "\(who) eine Ausgabe geändert", details: []) }
-            var details: [String] = []
-            if old.title != new.title { details.append("Titel: \(quoted(old.title)) → \(quoted(new.title))") }
-            if old.amountCents != new.amountCents { details.append("Betrag: \(money(old.amountCents)) → \(money(new.amountCents))") }
-            if old.payerID != new.payerID { details.append("Bezahlt von: \(name(old.payerID)) → \(name(new.payerID))") }
-            if Set(old.participantIDs ?? []) != Set(new.participantIDs ?? []) {
-                details.append("Für: \(names(old.participantIDs)) → \(names(new.participantIDs))")
-            } else if old.splitKind != new.splitKind || old.splitValues != new.splitValues {
-                details.append("Aufteilung: \(splitName(old.splitKind)) → \(splitName(new.splitKind))")
+            guard let old, let new else {
+                return Wording(headline: mine ? String(localized: "Du hast eine Ausgabe geändert") : String(localized: "\(actor) hat eine Ausgabe geändert"),
+                               details: [])
             }
-            if old.spentOn != new.spentOn { details.append("Datum: \(day(old.spentOn)) → \(day(new.spentOn))") }
-            return Wording(headline: "\(who) \(quoted(new.title)) geändert", details: details)
+            var details: [String] = []
+            if old.title != new.title { details.append(String(localized: "Titel: \(quoted(old.title)) → \(quoted(new.title))")) }
+            if old.amountCents != new.amountCents { details.append(String(localized: "Betrag: \(money(old.amountCents)) → \(money(new.amountCents))")) }
+            if old.payerID != new.payerID { details.append(String(localized: "Bezahlt von: \(name(old.payerID)) → \(name(new.payerID))")) }
+            if Set(old.participantIDs ?? []) != Set(new.participantIDs ?? []) {
+                details.append(String(localized: "Für: \(names(old.participantIDs)) → \(names(new.participantIDs))"))
+            } else if old.splitKind != new.splitKind || old.splitValues != new.splitValues {
+                details.append(String(localized: "Aufteilung: \(splitName(old.splitKind)) → \(splitName(new.splitKind))"))
+            }
+            if old.spentOn != new.spentOn { details.append(String(localized: "Datum: \(day(old.spentOn)) → \(day(new.spentOn))")) }
+            let title = quoted(new.title)
+            return Wording(headline: mine ? String(localized: "Du hast \(title) geändert") : String(localized: "\(actor) hat \(title) geändert"),
+                           details: details)
         case .groupUpdated:
             var details: [String] = []
-            if old?.name != new?.name { details.append("Name: \(old?.name ?? "?") → \(new?.name ?? "?")") }
-            if old?.currency != new?.currency { details.append("Währung: \(old?.currency ?? "?") → \(new?.currency ?? "?")") }
-            return Wording(headline: "\(who) die Gruppe bearbeitet", details: details)
+            if old?.name != new?.name { details.append(String(localized: "Name: \(old?.name ?? "?") → \(new?.name ?? "?")")) }
+            if old?.currency != new?.currency { details.append(String(localized: "Währung: \(old?.currency ?? "?") → \(new?.currency ?? "?")")) }
+            return Wording(headline: mine ? String(localized: "Du hast die Gruppe bearbeitet") : String(localized: "\(actor) hat die Gruppe bearbeitet"),
+                           details: details)
         case .groupClosed:
-            return Wording(headline: "\(who) die Gruppe abgeschlossen", details: [])
+            return Wording(headline: mine ? String(localized: "Du hast die Gruppe abgeschlossen") : String(localized: "\(actor) hat die Gruppe abgeschlossen"),
+                           details: [])
         case .groupReopened:
-            return Wording(headline: "\(who) die Gruppe wieder geöffnet", details: [])
+            return Wording(headline: mine ? String(localized: "Du hast die Gruppe wieder geöffnet") : String(localized: "\(actor) hat die Gruppe wieder geöffnet"),
+                           details: [])
         case .memberAdded:
-            return Wording(headline: "\(who) \(new?.name ?? "jemanden") hinzugefügt", details: [])
+            let person = new?.name ?? someone
+            return Wording(headline: mine ? String(localized: "Du hast \(person) hinzugefügt") : String(localized: "\(actor) hat \(person) hinzugefügt"),
+                           details: [])
         case .memberRenamed:
-            return Wording(headline: "\(who) \(old?.name ?? "?") in \(new?.name ?? "?") umbenannt", details: [])
+            let from = old?.name ?? "?", to = new?.name ?? "?"
+            return Wording(headline: mine ? String(localized: "Du hast \(from) in \(to) umbenannt") : String(localized: "\(actor) hat \(from) in \(to) umbenannt"),
+                           details: [])
         case .memberRemoved:
-            return Wording(headline: "\(who) \(old?.name ?? "jemanden") entfernt", details: [])
+            let person = old?.name ?? someone
+            return Wording(headline: mine ? String(localized: "Du hast \(person) entfernt") : String(localized: "\(actor) hat \(person) entfernt"),
+                           details: [])
         case .unknown:
-            return Wording(headline: "\(who) etwas geändert", details: [])
+            return Wording(headline: mine ? String(localized: "Du hast etwas geändert") : String(localized: "\(actor) hat etwas geändert"),
+                           details: [])
         }
     }
 
     private func splitName(_ kind: String?) -> String {
         switch kind {
-        case "shares": "nach Anteilen"
-        case "exact": "feste Beträge"
-        default: "gleichmäßig"
+        case "shares": String(localized: "nach Anteilen", comment: "History: split kind")
+        case "exact": String(localized: "feste Beträge", comment: "History: split kind")
+        default: String(localized: "gleichmäßig", comment: "History: split kind")
         }
     }
 
