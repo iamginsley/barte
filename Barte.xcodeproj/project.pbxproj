@@ -21,6 +21,7 @@
 		2C13836BE12234DF42062517 /* ExpenseIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6181B09FEA986465B97CF5A8 /* ExpenseIcon.swift */; };
 		2E1E298E410D53BDF975E553 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8331077E0535884A22CB08F /* AppDelegate.swift */; };
 		30970F009773D7C626104940 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD7E8FAA874AD3AD11C693 /* SignInViewModel.swift */; };
+		31BBD6139319696A548468DA /* CurrencyLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CF57E0D9F5278A19CF0F1D /* CurrencyLockTests.swift */; };
 		36C30A5179FA23E3E762BAA2 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C250BC52F146572F356D78 /* WidgetSnapshot.swift */; };
 		414CF9027973560C983698C4 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
 		4796451C2E81661F65622418 /* BarteWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -141,6 +142,7 @@
 		79B193C6E434151831365ED1 /* GroupEditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEditorModel.swift; sourceTree = "<group>"; };
 		7ED9AC8E3C519BEA267D3390 /* GroupRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRepository.swift; sourceTree = "<group>"; };
 		8455D96187B57EDABDBC2F55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		85CF57E0D9F5278A19CF0F1D /* CurrencyLockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyLockTests.swift; sourceTree = "<group>"; };
 		89DAAD7867B182D9084D1F53 /* WidgetSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSync.swift; sourceTree = "<group>"; };
 		8B519AB4E206BA055D174A5F /* BarteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BarteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B2BBE6996A48CBCED9D623 /* BarteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarteApp.swift; sourceTree = "<group>"; };
@@ -406,6 +408,7 @@
 			children = (
 				220D32C3C14648624195EE53 /* AccountNameTests.swift */,
 				D956425CB86E8BCE289BEE4C /* ChatTests.swift */,
+				85CF57E0D9F5278A19CF0F1D /* CurrencyLockTests.swift */,
 				477AC025359D480EB93BCB9C /* GroupEventTests.swift */,
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
 				3909B49D515E86B76403FAB2 /* LedgerTests.swift */,
@@ -651,6 +654,7 @@
 			files = (
 				95BCBAB2FA5450E7EE541A44 /* AccountNameTests.swift in Sources */,
 				FF251D0FE9A53DBDBF4D0F8F /* ChatTests.swift in Sources */,
+				31BBD6139319696A548468DA /* CurrencyLockTests.swift in Sources */,
 				1DE1558A5A53002FADAD729D /* GroupEventTests.swift in Sources */,
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,
 				D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */,
