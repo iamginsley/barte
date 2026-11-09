@@ -146,7 +146,7 @@ try {
   await call(b, "mark_chat_read", { p_group_id: group });
   check((await unread(b))?.unread_messages === 0, "mark_chat_read clears it");
   await call(b, "set_chat_muted", { p_group_id: group, p_muted: true });
-  check((await unread(b))?.chat_states[0]?.muted === true && (await unread(a))?.chat_states.length === 0, "muting is per person and private");
+  check((await unread(b))?.chat_states[0]?.muted === true && (await unread(a))?.chat_states.every((s) => !s.muted), "muting is per person and private");
   await fails(call(c, "send_message", { p_id: randomUUID(), p_group_id: group, p_body: "Hi", p_expense_id: null }), "not_member", "outsider cannot write");
   await fails(call(b, "delete_message", { p_id: messageID }), "message_not_found", "B cannot delete A's message");
   const forgedMessage = await gql(b, `mutation { insert_chat_messages_one(object: { id: "${randomUUID()}", group_id: "${group}", author_id: "${a}", body: "fake" }) { id } }`);
