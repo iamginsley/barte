@@ -133,6 +133,14 @@ try {
   const erased = await gql(a, `mutation { delete_group_events(where: {}) { affected_rows } }`);
   check(Boolean(erased.errors), "nobody can erase history");
 
+  // Account names: the same in every group, app users can't be renamed by others.
+  await call(b, "set_my_name", { p_name: "Benjamin" });
+  const names = (await gql(a, groupsQuery)).data.groups[0].members.map((m) => m.name);
+  check(names.includes("Benjamin") && !names.includes("Ben"), "B's account name shows in the group");
+  const benID = (await gql(a, groupsQuery)).data.groups[0].members.find((m) => m.user_id === b).id;
+  await fails(call(a, "rename_member", { p_member_id: benID, p_name: "X" }), "member_linked", "nobody renames an app user");
+  check((await call(b, "sync_my_name", { p_fallback: "Ben" })).code === "Benjamin", "sync_my_name returns the account name");
+
   // Chat: members write and read, unread counts per person, outsiders see nothing.
   const messageID = randomUUID();
   await call(a, "send_message", { p_id: messageID, p_group_id: group, p_body: "  Wer hat Bargeld?  ", p_expense_id: null });

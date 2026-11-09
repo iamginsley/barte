@@ -47,6 +47,7 @@
 		8D24D0D7D2DB55852EFC78CF /* GroupEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF83B32F1F1A14151E57FFE /* GroupEditorSheet.swift */; };
 		8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72919225A511CF3BEABFF20E /* SplitGroup.swift */; };
 		8FC05A23C8F0CF51228F28B0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = ADACD81F8F846A944C9F702F /* AppIcon.icon */; };
+		95BCBAB2FA5450E7EE541A44 /* AccountNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220D32C3C14648624195EE53 /* AccountNameTests.swift */; };
 		97D1E8BD833269D810937705 /* SplitModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56AD0E8779F63BD28B74EE0 /* SplitModeTests.swift */; };
 		982B6053768E2AE5124EC58B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0211324505177E7B775948 /* SignInView.swift */; };
 		A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8455D96187B57EDABDBC2F55 /* Theme.swift */; };
@@ -56,7 +57,6 @@
 		BC75D7418369CDE98FB94FFB /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E327F2799EF74336CCF6DA /* Money.swift */; };
 		C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */; };
 		CE41BFE03C63812A131DF6F1 /* WidgetAndLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7965253B6D373C9130DBFE6C /* WidgetAndLinkTests.swift */; };
-		D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF4BE01897FD753519138AF /* WhoAmISheet.swift */; };
 		D86C5255BB0A5CF35646B1CF /* MemberAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E717002048274CB18A03413 /* MemberAvatar.swift */; };
 		D9C7D90F943C56D33437A521 /* LedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909B49D515E86B76403FAB2 /* LedgerTests.swift */; };
 		DB65EFE94CDB440EF35B1C14 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CC263F664096A440BB76B /* DemoData.swift */; };
@@ -115,6 +115,7 @@
 		0E717002048274CB18A03413 /* MemberAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAvatar.swift; sourceTree = "<group>"; };
 		12A8AEC534DABD9DE65E7FF0 /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		20901C1AE3DBAD3A7FBA1312 /* HistorySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySheet.swift; sourceTree = "<group>"; };
+		220D32C3C14648624195EE53 /* AccountNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountNameTests.swift; sourceTree = "<group>"; };
 		24C250BC52F146572F356D78 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		288FCA82E772921CF8DFF32E /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		2AC77A98173AD0934686C779 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
@@ -125,7 +126,6 @@
 		3AB3CD302EEE5E1C3EC9CCC4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3C2C7D89341BF6B2C68C3CF4 /* BarteWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = BarteWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1EFB70DFDDC97A1DFC2261 /* Barte.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Barte.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3EF4BE01897FD753519138AF /* WhoAmISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhoAmISheet.swift; sourceTree = "<group>"; };
 		41EC235A4715776991373586 /* PaymentDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailsTests.swift; sourceTree = "<group>"; };
 		4258DD07CEED97267C50436A /* BalanceWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceWidget.swift; sourceTree = "<group>"; };
 		477AC025359D480EB93BCB9C /* GroupEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEventTests.swift; sourceTree = "<group>"; };
@@ -196,7 +196,6 @@
 			children = (
 				DEED078948C81E4D89678841 /* GroupDetailView.swift */,
 				2CAA61D9562A4EDD55FF1FE7 /* InviteSheet.swift */,
-				3EF4BE01897FD753519138AF /* WhoAmISheet.swift */,
 			);
 			path = GroupDetail;
 			sourceTree = "<group>";
@@ -405,6 +404,7 @@
 		E807992DF7C4784E726B71AD /* BarteTests */ = {
 			isa = PBXGroup;
 			children = (
+				220D32C3C14648624195EE53 /* AccountNameTests.swift */,
 				D956425CB86E8BCE289BEE4C /* ChatTests.swift */,
 				477AC025359D480EB93BCB9C /* GroupEventTests.swift */,
 				9F99CB0596B4478769FC6FFF /* InviteAndDayTests.swift */,
@@ -640,7 +640,6 @@
 				30970F009773D7C626104940 /* SignInViewModel.swift in Sources */,
 				8D68E35D47E9608C3029FB01 /* SplitGroup.swift in Sources */,
 				A29ADBB1DE1DAFC07831F563 /* Theme.swift in Sources */,
-				D6DB00ACA15B7101CD319592 /* WhoAmISheet.swift in Sources */,
 				36C30A5179FA23E3E762BAA2 /* WidgetSnapshot.swift in Sources */,
 				EEC3C6A34E0FF5280DA86D75 /* WidgetSync.swift in Sources */,
 			);
@@ -650,6 +649,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95BCBAB2FA5450E7EE541A44 /* AccountNameTests.swift in Sources */,
 				FF251D0FE9A53DBDBF4D0F8F /* ChatTests.swift in Sources */,
 				1DE1558A5A53002FADAD729D /* GroupEventTests.swift in Sources */,
 				C962E91B970B0FF91C49DF29 /* InviteAndDayTests.swift in Sources */,

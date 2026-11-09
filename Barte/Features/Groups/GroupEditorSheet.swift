@@ -55,14 +55,19 @@ struct GroupEditorSheet: View {
                 ForEach($model.rows) { $row in
                     HStack(spacing: 12) {
                         MemberAvatar(name: row.name, isMe: row.isMe, size: 30)
-                        TextField(row.isMe ? "Dein Name" : "Name", text: $row.name)
-                            .textContentType(row.isMe ? .givenName : nil)
-                            .focused($focusedRow, equals: row.id)
-                            .submitLabel(.next)
-                            .onSubmit {
-                                if row.id == model.rows.last?.id, !row.name.isEmpty { model.addRow() }
-                                focusedRow = model.rows.last?.id
-                            }
+                        if row.isFixed {
+                            Text(row.name)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        } else {
+                            TextField(row.isMe ? "Dein Name" : "Name", text: $row.name)
+                                .textContentType(row.isMe ? .givenName : nil)
+                                .focused($focusedRow, equals: row.id)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    if row.id == model.rows.last?.id, !row.name.isEmpty { model.addRow() }
+                                    focusedRow = model.rows.last?.id
+                                }
+                        }
                         if row.isMe {
                             Text("Ich")
                                 .font(.caption.weight(.semibold))
@@ -87,7 +92,7 @@ struct GroupEditorSheet: View {
             } footer: {
                 Text(model.isNew
                      ? "Freund:innen brauchen die App nicht. Lade sie später mit einem Link ein, dann tragen alle selbst Ausgaben ein."
-                     : "Personen, die in Ausgaben vorkommen oder Barte selbst nutzen, lassen sich nicht entfernen.")
+                     : "Wer Barte nutzt, heißt überall wie im eigenen Konto. Personen, die in Ausgaben vorkommen oder Barte nutzen, lassen sich nicht entfernen.")
             }
         }
         .scrollDismissesKeyboard(.interactively)

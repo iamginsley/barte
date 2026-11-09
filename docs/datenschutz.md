@@ -19,7 +19,8 @@ Barte ist eine kostenlose iOS-App, mit der du Ausgaben mit Freund:innen teilst. 
 
 - **Konto:** eine zufällige Benutzer-ID und die E-Mail-Adresse, die Apple bei der Anmeldung übermittelt. Wenn du „E-Mail-Adresse verbergen“ wählst, ist das eine anonyme Weiterleitungsadresse von Apple. Die E-Mail-Adresse wird nur für die Anmeldung genutzt, Barte schreibt dir keine E-Mails.
 - **Gruppen:** Name, Farbe, Währung und ein Einladungscode
-- **Personen:** die Namen, die ihr in einer Gruppe eintragt, und bei Personen, die Barte nutzen, die Verknüpfung mit ihrer Benutzer-ID
+- **Dein Name:** der Name deines Kontos (bei der Anmeldung dein Vorname von Apple, änderbar unter „Über Barte“). Er erscheint in allen Gruppen, in denen du bist
+- **Personen:** die Namen, die ihr für Personen ohne Barte in einer Gruppe eintragt, und bei Personen, die Barte nutzen, die Verknüpfung mit ihrer Benutzer-ID
 - **Ausgaben:** Titel, Betrag, Tag, wer bezahlt hat, für wen und wie aufgeteilt wird
 - **Verlauf:** wer in einer Gruppe wann eine Ausgabe eingetragen, geändert oder gelöscht hat, mit den Werten vorher und nachher, außerdem Umbenennungen und das Abschließen einer Gruppe. Der Verlauf schützt alle in der Gruppe vor unbemerkten Änderungen; er lässt sich deshalb nicht bearbeiten und wird erst mit der Gruppe gelöscht
 - **Zahlungsdaten (freiwillig):** dein PayPal.me-Name sowie IBAN und Kontoinhaber:in, wenn du sie unter „Zahlungsdaten“ einträgst. Barte zeigt sie beim Ausgleichen, damit dir andere direkt zahlen können. Barte selbst wickelt keine Zahlungen ab; ein Tipp auf „PayPal“ öffnet paypal.me mit dem Betrag.

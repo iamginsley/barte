@@ -16,9 +16,10 @@ Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **
 | **Ausgaben** | Betrag, Titel mit automatischem Symbol („Pizza“ → Besteck), wer bezahlt hat, gleichmäßig auf alle oder ausgewählte Personen, Datum, Vorschau des Anteils pro Person |
 | **Ausgleichen** | Salden pro Person und die **wenigsten Überweisungen**, mit denen alle quitt sind; „Bezahlt“ verbucht einen Ausgleich |
 | **Abschließen** | Wenn alle quitt sind, die Gruppe für alle unter „Abgeschlossen“ ablegen statt löschen; sie bleibt lesbar, zählt nicht mehr in der Übersicht und im Widget und öffnet sich von selbst wieder, sobald jemand eine Ausgabe ändert |
-| **Chat** | Ein Chat pro Gruppe, sobald eine zweite Person die App nutzt. Der Verlauf läuft als leise Zeilen mit, Nachrichten können sich auf eine Ausgabe beziehen („Im Chat ansprechen“). Eigene Nachrichten in der Kartenfarbe, Zähler für Ungelesenes auf der Karte und am Chat-Symbol, Antworten direkt aus der Mitteilung, stumm schalten pro Gruppe, eigene Nachrichten löschen, fremde melden |
+| **Chat** | Ein Chat pro Gruppe (Sprechblase oben rechts); solange niemand sonst die App nutzt, führt er zum Einladen. Der Verlauf läuft als leise Zeilen mit, Nachrichten können sich auf eine Ausgabe beziehen („Im Chat ansprechen“). Eigene Nachrichten in der Kartenfarbe, Zähler für Ungelesenes auf der Karte und am Chat-Symbol, Antworten direkt aus der Mitteilung, stumm schalten pro Gruppe, eigene Nachrichten löschen, fremde melden |
 | **Verlauf** | Wer was eingetragen, geändert oder gelöscht hat, mit Vorher/Nachher; nicht änderbar, auch nicht vom Ersteller. Bearbeitete Ausgaben zeigen „bearbeitet“. Mitteilungen bei neuen, geänderten (Betrag, Zahler, Aufteilung) und gelöschten Ausgaben und Ausgleichen, leise beim Abschließen |
-| **Einladen** | Link oder Code teilen; wer beitritt, wählt seinen Namen aus der Gruppe (dann gehören die bisherigen Ausgaben zu ihm) oder trägt sich neu ein |
+| **Einladen** | Link oder Code teilen; wer beitritt, übernimmt einen eingetragenen Namen (dann gehören die bisherigen Ausgaben zu ihm) oder kommt neu dazu |
+| **Kontoname** | Wer Barte nutzt, heißt in allen Gruppen wie im Konto (`profiles`); ändern nur unter „Über Barte“, dann überall zugleich. Eingetragene Namen ohne App bleiben in der Gruppe änderbar |
 | **Konto** | Mit Apple anmelden, abmelden, Konto löschen inkl. Widerruf bei Apple; Gruppe verlassen oder (als Ersteller:in) für alle löschen |
 
 ## Das smarte Rechnen
@@ -114,6 +115,7 @@ docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Text
 
 ## Datenmodell
 
+- `profiles`: der Kontoname. `create_group`, `join_group`, `set_my_name` und `sync_my_name` (nach jeder Anmeldung) halten alle verknüpften `members` auf diesem Namen; `rename_member` lehnt verknüpfte Personen ab
 - `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
 - `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` lesen nur die Functions `events/group-event` und `events/chat-message`
 - `group_events`: der Verlauf. Trigger auf `expenses`, `groups` und `members` schreiben jede Änderung mit Vorher/Nachher, Person und Zeit in dieselbe Transaktion; ein weiterer Trigger verbietet Ändern und Löschen (außer zusammen mit der Gruppe). Jeder neue Eintrag löst über einen Hasura-Event-Trigger (`NHOST_WEBHOOK_SECRET`) `events/group-event` aus, das die Mitteilungen verschickt. So kann keine App eine Änderung durchführen, ohne dass die anderen davon erfahren

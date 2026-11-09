@@ -26,6 +26,8 @@ final class AppModel {
     /// How people want to be paid, by user id.
     private(set) var payments: [UUID: PaymentDetails] = [:]
     private(set) var userID: UUID?
+    /// The account name: the same in every group, changed only in "Über Barte".
+    private(set) var myName = Preferences.myName
     /// False until the first fetch finished, so the empty state doesn't flash.
     private(set) var hasLoaded = false
     private(set) var loadError: String?
@@ -51,6 +53,7 @@ final class AppModel {
         if DemoData.isEnabled {
             Preferences.useDemoDefaults()
             Preferences.myName = "Dominik"
+            self.myName = "Dominik"
             self.api = nil
             self.repository = DemoGroupRepository()
             self.isDemo = true
@@ -96,6 +99,7 @@ final class AppModel {
         userID = id
         phase = .ready
         Task { await reload() }
+        Task { await syncMyName() }
         if !isDemo {
             Task {
                 await PushToken.register(api: api)
@@ -193,6 +197,28 @@ final class AppModel {
         } else if let id = BarteLink.groupID(from: url) {
             if BarteLink.opensChat(url) { pendingChatGroupID = id }
             pendingGroupID = id
+        }
+    }
+
+    // MARK: Account name
+
+    /// After sign-in and joining: the server's account name wins over what this phone remembers.
+    func syncMyName() async {
+        guard let repository,
+              let name = try? await repository.syncMyName(fallback: Preferences.myName.isEmpty ? nil : Preferences.myName) else { return }
+        Preferences.myName = name
+        myName = name
+    }
+
+    /// Renames this person in every group. Returns a message if it failed.
+    func setMyName(_ name: String) async -> String? {
+        switch await runReturning({ try await $0.setMyName(name) }) {
+        case .success(let saved):
+            Preferences.myName = saved
+            myName = saved
+            return nil
+        case .failure(let failure):
+            return failure.message
         }
     }
 

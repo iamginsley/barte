@@ -32,7 +32,6 @@ select pg_temp.fails(
 select pg_temp.fails(format('select public.update_group(pg_temp.s(%L), %L, %L, %L, 0::smallint)', :b, :'gid', 'X', 'EUR'), 'not_member', 'outsider cannot rename');
 select pg_temp.fails(format('select public.rename_member(pg_temp.s(%L), %L, %L)', :b, :'ben', 'X'), 'not_member', 'outsider cannot rename members');
 select pg_temp.fails(format('select public.regenerate_invite_code(pg_temp.s(%L), %L)', :b, :'gid'), 'not_member', 'outsider cannot reset the code');
-select pg_temp.fails(format('select public.claim_member(pg_temp.s(%L), %L)', :b, :'ben'), 'not_member', 'outsider cannot claim without the code');
 select pg_temp.fails(format('insert into public.api_results (id) values (%L)', :'gid'), null, 'api_results never stores rows');
 
 -- Joining --------------------------------------------------------------------
@@ -47,13 +46,6 @@ select pg_temp.check((select id = :'gid' from public.join_group(pg_temp.s(:b), :
 select pg_temp.check((select (preview ->> 'is_member')::boolean from public.preview_invite(pg_temp.s(:b), :'code')), 'preview knows B is in');
 select pg_temp.check((select id = :'gid' from public.join_group(pg_temp.s(:b), :'code', :'clara')), 'joining again is a no-op');
 select pg_temp.check((select user_id is null from public.members where id = :'clara'), 'second join did not claim Clara');
-
--- Claiming a different name --------------------------------------------------
-select public.claim_member(pg_temp.s(:b), :'clara');
-select pg_temp.check((select user_id = :b from public.members where id = :'clara'), 'B is now Clara');
-select pg_temp.check((select user_id is null from public.members where id = :'ben'), 'Ben is free again');
-select pg_temp.fails(format('select public.claim_member(pg_temp.s(%L), %L)', :b, :'anna'), 'member_taken', 'cannot claim A');
-select public.claim_member(pg_temp.s(:b), :'ben');
 
 -- Expenses -------------------------------------------------------------------
 \set e1 '''eeeeeeee-0000-0000-0000-000000000001'''

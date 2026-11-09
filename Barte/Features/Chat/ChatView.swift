@@ -12,6 +12,7 @@ struct ChatView: View {
     @State private var chat: ChatModel
     @State private var openedExpense: Expense?
     @State private var didAppear = false
+    @State private var showsInvite = false
     @FocusState private var composerFocused: Bool
 
     init(groupID: UUID, reference: Expense? = nil, opensExpenses: Bool = true) {
@@ -32,7 +33,7 @@ struct ChatView: View {
         let entries = chat.entries(userID: app.userID)
         return ScrollView {
             LazyVStack(spacing: 0) {
-                intro(group)
+                if group.isShared { intro(group) } else { lonely(group) }
                 if !chat.hasLoaded {
                     ProgressView().padding(.vertical, 24)
                 } else if let error = chat.loadError, entries.isEmpty {
@@ -58,17 +59,19 @@ struct ChatView: View {
         .defaultScrollAnchor(.bottom, for: .sizeChanges)
         .scrollDismissesKeyboard(.interactively)
         .background(Color.surface.ignoresSafeArea())
-        .safeAreaBar(edge: .bottom) { composer(group) }
+        .safeAreaBar(edge: .bottom) { if group.isShared { composer(group) } }
         .navigationTitle("Chat")
         .navigationSubtitle(group.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            if group.isShared {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(group.chatMuted ? "Mitteilungen einschalten" : "Stummschalten",
                        systemImage: group.chatMuted ? "bell.slash" : "bell") {
                     Task { await toggleMute(group) }
                 }
                 .accessibilityValue(group.chatMuted ? "Stumm" : "Mitteilungen an")
+            }
             }
         }
         .task { await load() }
@@ -87,6 +90,7 @@ struct ChatView: View {
         .onDisappear {
             if app.visibleChatGroupID == groupID { app.visibleChatGroupID = nil }
         }
+        .sheet(isPresented: $showsInvite) { InviteSheet(groupID: group.id) }
         .sheet(item: $openedExpense) { ExpenseEditorSheet(group: group, expense: $0, me: group.me(userID: app.userID)) }
         .alert("Das hat nicht geklappt", isPresented: .init(get: { chat.actionError != nil }, set: { if !$0 { chat.actionError = nil } })) {
             Button("OK", role: .cancel) {}
@@ -111,6 +115,34 @@ struct ChatView: View {
         .padding(.horizontal, 28)
         .padding(.top, 20)
         .padding(.bottom, 4)
+        .frame(maxWidth: .infinity)
+    }
+
+    /// Nobody else in the group uses the app yet: nothing to write to, so the way there instead.
+    private func lonely(_ group: SplitGroup) -> some View {
+        let others = group.members.filter { $0.userID != app.userID }.map(\.name)
+        let names = others.count <= 2 ? others.formatted(.list(type: .and)) : "die anderen"
+        return VStack(spacing: 12) {
+            Image(systemName: "bubble.left.and.bubble.right.fill")
+                .font(.largeTitle)
+                .foregroundStyle(group.color.tint)
+                .accessibilityHidden(true)
+            Text("Noch schreibt niemand mit")
+                .font(.title3.weight(.semibold))
+            Text(others.isEmpty
+                 ? "Lade jemanden in „\(group.name)“ ein, dann könnt ihr hier schreiben. Neue und geänderte Ausgaben erscheinen automatisch dazwischen."
+                 : "Lade \(names) ein, dann könnt ihr hier schreiben und bekommt Mitteilungen. Neue und geänderte Ausgaben erscheinen automatisch dazwischen.")
+                .font(.subheadline)
+                .foregroundStyle(Color.inkSecondary)
+                .multilineTextAlignment(.center)
+            Button("Einladen", systemImage: "person.crop.circle.badge.plus") { showsInvite = true }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .padding(.top, 4)
+        }
+        .padding(.horizontal, 32)
+        .padding(.top, 48)
+        .padding(.bottom, 16)
         .frame(maxWidth: .infinity)
     }
 

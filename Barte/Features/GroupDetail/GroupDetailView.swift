@@ -10,7 +10,6 @@ struct GroupDetailView: View {
     @State private var showsNewExpense = false
     @State private var showsSettle = false
     @State private var showsEdit = false
-    @State private var showsWhoAmI = false
     @State private var confirmsDelete = false
     @State private var confirmsClose = false
     @State private var settlementToDelete: Expense?
@@ -93,7 +92,6 @@ struct GroupDetailView: View {
         .sheet(item: $editingExpense) { ExpenseEditorSheet(group: group, expense: $0, me: me) }
         .sheet(isPresented: $showsSettle) { SettleUpSheet(groupID: group.id) }
         .sheet(isPresented: $showsEdit) { GroupEditorSheet(group: group) { _ in } }
-        .sheet(isPresented: $showsWhoAmI) { WhoAmISheet(group: group) }
         .sheet(isPresented: $showsInvite) { InviteSheet(groupID: group.id) }
         .sheet(isPresented: $showsHistory) { HistorySheet(group: group) }
         .navigationDestination(isPresented: $showsChat) { ChatView(groupID: group.id) }
@@ -192,13 +190,11 @@ struct GroupDetailView: View {
 
     @ToolbarContentBuilder
     private func toolbar(_ group: SplitGroup) -> some ToolbarContent {
-        // A chat needs someone to talk to: it shows up once a second person uses the app.
-        if group.isShared {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Chat", systemImage: "bubble.left.and.bubble.right") { showsChat = true }
-                    .badge(group.unreadMessages)
-                    .accessibilityValue(group.unreadMessages > 0 ? UnreadBadge.label(group.unreadMessages) : "")
-            }
+        // Always there; until someone else uses the app, the chat leads to the invite.
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Chat", systemImage: "bubble.left.and.bubble.right") { showsChat = true }
+                .badge(group.unreadMessages)
+                .accessibilityValue(group.unreadMessages > 0 ? UnreadBadge.label(group.unreadMessages) : "")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button("Einladen", systemImage: "person.crop.circle.badge.plus") { showsInvite = true }
@@ -207,7 +203,6 @@ struct GroupDetailView: View {
             Menu("Mehr", systemImage: "ellipsis") {
                 Button("Gruppe bearbeiten", systemImage: "pencil") { showsEdit = true }
                 Button("Verlauf", systemImage: "clock.arrow.circlepath") { showsHistory = true }
-                Button("Das bin nicht ich", systemImage: "person.fill.questionmark") { showsWhoAmI = true }
                 if group.isClosed {
                     Button("Wieder öffnen", systemImage: "arrow.uturn.backward") { Task { await setClosed(false, group) } }
                 } else if !group.expenses.isEmpty {

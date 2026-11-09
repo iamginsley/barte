@@ -5,6 +5,8 @@ struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var myName = Preferences.myName
+    @State private var nameError: String?
+    @FocusState private var nameFocused: Bool
     @State private var split: CGFloat = 1
     @State private var taps = 0
     @State private var confirmsSignOut = false
@@ -41,11 +43,17 @@ struct AboutView: View {
                     TextField("Dein Name", text: $myName)
                         .textContentType(.givenName)
                         .submitLabel(.done)
-                        .onChange(of: myName) { Preferences.myName = myName }
+                        .focused($nameFocused)
+                        .onSubmit { Task { await saveName() } }
+                        .onChange(of: nameFocused) { if !nameFocused { Task { await saveName() } } }
                 } header: {
                     Text("Dein Name")
                 } footer: {
-                    Text("Wird bei neuen Gruppen und beim Beitreten vorgeschlagen.")
+                    if let nameError {
+                        Text(nameError).foregroundStyle(Color.negative)
+                    } else {
+                        Text("So heißt du in allen Gruppen. Änderst du ihn, ändert er sich überall.")
+                    }
                 }
 
                 Section {
@@ -140,6 +148,18 @@ struct AboutView: View {
         case (nil, _?): "IBAN"
         default: "Keine"
         }
+    }
+
+    /// Renames me in every group; an empty field puts the current name back.
+    private func saveName() async {
+        let name = myName.trimmingCharacters(in: .whitespaces)
+        guard name != app.myName else { return }
+        guard !name.isEmpty else {
+            myName = app.myName
+            return
+        }
+        nameError = await app.setMyName(name)
+        if nameError == nil { myName = app.myName }
     }
 
     private func deleteAccount() async {

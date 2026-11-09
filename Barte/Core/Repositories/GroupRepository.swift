@@ -14,8 +14,6 @@ protocol GroupRepository: Sendable {
     func addMember(named name: String, to groupID: UUID) async throws -> UUID
     func renameMember(_ id: UUID, to name: String) async throws
     func removeMember(_ id: UUID) async throws
-    /// Makes this person the given member instead of their current one.
-    func claimMember(_ id: UUID) async throws
 
     func save(_ expense: Expense, in groupID: UUID) async throws
     func deleteExpense(_ id: UUID) async throws
@@ -30,6 +28,10 @@ protocol GroupRepository: Sendable {
     func savePaymentDetails(_ details: PaymentDetails) async throws
 
     func deleteAccount(appleAuthorizationCode: String) async throws
+    /// The account name, used in every group; changing it renames this person everywhere.
+    func setMyName(_ name: String) async throws -> String
+    /// The account name after signing in; `fallback` names accounts that don't have one yet.
+    func syncMyName(fallback: String?) async throws -> String?
 
     /// The group's history, newest first; only what concerns one expense or member with `subjectID`.
     func fetchHistory(groupID: UUID, subjectID: UUID?) async throws -> [GroupEvent]
@@ -229,9 +231,6 @@ struct NhostGroupRepository: GroupRepository {
         try await api.call("remove_member", ["p_member_id": .uuid(id)])
     }
 
-    func claimMember(_ id: UUID) async throws {
-        try await api.call("claim_member", ["p_member_id": .uuid(id)])
-    }
 
     // MARK: Expenses
 
@@ -305,6 +304,15 @@ struct NhostGroupRepository: GroupRepository {
         }
         try await api.call("delete_my_account")
         await api.session.signOutLocally()
+    }
+
+    func setMyName(_ name: String) async throws -> String {
+        guard let saved = try await api.call("set_my_name", ["p_name": .string(name)])?.code else { throw BarteError.server(hint: nil) }
+        return saved
+    }
+
+    func syncMyName(fallback: String?) async throws -> String? {
+        try await api.call("sync_my_name", ["p_fallback": .optional(fallback)])?.code
     }
 
     // MARK: History

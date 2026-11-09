@@ -13,6 +13,8 @@ final class GroupEditorModel {
         var isMe: Bool
         var usesApp = false
         var canRemove: Bool
+        /// People with the app carry their account name; only typed-in names can be changed here.
+        var isFixed = false
     }
 
     let existing: SplitGroup?
@@ -29,11 +31,13 @@ final class GroupEditorModel {
         currency = group?.currency ?? "EUR"
         if let group {
             rows = group.members.map {
-                Row(id: $0.id, memberID: $0.id, name: $0.name, isMe: $0.id == me, usesApp: $0.usesApp, canRemove: !$0.usesApp && !group.isInvolved($0.id))
+                Row(id: $0.id, memberID: $0.id, name: $0.name, isMe: $0.id == me, usesApp: $0.usesApp,
+                    canRemove: !$0.usesApp && !group.isInvolved($0.id), isFixed: $0.usesApp)
             }
         } else {
             rows = [
-                Row(id: UUID(), memberID: nil, name: Preferences.myName, isMe: true, canRemove: false),
+                // Only an account without a name yet types one here; it becomes the account name.
+                Row(id: UUID(), memberID: nil, name: Preferences.myName, isMe: true, canRemove: false, isFixed: !Preferences.myName.isEmpty),
                 Row(id: UUID(), memberID: nil, name: "", isMe: false, canRemove: true),
             ]
         }
@@ -82,7 +86,7 @@ final class GroupEditorModel {
         let color = color
         if let existing {
             let removed = removed
-            let renamed = namedRows.compactMap { row in
+            let renamed = namedRows.filter { !$0.isFixed }.compactMap { row in
                 row.memberID.flatMap { id in existing.member(id)?.name != row.name ? (id, row.name) : nil }
             }
             let added = namedRows.filter { $0.memberID == nil }.map(\.name)
@@ -96,10 +100,10 @@ final class GroupEditorModel {
         }
         let myName = rows.first?.name.trimmingCharacters(in: .whitespaces) ?? ""
         let others = namedRows.dropFirst().map(\.name)
-        Preferences.myName = myName
         let result = await app.runReturning { repository in
             try await repository.createGroup(name: name, currency: currency, color: color, myName: myName, otherNames: Array(others))
         }
+        if case .success = result { await app.syncMyName() }
         return result.mapError { SaveError(message: $0.message) }
     }
 

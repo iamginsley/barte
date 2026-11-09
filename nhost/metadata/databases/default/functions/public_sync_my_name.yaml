@@ -1,5 +1,5 @@
 function:
-  name: claim_member
+  name: sync_my_name
   schema: public
 configuration:
   exposed_as: mutation
