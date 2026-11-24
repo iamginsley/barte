@@ -37,8 +37,8 @@ struct HistoryList: View {
                         Label("Noch kein Verlauf", systemImage: "clock")
                     } description: {
                         Text(subjectID == nil
-                             ? "Ab jetzt steht hier, wer was eingetragen, geändert oder gelöscht hat."
-                             : "Diese Ausgabe wurde eingetragen, bevor es den Verlauf gab.")
+                             ? String(localized: "Ab jetzt steht hier, wer was eingetragen, geändert oder gelöscht hat.")
+                             : String(localized: "Diese Ausgabe wurde eingetragen, bevor es den Verlauf gab."))
                     }
                     .listRowBackground(Color.clear)
                 } else {
@@ -88,8 +88,8 @@ struct HistoryList: View {
         let calendar = Calendar.current
         var result: [Day] = []
         for event in events {
-            let title = calendar.isDateInToday(event.createdAt) ? "Heute"
-                : calendar.isDateInYesterday(event.createdAt) ? "Gestern"
+            let title = calendar.isDateInToday(event.createdAt) ? String(localized: "Heute")
+                : calendar.isDateInYesterday(event.createdAt) ? String(localized: "Gestern")
                 : event.createdAt.formatted(calendar.isDate(event.createdAt, equalTo: now, toGranularity: .year)
                     ? .dateTime.weekday(.wide).day().month(.wide)
                     : .dateTime.day().month(.wide).year())

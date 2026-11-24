@@ -39,7 +39,7 @@ targets:
       properties:
         CFBundleDisplayName: Barte
         CFBundleDevelopmentRegion: de
-        CFBundleLocalizations: [de]
+        CFBundleLocalizations: [de, en]
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         LSApplicationCategoryType: public.app-category.finance
@@ -81,6 +81,7 @@ targets:
       properties:
         CFBundleDisplayName: Barte
         CFBundleDevelopmentRegion: de
+        CFBundleLocalizations: [de, en]
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         NSExtension:
@@ -118,6 +119,9 @@ schemes:
       targets:
         - BarteTests
       gatherCoverageData: false
+      # Tests check the German wording and formats; English is checked against the catalog.
+      language: de
+      region: DE
     run:
       config: Debug
     archive:

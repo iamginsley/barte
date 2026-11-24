@@ -3,7 +3,7 @@ import { decodeProtectedHeader, exportJWK, exportPKCS8, generateKeyPair, SignJWT
 import type { Request } from "express";
 import { expect, test } from "vitest";
 import { type ApnsConfig, type Device, payload, resetTokenCache, send, type Transport } from "../_lib/apns";
-import { compose, type Message, money } from "../_lib/messages";
+import { compose, languageOf, type Message, money } from "../_lib/messages";
 import { apnsConfig, changesMoney, type GroupEventRow, notifyEvent, type Snapshot } from "../_lib/notify";
 import { fromHasura } from "../events/group-event";
 import { callerID, type GraphQL } from "../_lib/server";
@@ -84,7 +84,8 @@ test("APNs config falls back to the Apple key and ignores placeholders", () => {
 test("new wording: edits, deletions and closing", () => {
   const changed = { kind: "expense_changed" as const, ...group, actor: "Anna", title: "Pizza" };
   expect(compose({ ...changed, change: { type: "amount", from: 4200, to: 2400 } }).body).toBe("Anna hat „Pizza“ geändert: 42,00 € → 24,00 €");
-  expect(compose({ ...changed, change: { type: "payer", from: "dir", to: "Ben" } }).body).toBe("Anna hat „Pizza“ geändert: bezahlt von Ben statt dir");
+  expect(compose({ ...changed, change: { type: "payer", from: { type: "recipient" }, to: { type: "other", name: "Ben" } } }).body)
+    .toBe("Anna hat „Pizza“ geändert: bezahlt von Ben statt dir");
   expect(compose({ ...changed, change: { type: "split" } }).body).toBe("Anna hat „Pizza“ geändert: neue Aufteilung");
   expect(compose({ kind: "expense_deleted", ...group, actor: "Anna", title: "Pizza", amountCents: 4200 }).body).toBe("Anna hat „Pizza“ gelöscht (42,00 €).");
   const settlement = { kind: "settlement_deleted" as const, ...group, actor: "Anna", amountCents: 2000, from: "Ben", to: "Anna", actorIsFrom: false };
@@ -93,6 +94,52 @@ test("new wording: edits, deletions and closing", () => {
   const closed = compose({ kind: "group_closed", ...group, actor: "Ben" });
   expect(closed.body).toBe("Ben hat die Gruppe abgeschlossen.");
   expect(closed.passive).toBe(true);
+});
+
+// English ---------------------------------------------------------------------------
+
+test("the device's language picks the wording, its region the money format", () => {
+  expect(languageOf("en-GB")).toBe("en");
+  expect(languageOf("en")).toBe("en");
+  expect(languageOf("de-AT")).toBe("de");
+  expect(languageOf("fr-FR")).toBe("de"); // the app falls back to German, so do pushes
+  expect(languageOf(null)).toBe("de");
+  expect(languageOf("eng")).toBe("de");
+  expect(money(123456, "EUR", "en-US")).toBe("€1,234.56");
+  expect(money(2850, "GBP", "en-GB")).toBe("£28.50");
+  expect(money(6400, "EUR", "de")).toBe("64,00 €");
+  expect(money(6400, "EUR", "xx-not-a-tag-at-all!")).toBe("64,00 €");
+});
+
+test("English wording for every kind of push", () => {
+  const en = "en-US";
+  const expense = { kind: "expense_added" as const, ...group, actor: "Anna", title: "Gas", amountCents: 6400 };
+  expect(compose({ ...expense, payer: { type: "actor" } }, en).body).toBe("Anna paid for “Gas”: €64.00");
+  expect(compose({ ...expense, payer: { type: "recipient" } }, en).body).toBe("Anna added “Gas”, paid by you: €64.00");
+  expect(compose({ ...expense, payer: { type: "other", name: "Ben" } }, en).body).toBe("Anna added “Gas”, paid by Ben: €64.00");
+  expect(compose({ ...expense, actor: null, payer: { type: "actor" } }, en).body).toBe("Someone paid for “Gas”: €64.00");
+  expect(compose({ ...expense, actor: null, payer: { type: "actor" } }).body).toBe("Jemand hat „Gas“ bezahlt: 64,00 €");
+
+  const settlement = { kind: "settlement_added" as const, ...group, amountCents: 2000, from: "Max", to: "Lena" };
+  expect(compose({ ...settlement, actor: "Max", actorIsFrom: true, recipient: "to" }, en).body).toBe("Max paid you back €20.00.");
+  expect(compose({ ...settlement, actor: "Dominik", actorIsFrom: false, recipient: "to" }, en).body)
+    .toBe("Dominik recorded: Max paid you back €20.00.");
+  expect(compose({ ...settlement, actor: "Lena", actorIsFrom: false, recipient: "from" }, en).body)
+    .toBe("Lena recorded: You paid Lena back €20.00.");
+
+  const changed = { kind: "expense_changed" as const, ...group, actor: "Anna", title: "Pizza" };
+  expect(compose({ ...changed, change: { type: "amount", from: 4200, to: 2400 } }, en).body).toBe("Anna changed “Pizza”: €42.00 → €24.00");
+  expect(compose({ ...changed, change: { type: "payer", from: { type: "recipient" }, to: { type: "other", name: "Ben" } } }, en).body)
+    .toBe("Anna changed “Pizza”: paid by Ben instead of you");
+  expect(compose({ ...changed, change: { type: "split" } }, en).body).toBe("Anna changed “Pizza”: new split");
+  expect(compose({ kind: "expense_deleted", ...group, actor: "Anna", title: "Pizza", amountCents: 4200 }, en).body).toBe("Anna deleted “Pizza” (€42.00).");
+  const deleted = { kind: "settlement_deleted" as const, ...group, actor: "Anna", amountCents: 2000, from: "Ben", to: "Anna", actorIsFrom: false };
+  expect(compose({ ...deleted, recipient: "from" }, en).body).toBe("Anna deleted a settlement: €20.00 from you to Anna.");
+  expect(compose({ ...deleted, recipient: "to" }, en).body).toBe("Anna deleted a settlement: €20.00 from Ben to you.");
+  const closed = compose({ kind: "group_closed", ...group, actor: "Ben" }, en);
+  expect(closed.body).toBe("Ben closed the group.");
+  expect(closed.passive).toBe(true);
+  expect(closed.title).toBe("WG Leopoldstraße"); // names are what people typed, never translated
 });
 
 test("only Hasura, with the webhook secret, may trigger pushes", () => {
@@ -132,10 +179,11 @@ const members = [
   { id: ids.ben, name: "Ben", user_id: "u-ben" },
   { id: ids.clara, name: "Clara", user_id: null },
 ];
+// Ben has a German iPhone and an English iPad; Anna's phone predates the language column.
 const devices = [
-  { token: "aa".repeat(32), environment: "sandbox", user_id: "u-anna" },
-  { token: "bb".repeat(32), environment: "production", user_id: "u-ben" },
-  { token: "bc".repeat(32), environment: "sandbox", user_id: "u-ben" },
+  { token: "aa".repeat(32), environment: "sandbox", user_id: "u-anna", language: null },
+  { token: "bb".repeat(32), environment: "production", user_id: "u-ben", language: "de-DE" },
+  { token: "bc".repeat(32), environment: "sandbox", user_id: "u-ben", language: "en-GB" },
 ];
 
 /** A fake Hasura: the group with its members, everyone's devices, and deletions. */
@@ -179,7 +227,9 @@ test("the others involved get a push, the one who made the change doesn't", asyn
   expect(await notifyEvent(gql, row("expense_added", null, snap()), config, sendImpl)).toEqual({ status: 200, body: { sent: 2, removed: 0 } });
   expect(calls.every((c) => c.asUser === undefined)).toBe(true); // Hasura is the caller; everything runs as admin
   expect(sent.map((s) => s.device.token).sort()).toEqual(["bb".repeat(32), "bc".repeat(32)]);
-  expect(bodies(sent)).toEqual(["Anna hat „Pizza“ bezahlt: 30,00 €"]);
+  expect(bodies(sent)).toEqual(["Anna hat „Pizza“ bezahlt: 30,00 €", "Anna paid for “Pizza”: €30.00"]);
+  expect(sent.find((s) => s.device.token === "bc".repeat(32))!.message.body).toBe("Anna paid for “Pizza”: €30.00");
+  expect(calls.find((c) => c.query.includes("query Devices"))!.query).toContain("language");
 });
 
 test("people not part of the expense get nothing", async () => {
@@ -200,7 +250,7 @@ test("an edit that changes money tells everyone involved before and after", asyn
 test("a new payer reads from the recipient's side", async () => {
   const { sent, sendImpl } = recorder();
   await notifyEvent(fakeGraphQL().gql, row("expense_changed", snap(), snap({ payer_id: ids.ben })), config, sendImpl);
-  expect(bodies(sent)).toEqual(["Anna hat „Pizza“ geändert: bezahlt von dir statt Anna"]);
+  expect(bodies(sent)).toEqual(["Anna hat „Pizza“ geändert: bezahlt von dir statt Anna", "Anna changed “Pizza”: paid by you instead of Anna"]);
 });
 
 test("title or date edits, renames and reopening stay quiet", async () => {

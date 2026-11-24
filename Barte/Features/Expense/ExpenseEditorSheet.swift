@@ -24,7 +24,7 @@ struct ExpenseEditorSheet: View {
             Form {
                 Section {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
-                        TextField("0,00", text: $model.amountText)
+                        TextField(Money.editString(0), text: $model.amountText)
                             .font(.system(size: amountSize, weight: .bold, design: .rounded).monospacedDigit())
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
@@ -58,7 +58,7 @@ struct ExpenseEditorSheet: View {
                     }
                     Picker("Bezahlt von", selection: $model.payerID) {
                         ForEach(group.members) { member in
-                            Text(member.id == model.me ? "\(member.name) (ich)" : member.name).tag(member.id)
+                            Text(memberName(member)).tag(member.id)
                         }
                     }
                     DatePicker("Datum", selection: $model.date, displayedComponents: .date)
@@ -189,7 +189,7 @@ struct ExpenseEditorSheet: View {
     }
 
     private func memberName(_ member: Member) -> String {
-        member.id == model.me ? "\(member.name) (ich)" : member.name
+        member.id == model.me ? String(localized: "\(member.name) (ich)", comment: "My own name in a list of people") : member.name
     }
 
     /// Shares mode: tap the row to include someone, the stepper for couples and families.
@@ -229,7 +229,8 @@ struct ExpenseEditorSheet: View {
             Stepper("Anteile", value: Binding(get: { weight }, set: { model.weights[member.id] = $0 }), in: 0...ExpenseEditorModel.maxWeight)
                 .labelsHidden()
                 .accessibilityLabel(memberName(member))
-                .accessibilityValue(weight == 0 ? "nicht beteiligt" : "\(weight) \(weight == 1 ? "Anteil" : "Anteile"), \(Money.format(share, currency: model.group.currency))")
+                .accessibilityValue(weight == 0 ? String(localized: "nicht beteiligt")
+                    : String(localized: "\(weight) Anteile, \(Money.format(share, currency: model.group.currency))", comment: "VoiceOver: number of shares and the resulting amount"))
         }
         .sensoryFeedback(.selection, trigger: weight)
     }
@@ -251,7 +252,7 @@ struct ExpenseEditorSheet: View {
                     .frame(minHeight: Theme.minTapSize)
                     .accessibilityLabel("Rest auf \(member.name)")
             }
-            TextField("0,00", text: text)
+            TextField(Money.editString(0), text: text)
                 .font(.amount)
                 .keyboardType(.decimalPad)
                 .multilineTextAlignment(.trailing)

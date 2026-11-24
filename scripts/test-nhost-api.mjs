@@ -170,6 +170,9 @@ try {
 
   // Devices and functions without arguments.
   await call(a, "register_device", { p_token: "ab".repeat(32), p_environment: "sandbox" });
+  await call(a, "register_device", { p_token: "ab".repeat(32), p_environment: "sandbox", p_language: "en-GB" });
+  const language = (await sql(`select language from public.device_tokens where token = '${"ab".repeat(32)}'`)).result[1][0];
+  check(language === "en-GB", "register_device stores the device language");
   const deleted = await gql(c, `mutation { delete_my_account { id } }`);
   check(!deleted.errors, "delete_my_account works without arguments");
   const remaining = (await sql(`select count(*) from auth.users where id = '${c}'`)).result[1][0];

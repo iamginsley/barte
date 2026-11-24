@@ -1,7 +1,7 @@
 // Turns a new chat message (public.chat_messages) into push notifications for everyone else in
 // the group who uses the app and hasn't muted the chat. Hasura calls this for every new row.
 import { type ApnsConfig, type Device, send } from "./apns";
-import type { Message } from "./messages";
+import { type Message, words } from "./messages";
 import type { Result } from "./notify";
 import type { GraphQL } from "./server";
 
@@ -23,16 +23,18 @@ export function preview(body: string, limit = 180): string {
   return `${(space > limit * 0.6 ? cut.slice(0, space) : cut).trimEnd()} …`;
 }
 
-/** "Anna" as the title, the group below it, and what was written. */
+/** "Anna" as the title, the group below it, and what was written; `tag` is the device's language. */
 export function composeChat(
   row: ChatMessageRow,
   group: { name: string },
-  author: string,
+  author: string | null,
   expenseTitle?: string,
+  tag = "de-DE",
 ): Message {
-  const about = expenseTitle ? `Zu „${expenseTitle}“: ` : "";
+  const w = words(tag);
+  const about = expenseTitle ? w.about(expenseTitle) : "";
   return {
-    title: `${author} · ${group.name}`,
+    title: `${author ?? w.someone} · ${group.name}`,
     body: about + preview(row.body ?? ""),
     link: `barte://group/${row.group_id}/chat`,
     // One thread per chat, apart from the group's expense notifications.
@@ -76,16 +78,16 @@ export async function notifyChat(
   if (users.length === 0) return { status: 200, body: { sent: 0, skipped: "no_recipients" } };
   if (!config) return { status: 200, body: { sent: 0, skipped: "not_configured" } };
 
-  const author = group.members.find((m) => m.id === row.member_id)?.name ?? "Jemand";
-  const message = composeChat(row, group, author, group.expenses[0]?.title);
-  const { device_tokens: devices } = await gql<{ device_tokens: Device[] }>(
-    `query Devices($users: [uuid!]!) { device_tokens(where: { user_id: { _in: $users } }) { token environment } }`,
+  const author = group.members.find((m) => m.id === row.member_id)?.name ?? null;
+  const { device_tokens: devices } = await gql<{ device_tokens: (Device & { language: string | null })[] }>(
+    `query Devices($users: [uuid!]!) { device_tokens(where: { user_id: { _in: $users } }) { token environment language } }`,
     { users },
   );
 
   let sent = 0;
   const gone: string[] = [];
   await Promise.all(devices.map(async (device) => {
+    const message = composeChat(row, group, author, group.expenses[0]?.title, device.language ?? "de");
     const outcome = await sendImpl(device, message, config).catch((error) => {
       console.error("chat-message: send failed", error);
       return "failed" as const;

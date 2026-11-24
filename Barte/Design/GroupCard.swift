@@ -30,7 +30,7 @@ struct GroupCard: View {
                 Spacer(minLength: 8)
                 if showsStatus {
                     VStack(alignment: .trailing, spacing: 1) {
-                        Text(group.expenses.isEmpty ? "Noch keine Ausgaben" : Self.statusText(balance: balance, me: me))
+                        Text(group.expenses.isEmpty ? String(localized: "Noch keine Ausgaben") : Self.statusText(balance: balance, me: me))
                             .font(.caption.weight(.medium))
                             .opacity(0.85)
                         if balance != 0 {
@@ -64,8 +64,10 @@ struct GroupCard: View {
     }
 
     static func statusText(balance: Int, me: UUID?) -> String {
-        if me == nil { return "Wer bist du?" }
-        return balance > 0 ? "Du bekommst" : balance < 0 ? "Du schuldest" : "Du bist quitt"
+        if me == nil { return String(localized: "Wer bist du?", comment: "Card status when I haven't picked my name in a group") }
+        return balance > 0 ? String(localized: "Du bekommst", comment: "Card status, followed by an amount")
+            : balance < 0 ? String(localized: "Du schuldest", comment: "Card status, followed by an amount")
+            : String(localized: "Du bist quitt")
     }
 
     static func accessibilityLabel(group: SplitGroup, balance: Int, me: UUID?) -> String {
@@ -75,8 +77,8 @@ struct GroupCard: View {
         } else {
             parts.append("\(statusText(balance: balance, me: me)) \(Money.format(abs(balance), currency: group.currency))")
         }
-        parts.append("\(group.members.count) Personen")
-        if group.isShared { parts.append("geteilt") }
+        parts.append(String(localized: "\(group.members.count) Personen", comment: "Number of people in a group"))
+        if group.isShared { parts.append(String(localized: "geteilt", comment: "VoiceOver: the group is shared with other app users")) }
         if group.unreadMessages > 0 { parts.append(UnreadBadge.label(group.unreadMessages)) }
         return parts.joined(separator: ", ")
     }
@@ -102,7 +104,7 @@ struct UnreadBadge: View {
     }
 
     static func label(_ count: Int) -> String {
-        count == 1 ? "1 neue Nachricht" : "\(count) neue Nachrichten"
+        String(localized: "\(count) neue Nachrichten", comment: "Unread chat messages, with plural variants")
     }
 }
 

@@ -1,0 +1,180 @@
+{
+  "sourceLanguage" : "de",
+  "strings" : {
+    "Barte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barte"
+          }
+        }
+      }
+    },
+    "Du bekommst" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You get"
+          }
+        }
+      }
+    },
+    "Du bekommst %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You get %@"
+          }
+        }
+      }
+    },
+    "Du schuldest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You owe"
+          }
+        }
+      }
+    },
+    "Du schuldest %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You owe %@"
+          }
+        }
+      }
+    },
+    "Niemand schuldet hier jemandem etwas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody owes anybody anything here."
+          }
+        }
+      }
+    },
+    "Pizza-Abende" : {
+      "comment" : "Widget gallery sample group",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pizza Nights"
+          }
+        }
+      }
+    },
+    "Saldo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balance"
+          }
+        }
+      }
+    },
+    "Skiurlaub" : {
+      "comment" : "Widget gallery sample group",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ski Trip"
+          }
+        }
+      }
+    },
+    "WG" : {
+      "comment" : "Widget gallery sample group: a flat share",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flat Share"
+          }
+        }
+      }
+    },
+    "Was du insgesamt bekommst oder schuldest." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What you get or owe in total."
+          }
+        }
+      }
+    },
+    "und %lld weitere Währungen" : {
+      "comment" : "Widget: balances in other currencies, with plural variants",
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "und %lld weitere Währung"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "und %lld weitere Währungen"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "and %lld other currency"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "and %lld other currencies"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Öffne Barte, um deinen Saldo hier zu sehen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Barte to see your balance here."
+          }
+        }
+      }
+    },
+    "Überall quitt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Square everywhere"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
