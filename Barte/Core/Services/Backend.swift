@@ -37,6 +37,7 @@ enum BarteError: LocalizedError, Equatable {
             case "member_involved": String(localized: "Diese Person kommt in Ausgaben vor und kann nicht entfernt werden.")
             case "member_linked": String(localized: "Diese Person nutzt Barte selbst. Nur sie kann ihren Namen ändern oder die Gruppe verlassen.")
             case "not_creator": String(localized: "Nur wer die Gruppe erstellt hat, kann sie für alle löschen.")
+            case "currency_locked": String(localized: "Die Währung lässt sich nicht mehr ändern, weil die Gruppe schon Ausgaben hat. Beträge würden nicht umgerechnet.")
             case "not_member": String(localized: "Du bist nicht mehr in dieser Gruppe.")
             case "unknown_member", "member_not_found": String(localized: "Jemand aus dieser Ausgabe ist nicht mehr in der Gruppe.")
             case "empty_name": String(localized: "Bitte gib einen Namen ein.")

@@ -51,6 +51,10 @@ SUBSTITUTIONS = {
 }
 
 EN = {
+    "Die Währung lässt sich nicht mehr ändern, weil die Gruppe schon Ausgaben hat. Beträge würden nicht umgerechnet.":
+        "The currency can't be changed anymore because the group already has expenses. Amounts wouldn't be converted.",
+    "Die Währung bleibt, sobald es Ausgaben gibt. Beträge würden sonst nicht umgerechnet.":
+        "The currency stays once there are expenses. Amounts wouldn't be converted otherwise.",
     # Formats that read the same
     "%@": "%@", "%@\n%@": "%1$@\n%2$@", "%@ (%@)": "%1$@ (%2$@)", "%@ · %@": "%1$@ · %2$@",
     "%@ → %@: %@": "%1$@ → %2$@: %3$@", "%lld": "%lld", "%lld×": "%lld×", "+%lld": "+%lld", "99+": "99+",
