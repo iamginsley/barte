@@ -9,7 +9,8 @@ select id as anna from public.members where group_id = :'gid' and name = 'Anna' 
 select id as ben from public.members where group_id = :'gid' and name = 'Ben' \gset
 select invite_code as code from public.groups where id = :'gid' \gset
 select public.join_group(pg_temp.s(:b), :'code', :'ben');
-select pg_temp.check((select count(*) = 0 from public.group_events where group_id = :'gid'), 'creating and joining leave no events');
+select pg_temp.check((select array_agg(kind) = array['member_joined'] from public.group_events where group_id = :'gid'),
+  'creating leaves no events, joining one');
 
 -- Adding, changing and deleting an expense
 select id as eid from public.save_expense(pg_temp.s(:a), gen_random_uuid(), :'gid', 'Pizza', 4200, '2026-11-08', :'anna', array[:'anna', :'ben']::uuid[]) \gset
@@ -61,8 +62,8 @@ select pg_temp.check((select array_agg(kind order by created_at) = array['member
 select pg_temp.fails(format('update public.group_events set new = null where group_id = %L', :'gid'), null, 'events cannot be edited');
 select pg_temp.fails(format('delete from public.group_events where group_id = %L', :'gid'), null, 'events cannot be deleted');
 
--- Deleting the whole group takes its history with it
-select public.delete_group(pg_temp.s(:a), :'gid');
+-- A group that goes (the last person left) takes its history with it
+delete from public.groups where id = :'gid';
 select pg_temp.check((select count(*) = 0 from public.group_events where group_id = :'gid'), 'history goes with the group');
 
 -- Deleting an account keeps the shared history, with the name it had
@@ -73,4 +74,6 @@ select public.join_group(pg_temp.s(:b), :'code2', :'ben2');
 select public.save_expense(pg_temp.s(:a), gen_random_uuid(), :'g2', 'Strom', 8000, '2026-11-08', :'ben2', array[:'ben2']::uuid[]);
 select public.delete_my_account(pg_temp.s(:a));
 select pg_temp.check((select count(*) = 1 and bool_and(actor_name = 'Anna')
-  from public.group_events where group_id = :'g2'), 'history survives the account deletion');
+  from public.group_events where group_id = :'g2' and kind = 'expense_added'), 'history survives the account deletion');
+select pg_temp.check((select count(*) = 1 from public.group_events where group_id = :'g2' and kind = 'member_left'
+  and old ->> 'name' = 'Anna'), 'and shows that Anna left');

@@ -78,10 +78,15 @@ struct SplitGroup: Identifiable, Hashable, Sendable {
     /// More than one person uses the app in this group.
     var isShared: Bool { members.filter(\.usesApp).count > 1 }
 
-    /// The creator deletes for everyone; so does the last person with the app. Everyone else leaves.
-    func canDelete(userID: UUID?) -> Bool {
+    /// Nobody deletes a group. The last person with the app takes it along when leaving.
+    func leavingDeletes(userID: UUID?) -> Bool {
         guard let userID else { return false }
-        return createdBy == userID || !members.contains { $0.usesApp && $0.userID != userID }
+        return !members.contains { $0.usesApp && $0.userID != userID }
+    }
+
+    /// Nobody walks away from open amounts while others with the app are still in (the server checks too).
+    func canLeave(userID: UUID?) -> Bool {
+        leavingDeletes(userID: userID) || balance(of: me(userID: userID)) == 0
     }
 
     func name(of id: UUID, me: UUID?) -> String {

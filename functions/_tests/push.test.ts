@@ -277,6 +277,24 @@ test("deleting an expense or a payback is announced", async () => {
   expect(bodies(payback.sent)).toEqual(["Ben hat einen Ausgleich gelöscht: 20,00 € von Ben an dich."]);
 });
 
+test("joining tells the others, above all who took over a typed-in name", async () => {
+  const joined = { kind: "member_joined" as const, ...group, actor: "Benjamin", name: "Benjamin" };
+  expect(compose({ ...joined, claimed: "Ben" }).body).toBe("Benjamin ist beigetreten und übernimmt „Ben“ mit allen Ausgaben.");
+  expect(compose({ ...joined, claimed: null }).body).toBe("Benjamin ist der Gruppe beigetreten.");
+  expect(compose({ ...joined, claimed: "Ben" }, "en-US").body).toBe("Benjamin joined and takes over “Ben” with all its expenses.");
+  expect(compose({ ...joined, claimed: null }, "en-US").body).toBe("Benjamin joined the group.");
+
+  const { sent, sendImpl } = recorder();
+  const claim = { ...row("member_joined", null, null, "u-ben", "Ben"), old: { name: "Ben" } as Snapshot, new: { name: "Ben" } as Snapshot };
+  await notifyEvent(fakeGraphQL().gql, claim, config, sendImpl);
+  expect(sent.map((s) => s.device.token)).toEqual(["aa".repeat(32)]); // Anna hears it, Ben doesn't
+  expect(bodies(sent)).toEqual(["Ben ist beigetreten und übernimmt „Ben“ mit allen Ausgaben."]);
+  expect(sent[0].message.passive).toBe(false);
+  for (const kind of ["member_left"]) {
+    expect((await notifyEvent(fakeGraphQL().gql, row(kind, null, null), config, sendImpl)).body).toEqual({ sent: 0, skipped: "quiet" });
+  }
+});
+
 test("closing reaches everyone with the app, quietly", async () => {
   const { sent, sendImpl } = recorder();
   await notifyEvent(fakeGraphQL().gql, row("group_closed", null, null), config, sendImpl);

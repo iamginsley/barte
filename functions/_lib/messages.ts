@@ -39,7 +39,14 @@ export type Event =
       | { type: "split" };
   }
   | Common & { kind: "expense_deleted"; title: string; amountCents: number }
-  | Common & { kind: "group_closed" };
+  | Common & { kind: "group_closed" }
+  | Common & {
+    kind: "member_joined";
+    /** The name they now have in the group. */
+    name: string;
+    /** The typed-in name they took over (with its expenses), if any. */
+    claimed: string | null;
+  };
 
 export interface Message {
   title: string;
@@ -90,6 +97,8 @@ interface Wording {
   newSplit: string;
   deleted: (actor: string, title: string, amount: string) => string;
   closed: (actor: string) => string;
+  joined: (name: string) => string;
+  joinedAs: (name: string, claimed: string) => string;
   /** Chat: the line before a message about an expense. */
   about: (title: string) => string;
 }
@@ -113,6 +122,8 @@ const wording: Record<Language, Wording> = {
     newSplit: "neue Aufteilung",
     deleted: (actor, title, amount) => `${actor} hat ${title} gelöscht (${amount}).`,
     closed: (actor) => `${actor} hat die Gruppe abgeschlossen.`,
+    joined: (name) => `${name} ist der Gruppe beigetreten.`,
+    joinedAs: (name, claimed) => `${name} ist beigetreten und übernimmt „${claimed}“ mit allen Ausgaben.`,
     about: (title) => `Zu „${title}“: `,
   },
   en: {
@@ -133,6 +144,8 @@ const wording: Record<Language, Wording> = {
     newSplit: "new split",
     deleted: (actor, title, amount) => `${actor} deleted ${title} (${amount}).`,
     closed: (actor) => `${actor} closed the group.`,
+    joined: (name) => `${name} joined the group.`,
+    joinedAs: (name, claimed) => `${name} joined and takes over “${claimed}” with all its expenses.`,
     about: (title) => `About “${title}”: `,
   },
 };
@@ -184,5 +197,8 @@ export function compose(event: Event, tag = "de-DE"): Message {
       return message(w.deleted(actor, w.quoted(event.title), amountOf(event.amountCents)));
     case "group_closed":
       return message(w.closed(actor), true);
+    case "member_joined":
+      // Taking over a name takes over its expenses: everyone should know who that is now.
+      return message(event.claimed ? w.joinedAs(event.name, event.claimed) : w.joined(event.name));
   }
 }

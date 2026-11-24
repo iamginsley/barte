@@ -26,8 +26,8 @@ select pg_temp.check((select count(*) = 1 from public.expenses where group_id = 
 select pg_temp.check((select count(*) = 0 from public.payment_details where user_id = :a), 'payment details deleted with the account');
 select pg_temp.check((select count(*) = 0 from public.device_tokens where user_id = :a), 'devices deleted with the account');
 
--- B may now delete the group, being the only one left with the app
-select public.delete_group(pg_temp.s(:b), :'shared');
-select pg_temp.check((select count(*) = 0 from public.groups where id = :'shared'), 'B could delete the orphaned group');
+-- B is the only one left with the app: leaving takes the group along, open amounts or not
+select public.leave_group(pg_temp.s(:b), :'shared');
+select pg_temp.check((select count(*) = 0 from public.groups where id = :'shared'), 'the orphaned group is gone with B');
 
 select pg_temp.fails($$select public.delete_my_account('{}')$$, 'not_signed_in', 'needs a user');

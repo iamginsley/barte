@@ -28,6 +28,8 @@ struct HistoryList: View {
     @Environment(AppModel.self) private var model
     @State private var events: [GroupEvent]?
     @State private var loadError: String?
+    @State private var restoring: UUID?
+    @State private var restoreError: String?
 
     var body: some View {
         List {
@@ -45,7 +47,9 @@ struct HistoryList: View {
                     ForEach(Self.days(of: events), id: \.title) { day in
                         Section(day.title) {
                             ForEach(day.events) { event in
-                                HistoryRow(event: event, wording: event.text(in: group, userID: model.userID), tint: group.color.tint)
+                                HistoryRow(event: event, wording: event.text(in: group, userID: model.userID), tint: group.color.tint,
+                                           restore: restorable.contains(event.id) && !group.isClosed ? { Task { await restore(event) } } : nil,
+                                           isRestoring: restoring == event.id)
                             }
                         }
                     }
@@ -70,6 +74,31 @@ struct HistoryList: View {
         .task { await load() }
         // Someone else changing something while this is open shows up here too.
         .onChange(of: group) { Task { await load() } }
+        .alert("Wiederherstellen hat nicht geklappt", isPresented: Binding(get: { restoreError != nil }, set: { if !$0 { restoreError = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(restoreError ?? "")
+        }
+    }
+
+    /// Only the newest deletion of something that is still gone can bring it back.
+    private var restorable: Set<UUID> {
+        var seen = Set<UUID>(), result = Set<UUID>()
+        for event in events ?? [] {
+            guard let subject = event.subjectID, seen.insert(subject).inserted else { continue }
+            if event.restoredExpense(in: group) != nil { result.insert(event.id) }
+        }
+        return result
+    }
+
+    /// Saves the deleted expense again under its old id; the history then shows who brought it back.
+    private func restore(_ event: GroupEvent) async {
+        guard let expense = event.restoredExpense(in: group), restoring == nil else { return }
+        restoring = event.id
+        let groupID = group.id
+        restoreError = await model.run { try await $0.save(expense, in: groupID) }
+        restoring = nil
+        await load()
     }
 
     private func load() async {
@@ -108,6 +137,9 @@ private struct HistoryRow: View {
     let wording: GroupEvent.Wording
     /// The group's card color, dark enough for white symbols.
     let tint: Color
+    /// Brings a deleted expense back; nil when that isn't possible.
+    let restore: (() -> Void)?
+    let isRestoring: Bool
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -125,6 +157,13 @@ private struct HistoryRow: View {
                         .font(.subheadline.monospacedDigit())
                         .foregroundStyle(Color.inkSecondary)
                 }
+                if let restore {
+                    Button("Wiederherstellen", systemImage: "arrow.uturn.backward", action: restore)
+                        .font(.subheadline.weight(.medium))
+                        .buttonStyle(.borderless)
+                        .disabled(isRestoring)
+                        .frame(minHeight: 44, alignment: .leading)
+                }
             }
             Spacer(minLength: 8)
             Text(event.createdAt.formatted(.dateTime.hour().minute()))
@@ -133,5 +172,8 @@ private struct HistoryRow: View {
         }
         .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
+        .accessibilityActions {
+            if let restore { Button("Wiederherstellen", action: restore) }
+        }
     }
 }

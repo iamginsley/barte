@@ -33,6 +33,41 @@ struct GroupEventTests {
         GroupEvent(id: UUID(), kind: kind, actorID: actor ?? ben, actorName: name, subjectID: UUID(), old: old, new: new, createdAt: .now)
     }
 
+    @Test func joiningAndLeavingAreLogged() {
+        let joined = event(.memberJoined, new: .init(name: "Ben")).text(in: group, userID: me)
+        #expect(joined.headline == "Ben ist der Gruppe beigetreten")
+        let claimed = event(.memberJoined, old: .init(name: "Benni"), new: .init(name: "Ben"))
+        #expect(claimed.text(in: group, userID: me).headline == "Ben ist beigetreten und hat „Benni“ übernommen")
+        #expect(claimed.isNotable)
+        #expect(!event(.memberJoined, new: .init(name: "Ben")).isNotable)
+        #expect(event(.memberJoined, by: me, new: .init(name: "Dominik")).text(in: group, userID: me).headline == "Du bist der Gruppe beigetreten")
+        #expect(event(.memberLeft, old: .init(name: "Ben")).text(in: group, userID: me).headline == "Ben hat die Gruppe verlassen")
+        #expect(GroupEvent.Kind(rawValue: "member_left") == .memberLeft)
+    }
+
+    @Test func deletedExpensesCanBeRestored() throws {
+        var old = snapshot("Pizza", 4500, for: [benMember.id, anna.id])
+        old.splitKind = "shares"
+        old.splitValues = [2, 1]
+        let deleted = event(.expenseDeleted, old: old)
+        let expense = try #require(deleted.restoredExpense(in: group))
+        #expect(expense.id == deleted.subjectID)
+        #expect(expense.title == "Pizza" && expense.amountCents == 4500 && expense.payerID == benMember.id)
+        #expect(expense.split == .shares([benMember.id: 2, anna.id: 1]))
+        #expect(LocalDay.string(from: expense.date) == "2026-11-08")
+        #expect(!expense.isSettlement)
+
+        // Back in the group, it can't be restored a second time.
+        var restored = group
+        restored.expenses = [expense]
+        #expect(deleted.restoredExpense(in: restored) == nil)
+
+        let settlement = event(.settlementDeleted, old: snapshot("Ausgleich", 1000, for: [anna.id], settlement: true))
+        #expect(try #require(settlement.restoredExpense(in: group)).isSettlement)
+        #expect(event(.expenseAdded, new: snapshot()).restoredExpense(in: group) == nil)
+        #expect(event(.expenseDeleted, old: .init(title: "Pizza")).restoredExpense(in: group) == nil)
+    }
+
     @Test func addedAndDeletedShowWhatItWas() {
         let added = event(.expenseAdded, new: snapshot()).text(in: group, userID: me)
         #expect(added.headline == "Ben hat „Pizza“ eingetragen")

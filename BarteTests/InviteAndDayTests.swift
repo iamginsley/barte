@@ -80,11 +80,24 @@ struct GroupRulesTests {
         #expect(group.me(userID: nil) == nil)
     }
 
-    @Test func whoMayDelete() {
-        #expect(group(createdBy: me, friendUsesApp: true).canDelete(userID: me))
-        #expect(!group(createdBy: friend, friendUsesApp: true).canDelete(userID: me))
-        // The creator left: the last person with the app may delete.
-        #expect(group(createdBy: nil, friendUsesApp: false).canDelete(userID: me))
+    @Test func onlyTheLastAppUserTakesTheGroupAlong() {
+        // Being the creator doesn't matter: nobody deletes a group for the others.
+        #expect(!group(createdBy: me, friendUsesApp: true).leavingDeletes(userID: me))
+        #expect(group(createdBy: friend, friendUsesApp: false).leavingDeletes(userID: me))
+        #expect(!group(createdBy: me, friendUsesApp: false).leavingDeletes(userID: nil))
+    }
+
+    @Test func leavingNeedsToBeSquareWhileOthersStay() {
+        var shared = group(createdBy: me, friendUsesApp: true)
+        #expect(shared.canLeave(userID: me))
+        shared.expenses = [Expense(id: UUID(), title: "Pizza", amountCents: 2000, date: .now,
+                                   payerID: shared.members[0].id, participantIDs: shared.members.map(\.id))]
+        #expect(!shared.canLeave(userID: me))
+        #expect(!shared.canLeave(userID: friend))
+        // Alone with typed-in names, the group goes with them, open amounts or not.
+        var alone = group(createdBy: me, friendUsesApp: false)
+        alone.expenses = shared.expenses.map { var e = $0; e.payerID = alone.members[0].id; e.participantIDs = alone.members.map(\.id); return e }
+        #expect(alone.canLeave(userID: me))
     }
 
     @Test func sharedOnlyWithASecondAppUser() {

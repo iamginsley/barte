@@ -178,10 +178,10 @@ try {
   const remaining = (await sql(`select count(*) from auth.users where id = '${c}'`)).result[1][0];
   check(remaining === "0", "C's auth user is gone");
 
-  // Leaving and deleting.
-  await fails(call(b, "delete_group", { p_group_id: group }), "not_creator", "B cannot delete A's group");
-  await call(a, "delete_group", { p_group_id: group });
-  check((await gql(b, groupsQuery)).data.groups.length === 0, "deleted for everyone");
+  // Nobody can delete a group for everyone; it goes away when the last app user leaves.
+  const deleting = await gql(a, `mutation { delete_group(args: {p_group_id: "${group}"}) { id } }`);
+  check(deleting.errors, "delete_group no longer exists");
+  check((await gql(b, groupsQuery)).data.groups.length === 1, "the group is still there for B");
 } catch (error) {
   console.error("✗ unexpected:", error.message, error.graphql ?? "");
   failures++;

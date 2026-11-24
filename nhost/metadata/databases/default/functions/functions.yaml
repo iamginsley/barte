@@ -1,7 +1,6 @@
 - "!include public_add_member.yaml"
 - "!include public_create_group.yaml"
 - "!include public_delete_expense.yaml"
-- "!include public_delete_group.yaml"
 - "!include public_delete_message.yaml"
 - "!include public_delete_my_account.yaml"
 - "!include public_join_group.yaml"

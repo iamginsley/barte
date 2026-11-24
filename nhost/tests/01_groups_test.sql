@@ -87,7 +87,7 @@ select pg_temp.fails(format('select public.add_member(pg_temp.s(%L), %L, %L)', :
 select pg_temp.fails(format('select public.rename_member(pg_temp.s(%L), gen_random_uuid(), %L)', :b, 'X'), 'member_not_found', 'unknown member');
 
 -- Deleting and leaving -------------------------------------------------------
-select pg_temp.fails(format('select public.delete_group(pg_temp.s(%L), %L)', :b, :'gid'), 'not_creator', 'B cannot delete A''s group');
+select pg_temp.check((select count(*) = 0 from pg_proc where proname = 'delete_group'), 'nobody can delete a group');
 select public.leave_group(pg_temp.s(:b), :'gid');
 select pg_temp.check((select not public.is_group_member(:'gid', :b)), 'B left');
 select pg_temp.check((select user_id is null and name = 'Ben' from public.members where id = :'ben'), 'Ben stays as a name');
@@ -102,8 +102,10 @@ select code as newcode from public.regenerate_invite_code(pg_temp.s(:a), :'gid')
 select pg_temp.check(:'newcode' <> :'code', 'new code');
 select pg_temp.fails(format('select public.join_group(pg_temp.s(%L), %L, %L)', :b, :'code', :'ben'), 'invalid_code', 'old code no longer works');
 
--- The creator deletes for everyone
-select public.delete_group(pg_temp.s(:a), :'gid');
+-- The last person with Barte to leave takes the group with them
+select public.leave_group(pg_temp.s(:c), :'gid');
+select pg_temp.check((select count(*) = 1 from public.groups where id = :'gid'), 'kept while A is still in');
+select public.leave_group(pg_temp.s(:a), :'gid');
 select pg_temp.check((select count(*) = 0 from public.groups where id = :'gid'), 'group deleted');
 select pg_temp.check((select count(*) = 0 from public.expenses where group_id = :'gid'), 'expenses deleted');
 select pg_temp.check((select count(*) = 0 from public.members where group_id = :'gid'), 'members deleted');
