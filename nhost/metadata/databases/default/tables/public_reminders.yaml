@@ -1,0 +1,23 @@
+# Reminders from settle-up (see the reminders migration). No permissions: only remind() writes,
+# and only the event trigger reads, to push the one person who was reminded.
+table:
+  name: reminders
+  schema: public
+object_relationships:
+  - name: group
+    using:
+      foreign_key_constraint_on: group_id
+event_triggers:
+  - name: reminder_notify
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: "{{NHOST_FUNCTIONS_URL}}/events/reminder"
+    headers:
+      - name: nhost-webhook-secret
+        value_from_env: NHOST_WEBHOOK_SECRET

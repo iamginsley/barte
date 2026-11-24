@@ -7,6 +7,8 @@ protocol GroupRepository: Sendable {
     func createGroup(name: String, currency: String, color: CardColor, myName: String, otherNames: [String]) async throws -> UUID
     func updateGroup(_ id: UUID, name: String, currency: String, color: CardColor) async throws
     func leaveGroup(_ id: UUID) async throws
+    /// Pushes a reminder to someone who owes me `amountCents`; at most once a day per person.
+    func remind(_ memberID: UUID, amountCents: Int, in groupID: UUID) async throws
     /// Puts a group away for everyone in it, or brings it back.
     func setClosed(_ closed: Bool, group id: UUID) async throws
 
@@ -206,6 +208,10 @@ struct NhostGroupRepository: GroupRepository {
 
     func leaveGroup(_ id: UUID) async throws {
         try await api.call("leave_group", ["p_group_id": .uuid(id)])
+    }
+
+    func remind(_ memberID: UUID, amountCents: Int, in groupID: UUID) async throws {
+        try await api.call("remind", ["p_group_id": .uuid(groupID), "p_member_id": .uuid(memberID), "p_amount_cents": .int(amountCents)])
     }
 
     func setClosed(_ closed: Bool, group id: UUID) async throws {

@@ -8,6 +8,7 @@
 - "!include public_mark_chat_read.yaml"
 - "!include public_preview_invite.yaml"
 - "!include public_regenerate_invite_code.yaml"
+- "!include public_remind.yaml"
 - "!include public_register_device.yaml"
 - "!include public_remove_member.yaml"
 - "!include public_rename_member.yaml"

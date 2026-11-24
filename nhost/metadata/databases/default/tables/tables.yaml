@@ -20,6 +20,7 @@
 - "!include public_groups.yaml"
 - "!include public_members.yaml"
 - "!include public_payment_details.yaml"
+- "!include public_reminders.yaml"
 - "!include storage_buckets.yaml"
 - "!include storage_files.yaml"
 - "!include storage_virus.yaml"

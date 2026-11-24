@@ -43,6 +43,8 @@ struct LocalizationTests {
         #expect(text("%lld Anteile, %@", 1, "€5.00") == "1 share, €5.00")
         #expect(text("%@ hat %@ in %@ umbenannt", "Ben", "Clara", "Klara") == "Ben renamed Clara to Klara")
         #expect(text("Du hast %@ eingetragen", "“Pizza”") == "You added “Pizza”")
+        #expect(text("Hallo %@, kleine Erinnerung: Für „%@“ sind noch %@ an mich offen.", "Clara", "Ski", "€20.00")
+            == "Hi Clara, just a quick reminder: you still owe me €20.00 for “Ski”.")
         #expect(text("Diesen Einladungscode gibt es nicht. Vielleicht wurde ein neuer Link erstellt?")
             == "This invite code doesn't exist. Maybe a new link was created?")
     }

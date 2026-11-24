@@ -10,6 +10,10 @@ struct SettleUpSheet: View {
     @State private var pending: Transfer?
     @State private var paidCount = 0
     @State private var errorMessage: String?
+    @State private var remindError: String?
+    /// Who I reminded while this sheet is open; the server allows one reminder a day.
+    @State private var reminded: Set<UUID> = []
+    @State private var remindedCount = 0
     @State private var showsPaymentDetails = false
 
     var body: some View {
@@ -28,6 +32,7 @@ struct SettleUpSheet: View {
             }
         }
         .sensoryFeedback(.success, trigger: paidCount)
+        .sensoryFeedback(.success, trigger: remindedCount)
         .sheet(isPresented: $showsPaymentDetails) { PaymentDetailsSheet() }
         .alert("Nicht verbucht", isPresented: .init(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
             Button("OK", role: .cancel) {}
@@ -63,7 +68,8 @@ struct SettleUpSheet: View {
                     ForEach(transfers, id: \.self) { transfer in
                         TransferRow(
                             transfer: transfer, group: group, me: me,
-                            payment: transfer.from == me ? model.payment(for: group.member(transfer.to)) : nil
+                            payment: transfer.from == me ? model.payment(for: group.member(transfer.to)) : nil,
+                            reminder: reminder(for: transfer, in: group, me: me)
                         ) { pending = transfer }
                     }
                 } header: {
@@ -123,6 +129,35 @@ struct SettleUpSheet: View {
         } message: { transfer in
             Text("\(group.name(of: transfer.from, me: me)) → \(group.name(of: transfer.to, me: me)): \(Money.format(transfer.amountCents, currency: group.currency))")
         }
+        .alert("Nicht erinnert", isPresented: .init(get: { remindError != nil }, set: { if !$0 { remindError = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(remindError ?? "")
+        }
+    }
+
+    /// Only for money coming to me: a push for people with Barte, a message to share for everyone else.
+    private func reminder(for transfer: Transfer, in group: SplitGroup, me: UUID?) -> TransferRow.Reminder? {
+        guard transfer.to == me, !group.isClosed, let debtor = group.member(transfer.from) else { return nil }
+        if debtor.usesApp {
+            return reminded.contains(debtor.id) ? .sent : .push { Task { await remind(transfer, in: group) } }
+        }
+        let amount = Money.format(transfer.amountCents, currency: group.currency)
+        let paypal = model.myPayment?.paypalURL(amountCents: transfer.amountCents, currency: group.currency)
+        return .share(Reminder.message(to: debtor.name, group: group.name, amount: amount, paypal: paypal))
+    }
+
+    private func remind(_ transfer: Transfer, in group: SplitGroup) async {
+        let (groupID, debtor, amount) = (group.id, transfer.from, transfer.amountCents)
+        guard !reminded.contains(debtor) else { return }
+        reminded.insert(debtor)
+        if let message = await model.run({ try await $0.remind(debtor, amountCents: amount, in: groupID) }) {
+            remindError = message
+            // Already reminded today: the button stays "Erinnert"; anything else can be tried again.
+            if message != BarteError.server(hint: "reminded_recently").errorDescription { reminded.remove(debtor) }
+        } else {
+            remindedCount += 1
+        }
     }
 
     private func record(_ transfer: Transfer, in group: SplitGroup) async {
@@ -146,7 +181,17 @@ private struct TransferRow: View {
     let me: UUID?
     /// The recipient's details, when I am the one paying.
     let payment: PaymentDetails?
+    let reminder: Reminder?
     let markPaid: () -> Void
+
+    enum Reminder {
+        /// Push through Barte.
+        case push(() -> Void)
+        /// Already reminded while the sheet is open.
+        case sent
+        /// A message to send myself, for people without the app.
+        case share(String)
+    }
 
     @State private var copied = 0
 
@@ -181,9 +226,40 @@ private struct TransferRow: View {
             if let payment, !payment.isEmpty {
                 payButtons(payment, to: to)
             }
+            if let reminder {
+                remindButton(reminder, from: from)
+            }
         }
         .padding(.vertical, 2)
         .sensoryFeedback(.success, trigger: copied)
+    }
+
+    @ViewBuilder
+    private func remindButton(_ reminder: Reminder, from name: String) -> some View {
+        Group {
+            switch reminder {
+            case .push(let remind):
+                Button(action: remind) {
+                    Label("Erinnern", systemImage: "bell")
+                        .frame(maxWidth: .infinity, minHeight: 30)
+                }
+                .accessibilityLabel("\(name) erinnern")
+                .accessibilityHint("Schickt \(name) eine Mitteilung. Geht einmal am Tag.")
+            case .sent:
+                Label("Erinnert", systemImage: "checkmark")
+                    .frame(maxWidth: .infinity, minHeight: 30)
+                    .foregroundStyle(Color.inkSecondary)
+                    .accessibilityLabel("\(name) erinnert")
+            case .share(let text):
+                ShareLink(item: text) {
+                    Label("Erinnern", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity, minHeight: 30)
+                }
+                .accessibilityLabel("\(name) eine Erinnerung schicken")
+            }
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.regular)
     }
 
     /// PayPal with the amount filled in, and the bank details to copy.

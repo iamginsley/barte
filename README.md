@@ -14,7 +14,7 @@ Ausgaben mit Freund:innen teilen – einfach und kostenlos. Barte = **Bar** + **
 | --- | --- |
 | **Gruppen** | Als farbige Karten im Wallet-Stil (Signature-Element), Name, Farbe, Währung pro Gruppe, Personen als einfache Namen (Freund:innen brauchen die App nicht) |
 | **Ausgaben** | Betrag, Titel mit automatischem Symbol („Pizza“ → Besteck), wer bezahlt hat, gleichmäßig auf alle oder ausgewählte Personen, Datum, Vorschau des Anteils pro Person |
-| **Ausgleichen** | Salden pro Person und die **wenigsten Überweisungen**, mit denen alle quitt sind; „Bezahlt“ verbucht einen Ausgleich |
+| **Ausgleichen** | Salden pro Person und die **wenigsten Überweisungen**, mit denen alle quitt sind; „Bezahlt“ verbucht einen Ausgleich. „Erinnern“ bei Geld, das man selbst bekommt: eine Mitteilung an die Person (einmal am Tag, nur an sie, nicht im Verlauf), für Namen ohne App eine Nachricht zum Teilen mit Betrag und PayPal-Link |
 | **Abschließen** | Erst wenn alle quitt sind, die Gruppe für alle unter „Abgeschlossen“ ablegen statt löschen; sie bleibt lesbar, zählt nicht mehr in der Übersicht und im Widget und öffnet sich von selbst wieder, sobald jemand eine Ausgabe ändert |
 | **Chat** | Ein Chat pro Gruppe (Sprechblase oben rechts); solange niemand sonst die App nutzt, führt er zum Einladen. Der Verlauf läuft als leise Zeilen mit, Nachrichten können sich auf eine Ausgabe beziehen („Im Chat ansprechen“). Eigene Nachrichten in der Kartenfarbe, Zähler für Ungelesenes auf der Karte und am Chat-Symbol, Antworten direkt aus der Mitteilung, stumm schalten pro Gruppe, eigene Nachrichten löschen, fremde melden |
 | **Verlauf** | Wer was eingetragen, geändert oder gelöscht hat, wer beigetreten ist (und welchen Namen übernommen hat) und wer gegangen ist, mit Vorher/Nachher; nicht änderbar, auch nicht vom Ersteller. Gelöschte Ausgaben und Ausgleiche lassen sich hier wiederherstellen. Bearbeitete Ausgaben zeigen „bearbeitet“. Mitteilungen bei neuen, geänderten (Betrag, Zahler, Aufteilung) und gelöschten Ausgaben und Ausgleichen, beim Beitreten; leise beim Abschließen und Verlassen |
@@ -48,7 +48,7 @@ Projekt `Barte` (Subdomain `uenqaayyhyrekjhojdwn`, Region **Frankfurt, eu-centra
 
 - `nhost/nhost.toml`: Konfiguration (Apple-Anmeldung, Umgebungsvariablen der Functions)
 - `nhost/migrations/`: Tabellen und SQL-Funktionen, `nhost/metadata/`: Hasura-Rechte (Rolle `user`) und die Funktionen als Mutations
-- `functions/`: `apple-revoke` (Konto löschen) sowie `events/group-event` und `events/chat-message` (Mitteilungen, werden nur von Hasura aufgerufen)
+- `functions/`: `apple-revoke` (Konto löschen) sowie `events/group-event`, `events/chat-message` und `events/reminder` (Mitteilungen, werden nur von Hasura aufgerufen)
 
 1. **Secrets** im Nhost-Dashboard unter *Settings → Secrets* anlegen (nie ins Repo). Im Developer Portal einen Key mit „Sign in with Apple“ **und** „Apple Push Notifications service“ erstellen (`AuthKey_XXXX.p8`):
    - `APPLE_KEY_ID`: die Key ID
@@ -68,7 +68,7 @@ Einladungslinks zeigen auf `docs/join/` (GitHub Pages). Die Seite zeigt den Code
 ```sh
 xcodebuild test -project Barte.xcodeproj -scheme Barte -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ./scripts/test-migrations.sh                         # SQL: Migrationen + Funktions-Tests auf lokalem Postgres (brew install postgresql@17)
-(cd functions && npm install && npm test)            # Nhost Functions apple-revoke, events/group-event und events/chat-message (vitest)
+(cd functions && npm install && npm test)            # Nhost Functions apple-revoke, events/group-event, events/chat-message und events/reminder (vitest)
 NHOST_ADMIN_SECRET=… node scripts/test-nhost-api.mjs # Hasura-Rechte gegen das echte Projekt
 ```
 
@@ -102,7 +102,7 @@ BarteWidgets/     Widget „Saldo“ (klein, mittel, Sperrbildschirm), liest den
 Shared/           Widget-Snapshot und barte://-Links, in App und Widget
 BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfachen, Einladungen, Tage
 nhost/            Konfiguration, Migrationen, Hasura-Metadaten, SQL-Tests
-functions/        Nhost Functions apple-revoke, events/group-event und events/chat-message mit Tests
+functions/        Nhost Functions apple-revoke, events/group-event, events/chat-message und events/reminder mit Tests
 scripts/          SQL-Tests auf lokalem Postgres, API-Prüfung gegen das echte Projekt
 docs/             Datenschutz (Deutsch, Englisch) und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
@@ -132,6 +132,7 @@ Deutsch ist Entwicklungssprache und Standard, Englisch kommt, wenn das iPhone au
 - `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
 - `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` (mit Sprache für die Mitteilungen) lesen nur die Functions `events/group-event` und `events/chat-message`
 - `group_events`: der Verlauf. Trigger auf `expenses`, `groups` und `members` schreiben jede Änderung mit Vorher/Nachher, Person und Zeit in dieselbe Transaktion; ein weiterer Trigger verbietet Ändern und Löschen (außer zusammen mit der Gruppe). Jeder neue Eintrag löst über einen Hasura-Event-Trigger (`NHOST_WEBHOOK_SECRET`) `events/group-event` aus, das die Mitteilungen verschickt. So kann keine App eine Änderung durchführen, ohne dass die anderen davon erfahren
+- `reminders`: Erinnerungen aus „Ausgleichen“. Geschrieben nur über `remind` (nur wer Geld bekommt, an wen schuldet, höchstens bis zum offenen Betrag, einmal in 20 Stunden pro Person; Einträge älter als 7 Tage werden dabei gelöscht). Keine Leserechte; jeder neue Eintrag löst `events/reminder` aus, das nur die erinnerte Person benachrichtigt, mit Link auf „Ausgleichen“
 - `chat_messages` und `chat_states`: der Chat. Geschrieben wird nur über `send_message` (Id von der App, damit ein Wiederholen nichts doppelt), `delete_message` (nur eigene, hinterlässt einen Platzhalter), `mark_chat_read` und `set_chat_muted`. `groups.unread_messages` ist ein berechnetes Feld mit der Hasura-Session. Jede neue Nachricht löst `events/chat-message` aus, das alle anderen benachrichtigt, die den Chat nicht stumm geschaltet haben. Konto löschen löscht die eigenen Nachrichten
 - Lesen nur über die Hasura-Rechte der Rolle `user` (eigene Gruppen, deren Personen und Ausgaben), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`. Hasura reicht die Sitzung als `hasura_session` an die Funktionen weiter; Fehler kommen als SQLSTATE 22000 mit dem Hinweis (z. B. `not_member`) als Meldung in der App an
 - Gerechnet wird in der App (`Ledger.swift`), damit alle Geräte dasselbe Ergebnis zeigen. Eine Android-App muss `Split.equal` und `Split.weighted` genauso umsetzen: Cent-Reste zuerst an die zahlende Person, dann nach der UUID in Großbuchstaben sortiert (bei Anteilen zuerst nach dem größten Rest).

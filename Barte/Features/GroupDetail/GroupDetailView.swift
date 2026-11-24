@@ -95,6 +95,7 @@ struct GroupDetailView: View {
         .sheet(isPresented: $showsHistory) { HistorySheet(group: group) }
         .navigationDestination(isPresented: $showsChat) { ChatView(groupID: group.id) }
         .onChange(of: model.pendingChatGroupID) { openPendingChat() }
+        .onChange(of: model.pendingSettleGroupID) { openPendingSettle() }
         .confirmationDialog("Gruppe verlassen?", isPresented: $confirmsLeave, titleVisibility: .visible) {
             Button("Verlassen", role: .destructive) { Task { await leave(group) } }
         } message: {
@@ -211,6 +212,7 @@ struct GroupDetailView: View {
         guard !didAppear else { return }
         didAppear = true
         openPendingChat()
+        openPendingSettle()
         guard model.isDemo else { return }
         switch DemoData.argument(after: "-BarteSheet") {
         case "settle": showsSettle = true
@@ -227,6 +229,13 @@ struct GroupDetailView: View {
         guard model.pendingChatGroupID == groupID else { return }
         model.pendingChatGroupID = nil
         showsChat = true
+    }
+
+    /// A reminder was tapped: paying is one step away.
+    private func openPendingSettle() {
+        guard model.pendingSettleGroupID == groupID else { return }
+        model.pendingSettleGroupID = nil
+        showsSettle = true
     }
 
     private func perform(_ work: @escaping @Sendable (GroupRepository) async throws -> Void) async {
