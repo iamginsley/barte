@@ -1407,6 +1407,26 @@
         }
       }
     },
+    "Die Währung bleibt, sobald es Ausgaben gibt. Beträge würden sonst nicht umgerechnet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The currency stays once there are expenses. Amounts wouldn't be converted otherwise."
+          }
+        }
+      }
+    },
+    "Die Währung lässt sich nicht mehr ändern, weil die Gruppe schon Ausgaben hat. Beträge würden nicht umgerechnet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The currency can't be changed anymore because the group already has expenses. Amounts wouldn't be converted."
+          }
+        }
+      }
+    },
     "Diese Ausgabe wurde eingetragen, bevor es den Verlauf gab." : {
       "localizations" : {
         "en" : {
