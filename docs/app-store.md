@@ -45,6 +45,38 @@ Barte teilt Ausgaben in Gruppen, ohne Werbung, kostenlos.
 
 „Anmeldung erforderlich“ bei den Prüfhinweisen bleibt aus: Die Prüfer:innen melden sich mit ihrer eigenen Apple-ID an.
 
+## Texte auf Englisch (English (U.S.), auch für English (U.K.))
+
+In App Store Connect unter „App-Informationen“ → Lokalisierung hinzufügen. Der Name wird nur auf Deutsch erklärt (Bar + Karte); Englisch bekommt ein eigenes Wortspiel.
+
+**Name:** Barte
+**Subtitle (30):** Cash or card? Split it easily
+**Privacy Policy URL:** https://iamginsley.github.io/barte/privacy
+
+**Promotional Text (170):**
+Trips, flat shares or pizza nights: add who paid for what. Barte works out the fewest transfers to get everyone square.
+
+**Description:**
+Barte splits expenses in groups, free and without ads.
+
+• Groups as cards: one card for every trip, flat share and night out
+• Quick to add: amount, what for, who paid and for whom
+• Split fairly: equally, by shares (a couple counts double) or with fixed amounts
+• Smart settling up: Barte nets out all debts and shows the fewest transfers that get everyone square
+• Pay back directly: with a PayPal link that has the amount filled in, or a copied IBAN
+• Together: invite friends with a link or code, and everyone adds their own expenses
+• Friends without the app are still part of it, as a name in the group
+• One chat per group, where every change to an expense shows up too
+• Notifications when someone adds something or writes, and a widget that shows what you get or owe
+• One currency per group, down to the cent
+• Private: Sign in with Apple, no ads, no tracking
+
+**Keywords (100):** split,expenses,bill,group,trip,travel,roommates,flatmates,debts,friends,share,costs,iou,settle,owe
+
+**Review Notes:**
+
+> Sign-in is only with “Sign in with Apple”. To try it: “+” → “New Group” → create a group with two names → “Expense” → “Settle Up”. Inviting: in a group, tap the person icon at the top, then share the link or code; a second device joins with “+” → “Join with Code”. Expenses can be split equally, by shares or with fixed amounts. PayPal.me and IBAN are optional (“About Barte” → “Payment Details”) and only appear when settling up, for people in the same group. Delete account: “About Barte” (i icon) → “Delete Account”. Chat (guideline 1.2): groups are private and only reachable by invitation; the chat (speech bubble at the top right of a group) works once a second person has joined. Own messages can be deleted (long press), others' messages can be reported by email (long press → “Report”), and we respond within 24 hours. Anyone who no longer wants to chat with someone can leave the group or mute the chat (bell at the top right).
+
 ## Datenschutz-Etiketten
 
 Frage „Erfasst die App Daten?“ → **Ja**. Für alle Datentypen gilt: **mit der Identität verknüpft: ja**, **für Tracking verwendet: nein**, **Zweck: App-Funktionalität**.
@@ -75,6 +107,8 @@ Der Push-Token des Geräts wird nur für Mitteilungen gespeichert und ist keine 
 - [ ] Konto löschen getestet (Apple-ID → Mit Apple anmelden: Barte ist danach verschwunden)
 - [ ] TestFlight-Build mit Freund:innen getestet
 - [ ] GitHub Pages aktiv (Settings → Pages → `main` / `docs`), Datenschutz-URL erreichbar
-- [ ] Screenshots ohne Alpha in 1206 × 2622 (Demo-Modus: `-BarteDemo`, `-BarteGroup 0`, `-BarteSheet settle|expense|invite|join|history|chat`)
+- [ ] Screenshots ohne Alpha in 1206 × 2622 (Demo-Modus: `-BarteDemo`, `-BarteGroup 0`, `-BarteSheet settle|expense|invite|join|history|chat`), auf Englisch zusätzlich mit `-AppleLanguages (en) -AppleLocale en_US`
+- [ ] Englische Lokalisierung in App Store Connect angelegt (Texte oben, Datenschutz-URL `/privacy`, englische Screenshots)
+- [ ] Mitteilungen auf einem englischen iPhone getestet (Sprache wird mit dem Push-Token gespeichert)
 - [x] Texte, Preis und Datenschutz-Etiketten in App Store Connect eingetragen und veröffentlicht
 - [ ] Inhaltsrechte („Nein“), Altersfreigabe, Verfügbarkeit und Kontakt für die Prüfung eingetragen

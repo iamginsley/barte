@@ -57,7 +57,7 @@ final class GroupEditorModel {
     var preview: SplitGroup {
         SplitGroup(
             id: existing?.id ?? UUID(),
-            name: name.isEmpty ? "Neue Gruppe" : name,
+            name: name.isEmpty ? String(localized: "Neue Gruppe") : name,
             currency: currency,
             color: color,
             createdAt: .now,

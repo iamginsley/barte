@@ -106,9 +106,9 @@ enum ChatTimeline {
     }
 
     static func title(for date: Date, now: Date = .now, calendar: Calendar = .current) -> String {
-        if calendar.isDate(date, inSameDayAs: now) { return "Heute" }
+        if calendar.isDate(date, inSameDayAs: now) { return String(localized: "Heute") }
         if let yesterday = calendar.date(byAdding: .day, value: -1, to: now), calendar.isDate(date, inSameDayAs: yesterday) {
-            return "Gestern"
+            return String(localized: "Gestern")
         }
         return date.formatted(calendar.isDate(date, equalTo: now, toGranularity: .year)
             ? .dateTime.weekday(.wide).day().month(.wide)

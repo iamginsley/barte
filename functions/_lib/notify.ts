@@ -2,7 +2,7 @@
 // this for every new row, so a change can't avoid notifying the others: the message comes from the
 // database's before/after snapshot, never from text a client sent.
 import { type ApnsConfig, type Device, send } from "./apns";
-import { compose, type Event, type Payer } from "./messages";
+import { compose, type Event, type Payer, type Person } from "./messages";
 import type { GraphQL } from "./server";
 
 /** An expense as the history stores it (expense_snapshot in the migration). */
@@ -81,9 +81,10 @@ export function eventFor(
   members: MemberRow[],
   recipient: MemberRow,
 ): Event | undefined {
-  const nameOf = (id: string) => (id === recipient.id ? "dir" : members.find((m) => m.id === id)?.name ?? "?");
+  const plain = (id: string) => members.find((m) => m.id === id)?.name ?? "?";
+  const person = (id: string): Person => (id === recipient.id ? { type: "recipient" } : { type: "other", name: plain(id) });
   const actorMember = members.find((m) => m.user_id && m.user_id === row.actor_id);
-  const common = { group: group.name, groupId: row.group_id, actor: row.actor_name ?? "Jemand", currency: group.currency };
+  const common = { group: group.name, groupId: row.group_id, actor: row.actor_name, currency: group.currency };
   const snapshot = row.new ?? row.old;
 
   switch (row.kind) {
@@ -93,14 +94,13 @@ export function eventFor(
         ? { type: "actor" }
         : s.payer_id === recipient.id
         ? { type: "recipient" }
-        : { type: "other", name: nameOf(s.payer_id) };
+        : { type: "other", name: plain(s.payer_id) };
       return { kind: "expense_added", ...common, title: s.title, amountCents: s.amount_cents, payer };
     }
     case "settlement_added":
     case "settlement_deleted": {
       const s = snapshot!;
       const to = s.participant_ids[0];
-      const plain = (id: string) => members.find((m) => m.id === id)?.name ?? "?";
       return {
         kind: row.kind,
         ...common,
@@ -116,7 +116,7 @@ export function eventFor(
       const change = old.amount_cents !== next.amount_cents
         ? { type: "amount" as const, from: old.amount_cents, to: next.amount_cents }
         : old.payer_id !== next.payer_id
-        ? { type: "payer" as const, from: nameOf(old.payer_id), to: nameOf(next.payer_id) }
+        ? { type: "payer" as const, from: person(old.payer_id), to: person(next.payer_id) }
         : { type: "split" as const };
       return { kind: "expense_changed", ...common, title: next.title, change };
     }
@@ -152,8 +152,8 @@ export async function notifyEvent(
   if (!config) return { status: 200, body: { sent: 0, skipped: "not_configured" } };
 
   const byUser = new Map(recipients.map((m) => [m.user_id!, m]));
-  const { device_tokens: devices } = await gql<{ device_tokens: (Device & { user_id: string })[] }>(
-    `query Devices($users: [uuid!]!) { device_tokens(where: { user_id: { _in: $users } }) { token environment user_id } }`,
+  const { device_tokens: devices } = await gql<{ device_tokens: (Device & { user_id: string; language: string | null })[] }>(
+    `query Devices($users: [uuid!]!) { device_tokens(where: { user_id: { _in: $users } }) { token environment user_id language } }`,
     { users: [...byUser.keys()] },
   );
 
@@ -162,7 +162,7 @@ export async function notifyEvent(
   await Promise.all(devices.map(async (device) => {
     const event = eventFor(row, group, group.members, byUser.get(device.user_id)!);
     if (!event) return;
-    const outcome = await sendImpl(device, compose(event), config).catch((error) => {
+    const outcome = await sendImpl(device, compose(event, device.language ?? "de"), config).catch((error) => {
       console.error("group-event: send failed", error);
       return "failed" as const;
     });

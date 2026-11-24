@@ -77,7 +77,7 @@ struct ChatTests {
     @MainActor
     @Test func sendingInTheDemoClearsTheDraftAndLands() async throws {
         let repository = DemoGroupRepository()
-        let group = try #require(try await repository.fetchGroups().first { $0.name == "Skiurlaub Saalbach" })
+        let group = try #require(try await repository.fetchGroups().first { $0.name == DemoData.Sample.skiTrip })
         #expect(group.unreadMessages == 2)
 
         let chat = ChatModel(groupID: group.id, reference: group.expenses.first)
@@ -102,7 +102,7 @@ struct ChatTests {
     @MainActor
     @Test func readMarkGoesOutOncePerNewMessage() async {
         let repository = DemoGroupRepository()
-        let group = try! await repository.fetchGroups().first { $0.name == "Skiurlaub Saalbach" }!
+        let group = try! await repository.fetchGroups().first { $0.name == DemoData.Sample.skiTrip }!
         let chat = ChatModel(groupID: group.id)
         await chat.load(repository)
         #expect(chat.takeUnreadMark(userID: DemoData.userID))

@@ -1,0 +1,286 @@
+{
+  "sourceLanguage" : "de",
+  "strings" : {
+    "%@ Beispiel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Example"
+          }
+        }
+      }
+    },
+    "Abendessen Alpenrose" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dinner Alpenrose"
+          }
+        }
+      }
+    },
+    "Chalet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chalet"
+          }
+        }
+      }
+    },
+    "Die Stromrechnung ist da, ich trag sie gleich ein." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The electricity bill is here, I'll add it now."
+          }
+        }
+      }
+    },
+    "Einkauf Spar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Groceries Spar"
+          }
+        }
+      }
+    },
+    "Fish & Chips" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fish & Chips"
+          }
+        }
+      }
+    },
+    "Hab den Spar-Bon korrigiert, da waren 10 € Pfand dabei, die ich zurückbekommen hab." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixed the Spar receipt, it had a €10 bottle deposit I got back."
+          }
+        }
+      }
+    },
+    "Hotel Shoreditch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotel Shoreditch"
+          }
+        }
+      }
+    },
+    "Hüttengaudi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hut Party"
+          }
+        }
+      }
+    },
+    "Ich" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me"
+          }
+        }
+      }
+    },
+    "Ich, so 50 €" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me, about €50"
+          }
+        }
+      }
+    },
+    "Internet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internet"
+          }
+        }
+      }
+    },
+    "Passt, danke!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Great, thanks!"
+          }
+        }
+      }
+    },
+    "Pizza" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pizza"
+          }
+        }
+      }
+    },
+    "Pizza-Abende" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pizza Nights"
+          }
+        }
+      }
+    },
+    "Pizzeria Da Mario" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pizzeria Da Mario"
+          }
+        }
+      }
+    },
+    "Putzmittel dm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cleaning Supplies dm"
+          }
+        }
+      }
+    },
+    "Roadtrip Kroatien" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Road Trip Croatia"
+          }
+        }
+      }
+    },
+    "Skipässe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ski Passes"
+          }
+        }
+      }
+    },
+    "Skipässe sind gezahlt, hab sie für alle eingetragen 🎿" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ski passes are paid, I added them for everyone 🎿"
+          }
+        }
+      }
+    },
+    "Skischule Kinder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ski School Kids"
+          }
+        }
+      }
+    },
+    "Skiurlaub Saalbach" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ski Trip Saalbach"
+          }
+        }
+      }
+    },
+    "Strom Oktober" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Electricity October"
+          }
+        }
+      }
+    },
+    "Tanken" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gas"
+          }
+        }
+      }
+    },
+    "Taxi zum Lift" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taxi to the Lift"
+          }
+        }
+      }
+    },
+    "Tube" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tube"
+          }
+        }
+      }
+    },
+    "WG Leopoldstraße" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flat Leopoldstraße"
+          }
+        }
+      }
+    },
+    "Wer hat noch Bargeld für die Hütte?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who still has cash for the hut?"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

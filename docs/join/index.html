@@ -27,13 +27,20 @@
   <div class="logo" aria-hidden="true">
     <svg width="56" height="40" viewBox="0 0 56 40"><path d="M2 6a6 6 0 0 1 6-6h22L18 40H8a6 6 0 0 1-6-6z" fill="#fff"/><path d="M34 0h14a6 6 0 0 1 6 6v28a6 6 0 0 1-6 6H22z" fill="#fff" opacity=".85"/></svg>
   </div>
-  <h1>Du bist eingeladen</h1>
-  <p>Jemand möchte Ausgaben mit dir in Barte teilen.</p>
-  <div class="code" id="code" aria-label="Einladungscode">–</div>
-  <a class="button" id="open" href="barte://join/">In Barte öffnen</a>
-  <small>Noch kein Barte? Installiere die App, öffne sie und tippe auf „Mit Code beitreten“.</small>
+  <h1 data-en="You’re invited">Du bist eingeladen</h1>
+  <p data-en="Someone wants to share expenses with you in Barte.">Jemand möchte Ausgaben mit dir in Barte teilen.</p>
+  <div class="code" id="code" aria-label="Einladungscode" data-en-label="Invite code">–</div>
+  <a class="button" id="open" href="barte://join/" data-en="Open in Barte">In Barte öffnen</a>
+  <small data-en="No Barte yet? Install the app, open it and tap “Join with Code”.">Noch kein Barte? Installiere die App, öffne sie und tippe auf „Mit Code beitreten“.</small>
 </main>
 <script>
+  // German by default, English for English browsers, like the app.
+  if (/^en\b/i.test(navigator.language || "")) {
+    document.documentElement.lang = "en";
+    document.title = "Invitation to Barte";
+    for (const el of document.querySelectorAll("[data-en]")) el.textContent = el.dataset.en;
+    for (const el of document.querySelectorAll("[data-en-label]")) el.setAttribute("aria-label", el.dataset.enLabel);
+  }
   const raw = new URLSearchParams(location.search).get("c") || "";
   const code = raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
   if (code) {

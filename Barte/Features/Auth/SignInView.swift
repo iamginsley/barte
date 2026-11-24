@@ -9,7 +9,7 @@ struct SignInView: View {
     @State private var model: SignInViewModel?
     @State private var split: CGFloat = 0
 
-    private static let privacyURL = URL(string: "https://iamginsley.github.io/barte/datenschutz")!
+    private static var privacyURL: URL { Legal.privacyPolicy }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -41,7 +41,7 @@ struct SignInView: View {
                 Text("Barte")
                     .font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .accessibilityAddTraits(.isHeader)
-                // The name explained: Bar + Karte.
+                // German: the name explained (Bar + Karte). Other languages get a pun of their own.
                 Text("Bar oder mit Karte? Egal, Barte rechnet.")
                     .font(.title3)
                     .foregroundStyle(Color.inkSecondary)
@@ -59,7 +59,7 @@ struct SignInView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func point(_ symbol: String, _ text: String) -> some View {
+    private func point(_ symbol: String, _ text: LocalizedStringKey) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 14) {
             Image(systemName: symbol)
                 .font(.body.weight(.semibold))

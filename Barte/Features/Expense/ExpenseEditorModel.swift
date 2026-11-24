@@ -12,9 +12,9 @@ final class ExpenseEditorModel {
 
         var title: String {
             switch self {
-            case .equal: "Gleich"
-            case .shares: "Anteile"
-            case .exact: "Beträge"
+            case .equal: String(localized: "Gleich", comment: "Split mode picker")
+            case .shares: String(localized: "Anteile", comment: "Split mode picker")
+            case .exact: String(localized: "Beträge", comment: "Split mode picker")
             }
         }
     }
@@ -113,22 +113,23 @@ final class ExpenseEditorModel {
     }
 
     var footerText: String? {
-        guard selectedIDs.isEmpty == false else { return "Wähle mindestens eine Person aus." }
+        guard selectedIDs.isEmpty == false else { return String(localized: "Wähle mindestens eine Person aus.") }
         guard let amount = amountCents, amount > 0 else { return nil }
         switch mode {
         case .equal:
             let values = Set(shares.values)
             let text = Money.format(amount / selectedIDs.count, currency: group.currency)
-            return values.count == 1 ? "Je \(text) pro Person" : "Je etwa \(text) pro Person, Cent-Reste trägt die zahlende Person"
+            return values.count == 1 ? String(localized: "Je \(text) pro Person")
+                : String(localized: "Je etwa \(text) pro Person, Cent-Reste trägt die zahlende Person")
         case .shares:
             let total = weights.values.filter { $0 > 0 }.reduce(0, +)
             let perShare = Money.format(amount / total, currency: group.currency)
-            return "\(total) Anteile, etwa \(perShare) pro Anteil. Ein Paar zählt zum Beispiel doppelt."
+            return String(localized: "\(total) Anteile, etwa \(perShare) pro Anteil. Ein Paar zählt zum Beispiel doppelt.")
         case .exact:
             guard let difference = exactDifference else { return nil }
-            if difference == 0 { return "Passt genau." }
+            if difference == 0 { return String(localized: "Passt genau.") }
             let text = Money.format(abs(difference), currency: group.currency)
-            return difference < 0 ? "Noch \(text) zu verteilen." : "\(text) zu viel verteilt."
+            return difference < 0 ? String(localized: "Noch \(text) zu verteilen.") : String(localized: "\(text) zu viel verteilt.")
         }
     }
 
@@ -179,7 +180,7 @@ final class ExpenseEditorModel {
         guard canSave else { return nil }
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         var expense = draft
-        expense.title = trimmed.isEmpty ? "Ausgabe" : trimmed
+        expense.title = trimmed.isEmpty ? String(localized: "Ausgabe", comment: "Title of an expense saved without one") : trimmed
         return expense
     }
 }

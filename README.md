@@ -82,6 +82,7 @@ Launch-Argumente für Screenshots und Tests, ohne Server, mit Beispieldaten im S
 | `-BarteSignedOut` | zusammen mit `-BarteDemo`: Anmeldebildschirm zeigen |
 | `-BarteGroup <n>` | n-te Karte öffnen (0 = oberste) |
 | `-BarteSheet settle\|expense\|group\|about\|invite\|join` | zusätzlich ein Sheet öffnen (`join` zeigt eine Beispiel-Einladung) |
+| `-AppleLanguages (en) -AppleLocale en_US` | auf Englisch, mit englischen Beispieldaten |
 
 ## Projektstruktur
 
@@ -102,7 +103,7 @@ BarteTests/       Swift-Testing-Suites für Geld, Aufteilung, Salden, Vereinfach
 nhost/            Konfiguration, Migrationen, Hasura-Metadaten, SQL-Tests
 functions/        Nhost Functions apple-revoke, events/group-event und events/chat-message mit Tests
 scripts/          SQL-Tests auf lokalem Postgres, API-Prüfung gegen das echte Projekt
-docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
+docs/             Datenschutz (Deutsch, Englisch) und Einladungsseite (GitHub Pages), App-Store-Texte, Icon-Vorschau
 ```
 
 ## Design
@@ -113,11 +114,22 @@ docs/             Datenschutz und Einladungsseite (GitHub Pages), App-Store-Text
 - System-Schrift, Rounded nur für große Beträge und Titel; Beträge `monospacedDigit`; Dynamic Type überall
 - Easter Egg: Tippe in „Über Barte“ ein paar Mal auf das Logo. Und schreib mal „Dackel“ als Ausgabe.
 
+## Sprachen
+
+Deutsch ist Entwicklungssprache und Standard, Englisch kommt, wenn das iPhone auf Englisch steht (jede andere Sprache: Deutsch).
+
+- Texte liegen in String Catalogs: `Barte/Resources/Localizable.xcstrings`, `Barte/Resources/Demo.xcstrings` (Beispieldaten) und `BarteWidgets/Localizable.xcstrings`. Literale in `Text`, `Button`, `Label` usw. landen beim Bauen automatisch darin, im Code zusammengesetzte Texte brauchen `String(localized:)`. Zahlen mit Plural-Varianten („1 neue Nachricht“ / „3 neue Nachrichten“)
+- Englisch steht in `scripts/translations_en.py`: neue Schlüssel dort ergänzen und `python3 scripts/translations_en.py` laufen lassen. Der Test „English“ schlägt fehl, solange ein Schlüssel kein Englisch hat
+- Beträge und Daten folgen Sprache und Region des iPhones („12,50 €“, „€12.50“)
+- Mitteilungen schreibt der Server: Die App schickt mit dem Push-Token ihre Sprache und die Region (`device_tokens.language`, z. B. `en-GB`), `functions/_lib/messages.ts` formuliert pro Gerät auf Deutsch oder Englisch
+- Das Wortspiel „Bar oder mit Karte?“ gibt es nur auf Deutsch; Englisch sagt „Cash or card? Barte does the math.“
+- Die Swift-Tests laufen auf Deutsch (Testsprache im Schema); Datenschutz auf Englisch unter `docs/privacy.md`, die Einladungsseite folgt der Browsersprache
+
 ## Datenmodell
 
 - `profiles`: der Kontoname. `create_group`, `join_group`, `set_my_name` und `sync_my_name` (nach jeder Anmeldung) halten alle verknüpften `members` auf diesem Namen; `rename_member` lehnt verknüpfte Personen ab
 - `groups`, `members` (Name, optional verknüpft mit einem Konto über `user_id`), `expenses` (Betrag in Cent, `spent_on` als Wandzeit-Tag des eintragenden iPhones, `participant_ids`, `split_kind` und `split_values` in derselben Reihenfolge wie die Beteiligten)
-- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` lesen nur die Functions `events/group-event` und `events/chat-message`
+- `payment_details` (PayPal.me, IBAN, Kontoinhaber:in) sieht nur, wer mit der Person in einer Gruppe ist; `device_tokens` (mit Sprache für die Mitteilungen) lesen nur die Functions `events/group-event` und `events/chat-message`
 - `group_events`: der Verlauf. Trigger auf `expenses`, `groups` und `members` schreiben jede Änderung mit Vorher/Nachher, Person und Zeit in dieselbe Transaktion; ein weiterer Trigger verbietet Ändern und Löschen (außer zusammen mit der Gruppe). Jeder neue Eintrag löst über einen Hasura-Event-Trigger (`NHOST_WEBHOOK_SECRET`) `events/group-event` aus, das die Mitteilungen verschickt. So kann keine App eine Änderung durchführen, ohne dass die anderen davon erfahren
 - `chat_messages` und `chat_states`: der Chat. Geschrieben wird nur über `send_message` (Id von der App, damit ein Wiederholen nichts doppelt), `delete_message` (nur eigene, hinterlässt einen Platzhalter), `mark_chat_read` und `set_chat_muted`. `groups.unread_messages` ist ein berechnetes Feld mit der Hasura-Session. Jede neue Nachricht löst `events/chat-message` aus, das alle anderen benachrichtigt, die den Chat nicht stumm geschaltet haben. Konto löschen löscht die eigenen Nachrichten
 - Lesen nur über die Hasura-Rechte der Rolle `user` (eigene Gruppen, deren Personen und Ausgaben), Schreiben nur über SQL-Funktionen wie `create_group`, `join_group`, `save_expense`, `delete_my_account`. Hasura reicht die Sitzung als `hasura_session` an die Funktionen weiter; Fehler kommen als SQLSTATE 22000 mit dem Hinweis (z. B. `not_member`) als Meldung in der App an

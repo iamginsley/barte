@@ -56,7 +56,7 @@ struct BalanceWidgetView: View {
                     .lineLimit(1)
                     .widgetAccentable()
                 if snapshot.totals.count > 1 {
-                    Text(snapshot.totals.count == 2 ? "und 1 weitere Währung" : "und \(snapshot.totals.count - 1) weitere Währungen")
+                    Text("und \(snapshot.totals.count - 1) weitere Währungen", comment: "Widget: balances in other currencies, with plural variants")
                         .font(.caption)
                         .foregroundStyle(Color.inkSecondary)
                 }

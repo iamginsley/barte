@@ -44,7 +44,7 @@ final class JoinModel {
 
     func lookUp(with repository: GroupRepository?) async {
         guard let repository, let code else {
-            errorMessage = "Das sieht nicht nach einem Einladungscode aus."
+            errorMessage = String(localized: "Das sieht nicht nach einem Einladungscode aus.")
             return
         }
         step = .loading
